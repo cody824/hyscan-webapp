@@ -1,0 +1,19 @@
+<ProductInfo xmlns="">
+	<uiConfig>
+		<ipCheckTime>0</ipCheckTime>
+		<lunNum>0</lunNum>
+		<msgNum>0</msgNum>
+		<chunk_size>10m</chunk_size>
+		<avatar_root>/mnt/sure/</avatar_root>
+	</uiConfig>
+	<moduleList>
+		<moduleList>
+			<name>settings</name>
+			<config />
+		</moduleList>
+		<moduleList>
+			<name>personal workspace</name>
+			<config />
+		</moduleList> 
+	</moduleList>
+</ProductInfo>
