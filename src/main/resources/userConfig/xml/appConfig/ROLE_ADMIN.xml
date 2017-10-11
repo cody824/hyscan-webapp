@@ -8,12 +8,67 @@
 	</uiConfig>
 	<moduleList>
 		<moduleList>
-			<name>settings</name>
-			<config />
-		</moduleList>
-		<moduleList>
-			<name>personal workspace</name>
-			<config />
-		</moduleList> 
+            <name>settings</name>
+            <config>
+                <cls>settings</cls>
+                <index>1</index>
+            </config>
+            <subModules>
+                <subModules>
+                    <name>ModelConfig</name>
+                    <disable>false</disable>
+                    <permissions>1</permissions>
+                    <config>
+                        <packageN>Hyscan</packageN>
+                        <index>0</index>
+                    </config>
+                </subModules>
+                <subModules>
+                    <name>MaterialConfig</name>
+                    <disable>false</disable>
+                    <permissions>1</permissions>
+                    <config>
+                        <packageN>Hyscan</packageN>
+                        <index>1</index>
+                    </config>
+                </subModules>
+            </subModules>
+        </moduleList>
+        <moduleList>
+            <name>dataManagement</name>
+            <config>
+                <cls>dataManagement</cls>
+                <index>0</index>
+            </config>
+            <subModules>
+                <subModules>
+                    <name>ScanTask</name>
+                    <disable>false</disable>
+                    <permissions>1</permissions>
+                    <config>
+                        <packageN>Hyscan</packageN>
+                        <index>0</index>
+                    </config>
+                </subModules>
+            </subModules>
+        </moduleList>
+        <moduleList>
+            <name>security</name>
+            <config>
+                <cls>security</cls>
+                <index>2</index>
+            </config>
+            <subModules>
+                <subModules>
+                    <name>User</name>
+                    <disable>false</disable>
+                    <permissions>1</permissions>
+                    <config>
+                        <packageN>Hyscan</packageN>
+                        <index>0</index>
+                    </config>
+                </subModules>
+            </subModules>
+        </moduleList>
 	</moduleList>
 </ProductInfo>

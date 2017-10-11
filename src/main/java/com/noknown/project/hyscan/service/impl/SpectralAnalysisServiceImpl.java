@@ -13,7 +13,6 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		// TODO Auto-generated method stub
 		Result result = new Result();
 		result.setLevel(3);
-		result.setLevelText("三级老化");
 		result.setMaterial("金属材质");
 		return result;
 	}

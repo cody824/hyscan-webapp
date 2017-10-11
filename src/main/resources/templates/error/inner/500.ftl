@@ -1,4 +1,3 @@
-<%@ page pageEncoding="UTF-8" %>
 <div class="page_error_box">
 	<div class="error_content">
 		<div class="error_info">

@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -34,6 +35,7 @@ public class ScanTask implements Serializable{
 	/**
 	 * 扫描时间
 	 */
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
 	private Date scanTime;
 	
 	/**
@@ -53,15 +55,14 @@ public class ScanTask implements Serializable{
 	private String city;
 	
 	/**
+	 * 位置：地址信息
+	 */
+	private String address;
+	
+	/**
 	 * 结果 ：老化等级
 	 */
 	private int level;
-	
-	/**
-	 * 结果 ：文本
-	 */
-	@Column(length = 16)
-	private String levelText;
 	
 	/**
 	 * 结果 ：材质
@@ -202,22 +203,6 @@ public class ScanTask implements Serializable{
 
 
 	/**
-	 * @return the levelText
-	 */
-	public String getLevelText() {
-		return levelText;
-	}
-
-
-	/**
-	 * @param levelText the levelText to set
-	 */
-	public void setLevelText(String levelText) {
-		this.levelText = levelText;
-	}
-
-
-	/**
 	 * @return the material
 	 */
 	public String getMaterial() {
@@ -342,6 +327,22 @@ public class ScanTask implements Serializable{
 	 */
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+
+	/**
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
+	}
+
+
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 

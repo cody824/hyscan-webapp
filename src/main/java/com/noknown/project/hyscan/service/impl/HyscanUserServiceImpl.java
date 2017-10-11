@@ -2,12 +2,12 @@ package com.noknown.project.hyscan.service.impl;
 
 import javax.transaction.Transactional;
 
-import com.noknown.framework.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.noknown.framework.common.exception.DAOException;
 import com.noknown.framework.common.exception.ServiceException;
+import com.noknown.framework.common.util.StringUtil;
 import com.noknown.framework.security.model.ThirdPartyAccount;
 import com.noknown.framework.security.model.User;
 import com.noknown.framework.security.service.UserService;
@@ -139,7 +139,6 @@ public  class HyscanUserServiceImpl extends UserServiceImpl implements UserServi
 			udDao.save(ud);
 		}
 	}
-
 
 
 }

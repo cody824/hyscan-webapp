@@ -4,12 +4,25 @@ import org.springframework.data.domain.Page;
 
 import com.noknown.framework.common.exception.DAOException;
 import com.noknown.framework.common.exception.ServiceException;
+import com.noknown.framework.common.web.model.PageData;
+import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
 import com.noknown.project.hyscan.pojo.AppScanTask;
 
 
 public interface ScanTaskService {
+	
+	
+	/**
+	 * 分页查询任务
+	 * @param page
+	 * @param size
+	 * @return
+	 * @throws ServiceException
+	 * @throws DAOException
+	 */
+	PageData<ScanTask> find(SQLFilter filter, int start , int limit) throws ServiceException, DAOException;
 
 	/**
 	 * 分页查询任务

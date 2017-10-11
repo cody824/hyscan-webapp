@@ -4,8 +4,6 @@ public class Result {
 
 	private int level;
 	
-	private String levelText;
-	
 	private String material;
 
 	/**
@@ -20,20 +18,6 @@ public class Result {
 	 */
 	public void setLevel(int level) {
 		this.level = level;
-	}
-
-	/**
-	 * @return the levelText
-	 */
-	public String getLevelText() {
-		return levelText;
-	}
-
-	/**
-	 * @param levelText the levelText to set
-	 */
-	public void setLevelText(String levelText) {
-		this.levelText = levelText;
 	}
 
 	/**

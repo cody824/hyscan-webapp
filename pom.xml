@@ -99,7 +99,7 @@
 			<artifactId>mailapi</artifactId>
 			<version>1.6.0</version>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>com.noknown</groupId>
 			<artifactId>framework</artifactId>
@@ -110,7 +110,14 @@
 			<artifactId>bd-admin</artifactId>
 			<version>0.0.1-snapshot</version>
 		</dependency>
-		
+
+		<!-- for 算法 -->
+		<dependency>
+			<groupId>gov.nist.math</groupId>
+			<artifactId>jama</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+
 
 	</dependencies>
 
@@ -121,7 +128,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					 <fork>true</fork> 
+					<fork>true</fork>
 					<jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
 				</configuration>
 				<executions>

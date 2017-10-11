@@ -1,0 +1,34 @@
+.settings {
+    background-image:url(../img/icon/advancedsettings.png);
+}
+.dataManagement {
+    background-image:url(../img/icon/fileoperation.png);
+}
+.md-ModelConfig {
+    background-image:url(../img/icon/host_settings.png);
+}
+
+.md-ModelConfig-32 {
+    background-image:url(../img/icon32/host_settings.png);
+}
+.md-MaterialConfig {
+    background-image:url(../img/icon/repository.png);
+}
+
+.md-MaterialConfig-32 {
+    background-image:url(../img/icon32/repository.png);
+}
+.md-ScanTask {
+    background-image:url(../img/icon/fileoperation.png);
+}
+
+.md-ScanTask-32 {
+    background-image:url(../img/icon32/fileoperation.png);
+}
+.md-User {
+    background-image:url(../img/icon/user.png);
+}
+
+.md-User-32 {
+    background-image:url(../img/icon32/user.png);
+}

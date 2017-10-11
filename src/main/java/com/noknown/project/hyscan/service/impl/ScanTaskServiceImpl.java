@@ -2,15 +2,23 @@ package com.noknown.project.hyscan.service.impl;
 
 import java.sql.Date;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.noknown.framework.common.exception.DAOException;
 import com.noknown.framework.common.exception.ServiceException;
+import com.noknown.framework.common.util.JpaUtil;
+import com.noknown.framework.common.web.model.PageData;
+import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.project.hyscan.dao.ScanTaskDao;
 import com.noknown.project.hyscan.dao.ScanTaskDataDao;
 import com.noknown.project.hyscan.model.ScanTask;
@@ -26,13 +34,33 @@ public class ScanTaskServiceImpl implements ScanTaskService {
 
 	@Autowired
 	private ScanTaskDataDao taskDataDao;
+	
 
-	@Value("${hyscan.data.taskPath:taskData}")
-	private String taskPath;
+	@Override
+	public PageData<ScanTask> find(SQLFilter filter, int start, int limit) throws ServiceException, DAOException {
+		
+		Pageable pageable = new PageRequest(start * limit, limit);
+		Specification<ScanTask> spec = new Specification<ScanTask>(){
+
+			@Override
+			public Predicate toPredicate(Root<ScanTask> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate predicate = JpaUtil.sqlFilterToPredicate(ScanTask.class, root, query, cb, filter);
+				return predicate;
+			}} ;
+		Page<ScanTask> pd = taskDao.findAll(spec , pageable);
+		
+		PageData<ScanTask> pageData = new PageData<>();
+		pageData.setTotal(pd.getTotalElements());
+		pageData.setTotalPage(pd.getTotalPages());
+		pageData.setData(pd.getContent());
+		pageData.setStart(start);
+		pageData.setLimit(limit);
+		
+		return pageData;
+	}
 
 	public Page<ScanTask> find(int page, int size) throws ServiceException, DAOException {
 		Pageable pageable = new PageRequest(page, size);
-
 		return taskDao.findAll(pageable);
 	}
 
@@ -59,7 +87,6 @@ public class ScanTaskServiceImpl implements ScanTaskService {
 		
 		if (appTask.getResult() != null) {
 			task.setLevel(appTask.getResult().getLevel());
-			task.setLevelText(appTask.getResult().getLevelText());
 			task.setMaterial(appTask.getResult().getMaterial());
 		}
 		
@@ -127,5 +154,6 @@ public class ScanTaskServiceImpl implements ScanTaskService {
 		taskDataDao.saveTaskData(taskData);
 		return task;
 	}
+
 
 }

@@ -1,7 +1,12 @@
 package com.noknown.project.hyscan.web.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,9 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.HtmlUtils;
 
 import com.noknown.framework.common.base.BaseController;
 import com.noknown.framework.common.exception.WebException;
+import com.noknown.framework.common.util.JsonUtil;
+import com.noknown.framework.common.web.model.PageData;
+import com.noknown.framework.common.web.model.SQLFilter;
+import com.noknown.framework.common.web.model.SQLOrder;
 import com.noknown.project.hyscan.common.Constants;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
@@ -38,10 +48,33 @@ public class ScanTaskController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/scanTask/", method = RequestMethod.GET)
-	public ResponseEntity<?> findScanTask(@RequestParam int page, @RequestParam int size)
+	public ResponseEntity<?> findScanTask(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(value = "filter", required = false) String filter,
+			@RequestParam(value = "sort", required = false) String sort,
+			@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+			@RequestParam(value = "limit", required = false, defaultValue = "-1") int limit)
 			throws Exception {
-		Page<ScanTask> pd = taskService.find(page, size);
-		return ResponseEntity.ok(pd);
+		filter = HtmlUtils.htmlUnescape(filter);
+		sort = HtmlUtils.htmlUnescape(sort);
+		PageData<?> tasks;
+		SQLFilter sqlFilter = null;
+		if (filter != null) {
+			sqlFilter = JsonUtil.toObject(filter, SQLFilter.class);
+		}
+		if (sort != null) {
+			if (sqlFilter == null)
+				sqlFilter = new SQLFilter();
+
+			List<SQLOrder> sortL = JsonUtil.toList(sort, SQLOrder.class);
+			for (SQLOrder order : sortL) {
+				sqlFilter.addSQLOrder(order);
+			}
+		} else {
+			sqlFilter.addSQLOrder(new SQLOrder("scanTime", "desc"));
+		}
+		tasks = taskService.find(sqlFilter, start, limit);
+		return ResponseEntity.ok(tasks);
 	}
 	
 	@RequestMapping(value = "/scanTask/info/{taskId}", method = RequestMethod.GET)
@@ -66,7 +99,7 @@ public class ScanTaskController extends BaseController {
 			throws Exception {
 		ScanTaskData data = taskService.getData(taskId);
 		if (data == null)
-			return ResponseEntity.notFound().build();
+			throw new WebException("数据不存在", HttpStatus.NOT_FOUND);
 		else 
 			return ResponseEntity.ok(data);
 	}
