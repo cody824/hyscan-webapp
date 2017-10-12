@@ -7,6 +7,8 @@ public class Position {
 	private Float lat;
 	
 	private String city;
+	
+	private String address;
 
 	/**
 	 * @return the lon
@@ -48,6 +50,20 @@ public class Position {
 	 */
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	/**
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
+	}
+
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	
 	

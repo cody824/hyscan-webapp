@@ -83,6 +83,7 @@ public class ScanTaskServiceImpl implements ScanTaskService {
 			task.setCity(appTask.getPosition().getCity());
 			task.setLon(appTask.getPosition().getLon());
 			task.setLat(appTask.getPosition().getLat());
+			task.setAddress(appTask.getPosition().getAddress());
 		}
 		
 		if (appTask.getResult() != null) {

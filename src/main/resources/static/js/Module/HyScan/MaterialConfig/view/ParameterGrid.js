@@ -1,6 +1,5 @@
 Ext.define('Module.Hyscan.MaterialConfig.view.ParameterGrid', {
-	extend : 'Soul.view.SearchGrid',
-	alias : 'widget.noticegrid',
+	extend : 'Ext.grid.Panel',
 	
 	requires  : [
 		'Soul.util.RendererUtil', 
@@ -10,6 +9,13 @@ Ext.define('Module.Hyscan.MaterialConfig.view.ParameterGrid', {
 		'Soul.util.ObjectView',
 		'Soul.ux.grid.feature.Searching'
 	],
+	
+	itemcontextmenuFunction : function(view,record,htmlElement,index,event,eopts){
+		event.preventDefault();
+		var me = this;
+		if (me.contextMenu != null)
+			me.contextMenu.showAt(event.getXY());
+	},
 	
 	initComponent : function() {
 		var columns = new Array();
@@ -27,14 +33,15 @@ Ext.define('Module.Hyscan.MaterialConfig.view.ParameterGrid', {
 		);
 		
 		var me = this;
-		me.contextMenu = Module.Hyscan.MaterialConfig.Tools.buildParamOptMenu();
+		me.contextMenu = me.portlet.buildOptMenu();
 		var sm = new Ext.selection.CheckboxModel({
+			mode : 'SINGLE',
 			listeners: {
 				selectionchange: function(sm2) {
 					var records = sm2.getSelection();
 					
-					rightEI = me.contextMenu.down('menuitem[name=editparam]');
-					rightDI = me.contextMenu.down('menuitem[name=delparam]');
+					var rightEI = me.contextMenu.down('menuitem[name=editparam]');
+					var rightDI = me.contextMenu.down('menuitem[name=delparam]');
 					var editIndex = me.portlet.down('menuitem[name=editIndex]');
 					var delIndex = me.portlet.down('menuitem[name=delIndex]');
 					if (sm2.getCount() == 1) {
@@ -66,10 +73,13 @@ Ext.define('Module.Hyscan.MaterialConfig.view.ParameterGrid', {
 		Ext.apply(this, {
 			selModel: sm,
 			viewConfig : {
-				emptyText : PARAMETER_MESSAGE.noParameter
+				emptyText : "没有配置材料索引"
 			},
 			store : paramStore,
-			columns : columns
+			columns : columns,
+			listeners : {
+				itemcontextmenu : me.itemcontextmenuFunction
+			}
 		});
 		this.loadData();
 		this.callParent(arguments);
@@ -96,16 +106,14 @@ Ext.define('Module.Hyscan.MaterialConfig.view.ParameterGrid', {
 	afterRender: function() {
         var me = this;
         me.callParent(arguments);
-        me.updateView(me);
-        
         var callbackFun = function(){
 			me.loadData(me);
 		};
 
 		var sm = me.selModel;
-		var editparamItem = me.contextMenu.down('menuitem[name=editparam]');
-		var addparamItem = me.contextMenu.down('menuitem[name=addparam]');
-		var delparamItem = me.contextMenu.down('menuitem[name=delparam]');
+		var editparamItem = me.contextMenu.down('menuitem[name=editIndex]');
+		var addparamItem = me.contextMenu.down('menuitem[name=createIndex]');
+		var delparamItem = me.contextMenu.down('menuitem[name=delIndex]');
 		
 		var createIndex = me.portlet.down('menuitem[name=createIndex]');
 		var editIndex = me.portlet.down('menuitem[name=editIndex]');

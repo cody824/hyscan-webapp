@@ -9,10 +9,12 @@ Ext.define('Module.Hyscan.ModelConfig.view.Grid', {
         'Soul.ux.grid.column.ComboColumn'
     ],
 
-    checkIndexes: ['status','busType', 'money'],
-    disableIndexes: [],
-
-    customFilter : [],
+    itemcontextmenuFunction : function(view,record,htmlElement,index,event,eopts){
+		event.preventDefault();
+		var me = this;
+		if (me.contextMenu != null)
+			me.contextMenu.showAt(event.getXY());
+	},
 
 
     initComponent: function () {
@@ -84,22 +86,34 @@ Ext.define('Module.Hyscan.ModelConfig.view.Grid', {
 		    listeners: {
 		        selectionchange: function (sm2) {
 		            var records = sm2.getSelection();
-		            var delModelItem = me.portlet.down('menuitem[name=delModel]');
-		            var editModel = me.portlet.down('menuitem[name=editModel]');
+		            
+		    		var editModelR = me.contextMenu.down('menuitem[name=editModel]');
+		    		var delModelR = me.contextMenu.down('menuitem[name=delModel]');
+		    		
+		    		var editModel = me.portlet.down('menuitem[name=editModel]');
+		    		var delModel = me.portlet.down('menuitem[name=delModel]');
+		            
 		            if (records.length > 0){
-		            	delModelItem.enable();
+		            	delModel.enable();
+		            	delModelR.enable();
 		            	if (records.length == 1){
 		            		editModel.enable();
+		            		editModelR.enable();
+		            	} else {
+		            		editModel.disable();
+		            		editModelR.disable();
 		            	}
 		            } else {
-		            	delModelItem.disable();
+		            	editModelR.disable();
+		            	delModelR.disable();
 		            	editModel.disable();
+		            	delModel.disable();
 		            }
 		            	
 		        }
 		    }
 		});
-
+		me.contextMenu = me.portlet.buildModelOptMenu();
         var store = Ext.create('Module.Hyscan.ModelConfig.store.ModelConfigStore');
         Ext.apply(this, {
         	selModel: sm,
@@ -108,7 +122,10 @@ Ext.define('Module.Hyscan.ModelConfig.view.Grid', {
                 emptyText: "没有配置型号",
                 enableTextSelection:true  
             },
-            store: store
+            store: store,
+			listeners : {
+				itemcontextmenu : me.itemcontextmenuFunction
+			}
         });
         me.reload();
         this.callParent(arguments);
@@ -148,6 +165,10 @@ Ext.define('Module.Hyscan.ModelConfig.view.Grid', {
 		    sm.deselectAll();
 		};
 		
+		var createModelR = me.contextMenu.down('menuitem[name=createModel]');
+		var editModelR = me.contextMenu.down('menuitem[name=editModel]');
+		var delModelR = me.contextMenu.down('menuitem[name=delModel]');
+		
 		var createModel = me.portlet.down('menuitem[name=createModel]');
 		var editModel = me.portlet.down('menuitem[name=editModel]');
 		var delModel = me.portlet.down('menuitem[name=delModel]');
@@ -155,13 +176,24 @@ Ext.define('Module.Hyscan.ModelConfig.view.Grid', {
 		createModel.on('click', function(){
 			opt.editModelWin(null, callbackFn);
 		});
+		createModelR.on('click', function(){
+			opt.editModelWin(null, callbackFn);
+		});
 		
 		editModel.on('click', function(){
 			var records = sm.getSelection();
 			opt.editModelWin(records[0], callbackFn);
 		});
+		editModelR.on('click', function(){
+			var records = sm.getSelection();
+			opt.editModelWin(records[0], callbackFn);
+		});
         
 		delModel.on('click', function(){
+			var records = sm.getSelection();
+			opt.doRemoveModel(records, callbackFn)
+		});
+		delModelR.on('click', function(){
 			var records = sm.getSelection();
 			opt.doRemoveModel(records, callbackFn)
 		});

@@ -1,31 +1,31 @@
-Ext.define('Module.Hyscan.MaterialConfig.Portlet', {
+Ext.define('Module.Hyscan.AlgoConfig.Portlet', {
 	extend : 'Soul.view.ModulePortlet',
 	alias : 'widget.sanoticeportlet',
 	
 	requires  : [
-		'Module.Hyscan.MaterialConfig.Operation',
-		'Module.Hyscan.MaterialConfig.Data',
+		'Module.Hyscan.AlgoConfig.Operation',
+		'Module.Hyscan.AlgoConfig.Data',
  	],
  		
  	VIEW : {
-		'Module.Hyscan.MaterialConfig.view.ParameterGrid': '材料索引'
+		'Module.Hyscan.AlgoConfig.view.Grid': '表格'
 	},
     
-	title: "材料索引",
+	title: "算法管理",
 			
-	icon : '/img/icon/repository.png',
+	iconCls : 'md-AlgoConfig',
 	
-	moduleName : 'Module.Hyscan.MaterialConfig',
+	moduleName : 'Module.Hyscan.AlgoConfig',
     
-    moduleSessionView : 'Module.Hyscan.MaterialConfigCurrentView',
+    moduleSessionView : 'Module.Hyscan.AlgoConfigCurrentView',
     
-    dataObj : Module.Hyscan.MaterialConfig.Data,
+    dataObj : Module.Hyscan.AlgoConfig.Data,
     
-    configObj : Module.Hyscan.MaterialConfig.Config,
+    configObj : Module.Hyscan.AlgoConfig.Config,
 	
-    defaultView : 'Module.Hyscan.MaterialConfig.view.ParameterGrid',
+    defaultView : 'Module.Hyscan.AlgoConfig.view.Grid',
 	
-    supportView :['Module.Hyscan.MaterialConfig.view.ParameterGrid'],
+    supportView :['Module.Hyscan.AlgoConfig.view.Grid'],
     
     havUpdateButton : false,
     
@@ -35,24 +35,24 @@ Ext.define('Module.Hyscan.MaterialConfig.Portlet', {
 
 	buildOptMenu : function(){
 		var menu = Ext.create('Ext.menu.Menu', {
-			name : 'modeloperation',
+			name : 'algooperation',
 			style: {
 				overflow: 'visible'
 			},
 			items: [{
-					text: "新建索引",
+					text: "上传算法",
 					disabled: false,
-					name: 'createIndex',
+					name: 'uploadAlgo',
 					iconCls: 'x-add-icon'
 				},{
-					text: "编辑索引",
+					text: "设置为当前算法",
 					disabled: true,
-					name: 'editIndex',
+					name: 'useAlgo',
 					iconCls: 'extensive-edit'
 				},{
-					text: "删除索引",
+					text: "删除算法",
 					disabled: true,
-					name: 'delIndex',
+					name: 'delAlgo',
 					iconCls: 'x-del-icon'
 				}]
 		});

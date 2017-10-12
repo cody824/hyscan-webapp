@@ -4,6 +4,8 @@ public class Result {
 
 	private int level;
 	
+	private int materialIndex;
+	
 	private String material;
 
 	/**
@@ -32,6 +34,20 @@ public class Result {
 	 */
 	public void setMaterial(String material) {
 		this.material = material;
+	}
+
+	/**
+	 * @return the materialIndex
+	 */
+	public int getMaterialIndex() {
+		return materialIndex;
+	}
+
+	/**
+	 * @param materialIndex the materialIndex to set
+	 */
+	public void setMaterialIndex(int materialIndex) {
+		this.materialIndex = materialIndex;
 	}
 	
 	

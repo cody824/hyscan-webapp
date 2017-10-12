@@ -5,6 +5,7 @@ MODULE_GROUP = {
 };
 
 MODULE_NAME = {
+"Module.Hyscan.AlgoConfig" : '算法配置',
      "Module.Hyscan.User" : '用户信息',
 	"Module.Hyscan.ScanTask" : '扫描任务',
 	"Module.Hyscan.MaterialConfig" : '材料索引',
@@ -12,6 +13,7 @@ MODULE_NAME = {
 };
 
 MODULE_HELP = {
+"Module.Hyscan.AlgoConfig" : '配置管理算法',
     "Module.Hyscan.User" : '显示系统已经注册用户',
 	"Module.Hyscan.ScanTask" : '记录客户端的扫描结果',
 	"Module.Hyscan.MaterialConfig" : '配置材料索引解释！',

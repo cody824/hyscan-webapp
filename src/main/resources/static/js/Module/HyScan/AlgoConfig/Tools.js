@@ -1,4 +1,4 @@
-Ext.define('Module.Hyscan.MaterialConfig.Tools', {
+Ext.define('Module.Hyscan.AlgoConfig.Tools', {
 	singleton: true, 
 	
 	requires  : [

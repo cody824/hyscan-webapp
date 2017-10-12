@@ -1,6 +1,6 @@
-package com.noknown.project.hyscan.agorithm;
+package com.noknown.project.hyscan.algorithm;
 
-public interface spectralAnalysisAlgo {
+public interface SpectralAnalysisAlgo {
 
 	/**
 	 * 检测老化等级
@@ -23,4 +23,5 @@ public interface spectralAnalysisAlgo {
 	 * @return 返回結果是一個int值，代表符号标准数据中的index值，根据index值可以查询到是哪一个结果
 	 */
 	int material(double [][]sampleData, double [][] normData, double threshold);
+	
 }

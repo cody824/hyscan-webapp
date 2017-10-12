@@ -7,7 +7,7 @@ Ext.define('Module.Hyscan.ModelConfig.Portlet', {
  	],
  		
  	VIEW : {
-		'Module.Hyscan.ModelConfig.view.Panel' : "型号列表"
+		'Module.Hyscan.ModelConfig.view.Grid' : "表格显示"
 	},
     
 	title: "型号配置",
@@ -73,7 +73,7 @@ Ext.define('Module.Hyscan.ModelConfig.Portlet', {
     initToolbar : function(){
 		var toolbar = this.callParent(arguments);
 	    var modelOpt = {
-	        text: "型号管理",
+	        text: "操作",
 	        icon : '/img/icon/show.png',
 	        menu: this.buildModelOptMenu()
 	    };
