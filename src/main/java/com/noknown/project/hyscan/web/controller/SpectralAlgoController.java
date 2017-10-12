@@ -90,8 +90,10 @@ public class SpectralAlgoController extends BaseController {
 	@RequestMapping(value = "/algorithm/{version}/current", method = RequestMethod.PUT)
 	public ResponseEntity<?> currentAlgo(@PathVariable String version)
 			throws Exception {
+		
 		gcService.updateValue(Constants.algoConfig, Constants.appId, "currentAlgoVersion", version);
 		loader.setCurrentAlgoVersion(version);
+		
 		return ResponseEntity.ok(null);
 	}
 	
