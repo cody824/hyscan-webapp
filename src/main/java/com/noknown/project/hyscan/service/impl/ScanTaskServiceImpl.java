@@ -150,9 +150,9 @@ public class ScanTaskServiceImpl implements ScanTaskService {
 		return task;
 	}
 
-	public ScanTask saveTask(ScanTask task, ScanTaskData taskData) throws ServiceException, DAOException {
+	@Override
+	public ScanTask updateTask(ScanTask task) throws ServiceException, DAOException {
 		task = taskDao.save(task);
-		taskDataDao.saveTaskData(taskData);
 		return task;
 	}
 

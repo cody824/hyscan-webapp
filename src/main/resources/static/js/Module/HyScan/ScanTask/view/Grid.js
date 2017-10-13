@@ -72,7 +72,7 @@ Ext.define('Module.Hyscan.ScanTask.view.Grid', {
 		        renderer : function(value, meta, record){
 	        		var address = record.get('address');
 	        		address = address || value;
-		            return '<span data-qtip="'+ value +'">'+address+'</span>';
+		            return '<span data-qtip="'+ address +'">'+value+'</span>';
 		        }
 	        }, {
 	            text: "老化等级",
@@ -98,8 +98,56 @@ Ext.define('Module.Hyscan.ScanTask.view.Grid', {
 	            searchType: 'string',
 	            align: 'center',
 	            width: 80,
-	            renderer:function(value){ 
-            		return "<img width='60px' heigth='30px' src='"+value+"' alt='没有图片'>";        
+	            renderer:function(value, metaData, record){ 
+	            	if (!value)
+	            		return "没有图片";
+	            	var id = metaData.record.id;//Ext.id();  
+                    metaData.tdAttr = 'data-qtip="双击查看大图"';  
+                    Ext.defer(function(){
+                    	Ext.EventManager.addListener(id, 'dblclick', function(e, a){
+                    		console.log(a.naturalWidth, a.naturalHeight);
+                            var win_Watch = Ext.create('Ext.Window', {  
+                                width: a.naturalWidth,  
+                                height: a.naturalHeight,  
+                                minHeight: 300,  
+                                minWidth: 300 * a.naturalWidth / a.naturalHeight,  
+                                maxHeight: 600 ,  
+                                maxWidth: 600 * a.naturalWidth / a.naturalHeight,
+                                maximizable: true,  
+                                title: '图片大图',  
+                                layout: "fit",                        //窗口布局类型  
+                                modal: true, //是否模态窗口，默认为false  
+                                resizable: false,  
+                                //closeAction: 'hide',  
+                                plain: true,  
+                                draggable: true,  
+                                border: false,  
+                                items: [  
+                                    Ext.create('Ext.Img', {  
+                                        src: value  
+                                    })  
+                                ]  
+                            });  
+                            win_Watch.show();  
+                    	})
+                    }, 500)
+                    
+                     var img = Ext.create('Ext.Img', {  
+                            height: 30,  
+                            //width: 80,  
+                            src: value,
+                            alt : '没有图片',
+                            listeners: {  
+                                scope:this,  
+                                el: {  
+                                    dblclick: function (e, a) {  
+                                    	
+                                    }  
+                                }  
+                            }  
+                              
+                        })  
+                    return "<img src='" + value + "' width='30px', height='30px' id='" + id + "'>";  
 	            } 
 	        }, {
 	            text: "光谱仪型号",

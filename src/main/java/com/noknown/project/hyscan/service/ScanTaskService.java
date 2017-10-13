@@ -48,15 +48,16 @@ public interface ScanTaskService {
 	 *//*
 	ScanTask saveTask(ScanTask task, Integer[] dn, Integer[] dc, Integer[] wd, Integer[] range, Float[] radianceConfig)throws ServiceException, DAOException;
 
-	*//**
-	 * 保存任务
+	*/
+	/**
+	 * 更新任务
 	 * @param task
 	 * @param taskData
 	 * @return
 	 * @throws ServiceException
 	 * @throws DAOException
-	 *//*
-	ScanTask saveTask(ScanTask task, ScanTaskData taskData)throws ServiceException, DAOException;*/
+	 */
+	ScanTask updateTask(ScanTask task)throws ServiceException, DAOException;
 	
 
 	/**
