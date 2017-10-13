@@ -75,10 +75,10 @@ public class ScanTaskController extends BaseController {
 		} catch (IOException e) {
 			throw new WebException("文件上传失败！");
 		}
-		Date now = new Date();
-		DateUtil.getCurrentYear(now);
-		Result<MediaFile> mf = mediaClient.upload("/taskImg/" + DateUtil.getCurrentYear(now) + "/" + 
-				DateUtil.getCurrentMonth(now)+ "/" + DateUtil.getCurrentDay(now), taskId + ".png", is, uploadFile.getSize());
+		Date taskTime = task.getScanTime();
+		DateUtil.getCurrentYear(taskTime);
+		Result<MediaFile> mf = mediaClient.upload("/taskImg/" + DateUtil.getCurrentYear(taskTime) + "/" + 
+				DateUtil.getCurrentMonth(taskTime)+ "/" + DateUtil.getCurrentDay(taskTime), taskId + ".png", is, uploadFile.getSize());
 		Map<String, String> ret = new HashMap<>();
 		
 		

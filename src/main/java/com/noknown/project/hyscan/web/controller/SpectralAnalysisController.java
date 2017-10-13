@@ -21,9 +21,24 @@ public class SpectralAnalysisController extends BaseController {
 	private SpectralAnalysisService analysisService;
 
 	@RequestMapping(value = "/spAnalysis", method = RequestMethod.POST)
-	public ResponseEntity<?> analysis(@RequestParam String model, @RequestParam(required = false) String algo, @RequestBody double[] dn)
+	public ResponseEntity<?> analysis(@RequestParam String model, @RequestParam(required = false) String algo, @RequestBody double[] reflectivitys)
 			throws Exception {
-		Result result = analysisService.analysis(dn, model, algo);
+		/*reflectivitys = reflectivitys.substring(1, reflectivitys.indexOf("]"));
+		
+		String[] attrs = reflectivitys.split(",");
+		System.out.println(attrs.length);
+		double[] rArray = new double[attrs.length];
+		int i = 0;
+		for (String str : attrs) {
+			try {
+				double d =  Double.parseDouble(str);
+				rArray[i++] = d;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}*/
+		
+		Result result = analysisService.analysis(reflectivitys, model, algo);
 		return ResponseEntity.ok(result);
 	}
 	
