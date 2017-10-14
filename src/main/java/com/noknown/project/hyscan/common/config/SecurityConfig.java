@@ -13,7 +13,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.noknown.framework.security.authentication.SMSAuthenticationProvider;
@@ -81,9 +82,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
     
     @Bean
-    public SavedRequestAwareAuthenticationSuccessHandler getSuccessHandler() {
-    	SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
-    	successHandler.setTargetUrlParameter("goto");
+    public AuthenticationSuccessHandler getSuccessHandler() {
+    	SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler();
+    	successHandler.setAlwaysUseDefaultTargetUrl(true);
+    	successHandler.setDefaultTargetUrl("/");
     	return successHandler;
     }
     
