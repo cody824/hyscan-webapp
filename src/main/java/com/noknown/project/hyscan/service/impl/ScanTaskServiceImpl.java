@@ -39,7 +39,7 @@ public class ScanTaskServiceImpl implements ScanTaskService {
 	@Override
 	public PageData<ScanTask> find(SQLFilter filter, int start, int limit) throws ServiceException, DAOException {
 		
-		Pageable pageable = new PageRequest(start * limit, limit);
+		Pageable pageable = new PageRequest(start / limit, limit);
 		Specification<ScanTask> spec = new Specification<ScanTask>(){
 
 			@Override
