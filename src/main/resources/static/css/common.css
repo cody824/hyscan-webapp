@@ -1,0 +1,160 @@
+/* ~~~~~~~~ 400 500 error page ~~~~~~~~ */
+.page_error_box
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #e2e7ea;
+}
+.error_content
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 944px;
+    height: auto;
+    box-sizing: border-box;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+}
+
+.error_content .error_info
+{
+    width: 470px;
+    margin: 57px auto 0;
+}
+
+.error_info .warn_icon
+{
+    position: absolute;
+    width: 134px;
+    height: 122px;
+    margin-top: 36px;
+    background: url('../img/icon/warn_bubble.png') no-repeat 0 0;
+}
+
+.error_info .error_status
+{
+    padding-left: 158px;
+}
+
+.error_info .error_desc
+{
+    padding-left: 146px;
+    font-size: 25px;
+    line-height: 50px;
+    color: #919aa3;
+}
+
+.error_content .actions
+{
+    width: 370px;
+    margin: 10px auto;
+    font-size: 12px;
+    line-height: 36px;
+    color: #919aa3;
+    text-align: center;
+}
+
+.error_content .actions a
+{
+    display: inline-block;
+    margin: 0 10px;
+    color: #1996f0;
+}
+
+.error_content .actions i
+{
+    padding-right: 5px;
+    font-size: 16px;
+    color: #c6d0dc;
+}
+
+.error_content .actions a:hover
+{
+    text-decoration: underline;
+}
+
+.error_content .actions a:hover i
+{
+    text-decoration: none;
+}
+
+.error_content .service_line
+{
+    position: relative;
+    width: 100%;
+    height: 40px;
+    margin-top: 40px;
+    font-size: 12px;
+    line-height: 36px;
+    color: #919aa3;
+    text-align: center;
+}
+
+.gradient_line
+{
+    display: block;
+    width: 370px;
+    height: 1px;
+    margin: 0 auto;
+    background: linear-gradient(to right, #e5e8ec , #bfc6d1, #e5e8ec);
+}
+
+@media screen and (max-width: 768px)
+{
+  .error_content
+          {
+        top: 50%;
+        left: 50%;
+        width: 288px;
+        margin: -193px 0 0 -144px;
+  }
+
+  .error_content .error_info
+          {
+        width: 220px;
+  }
+
+  .error_info .warn_icon
+          {
+        width: 67px;
+        height: 61px;
+        margin-top: 18px;
+        background-size: cover;
+  }
+
+  .error_info .error_status
+          {
+        padding-left: 77px;
+  }
+
+  .error_info .error_status img
+          {
+        width: 129px;
+  }
+
+  .error_info .error_desc
+          {
+        padding-left: 72px;
+        font-size: 16px;
+  }
+
+  .error_content .actions
+          {
+        width: 100%;
+  }
+
+  .gradient_line
+          {
+        width: 80%;
+  }
+}
+
+/* ~~~~~~~~ 400 500 error page end ~~~~~~~~ */

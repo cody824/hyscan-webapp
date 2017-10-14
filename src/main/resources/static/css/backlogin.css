@@ -1,0 +1,124 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	width:100%;
+	height:100%;
+	/*min-height:720px;*/
+	background:url(../img/login/backlogin_bg.jpg) no-repeat right top;
+}
+.BbBackLoginWrap{
+	width:800px;
+	height:700px;
+	position:absolute;
+	left:50%;
+	margin-left:-400px;
+	top:50%;
+	margin-top:-300px;
+}
+.BbBackLogin{
+	width:100%;
+	height:100%;
+	position:relative;
+}
+.BbBackLogin h2{
+	font-size:40px;
+	color:#00d2ff;
+	font-weight:normal;
+	text-align:center;
+	margin-bottom:30px;
+}
+.logincons{
+	width:100%;
+	height:480px;
+	background:url(../img/login/logincons_bg.png) no-repeat;
+	padding-top:120px;
+}
+.login_info{
+	width:484px;
+	height:64px;
+	background:url(../img/login/login_input_default.png) no-repeat;
+	margin:0 auto 50px;
+}
+.login_info.focus{
+	background:url(../img/login/login_input_pressed.png) no-repeat;
+}
+.login_info span{
+	float:left;
+	width:75px;
+	margin-right:15px;
+	height:100%;
+}
+.login_info .user{
+	background:url(../img/login/user_icon_default.png) no-repeat center center;
+}
+.login_info .user.on{
+	background:url(../img/login/user_icon_pressed.png) no-repeat center center;
+}
+.login_info .password{
+	background:url(../img/login/password_icon_default.png) no-repeat center center;
+}
+.login_info .password.on{
+	background:url(../img/login/password_icon_pressed.png) no-repeat center center;
+}
+.login_info input{
+	border:none;
+	outline:none;
+	background:none;
+	width:380px;
+	float:left;
+	height:100%;
+	line-height:60px;
+	font-size:24px;
+	color:#fff;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #c7c7c7; 
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #c7c7c7;
+}
+
+input:-ms-input-placeholder{
+  
+    color: #c7c7c7;
+}
+
+input::-webkit-input-placeholder{
+    color: #c7c7c7;
+}
+.login_btn{
+	display:block;
+	width:480px;
+	height:60px;
+	line-height:60px;
+	text-align:center;
+	font-size:30px;
+	color:#fff;
+	letter-spacing:1em;
+	background:url(../img/login/login_btn_bg.png) no-repeat;
+	margin:100px auto 50px;
+}
+.login_btn.checked{
+	background:url(../img/login/login_btn_bg_pressed.png) no-repeat;
+}
+.remember_info{
+	font-size:20px;
+	overflow:hidden;
+	width:140px;
+	height:30px;
+	margin:0 auto;
+	line-height:30px;
+}
+.remember_info input{
+	display:inline-block;
+	line-height:30px;
+}
+.remember_info span{
+	display:inline-block;
+	line-height:30px;
+	margin-left:15px;
+	color:#fff;
+}
+
+

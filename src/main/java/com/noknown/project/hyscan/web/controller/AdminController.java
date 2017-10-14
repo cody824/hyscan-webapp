@@ -15,4 +15,10 @@ public class AdminController extends BaseController {
 		return "admin";
 	}
 	
+	@RequestMapping(value = "/")
+	public String gotoMain()
+			throws Exception {
+		return "admin";
+	}
+	
 }

@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.noknown.framework.security.authentication.SMSAuthenticationProvider;
@@ -24,6 +25,7 @@ import com.noknown.framework.security.authentication.oauth2.handler.WechatOauth2
 import com.noknown.framework.security.authentication.oauth2.handler.WeiboOauth2Handler;
 import com.noknown.framework.security.web.authentication.AjaxLoginUrlAuthenticationEntryPoint;
 import com.noknown.framework.security.web.authentication.SureProcessingFilter;
+import com.noknown.framework.security.web.authentication.SureUrlAuthenticationFailureHandler;
 
 @Configuration
 // @EnableWebSecurity: 禁用Boot的默认Security配置，配合@Configuration启用自定义配置
@@ -70,7 +72,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${security.login.wechat:false}")
     private boolean supportWechatLogin;
     
-
+    @Bean
+    public SureUrlAuthenticationFailureHandler getFailureHandler() {
+    	SureUrlAuthenticationFailureHandler failureHandler = new SureUrlAuthenticationFailureHandler();
+    	//failureHandler.setUseForward(true);
+    	failureHandler.setTargetUrlParameter("errorGoto");
+    	return failureHandler;
+    }
+    
+    @Bean
+    public SavedRequestAwareAuthenticationSuccessHandler getSuccessHandler() {
+    	SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+    	successHandler.setTargetUrlParameter("goto");
+    	return successHandler;
+    }
+    
+    
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
     	authenticationManagerBuilder.authenticationProvider(upProvider);

@@ -2,7 +2,7 @@
 	<div class="error_content">
 		<div class="error_info">
 			<span class="warn_icon"></span>
-			<div class="error_status"><img src="${sure_static_url?default('/')}img/shop/403.png"></div>
+			<div class="error_status"><img src="${sure_static_url?default('/')}img/error/403.png"></div>
 			<p class="error_desc">	
 			<#if errorMsg??>
 				${errorMsg.errorMsg}
@@ -19,10 +19,6 @@
 			<#else>
 				<a href="javascript:history.go(-1);"><i class="icon-reply"></i>返回上一步</a>
 			</#if>
-		</div>
-		<div class="service_line">
-			<div class="gradient_line"></div>
-			<p>免费客服热线：${companyPhone?if_exists}</p>
 		</div>
 	</div>
 </div>
