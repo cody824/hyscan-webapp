@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -74,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private boolean supportWechatLogin;
     
     @Bean
-    public SureUrlAuthenticationFailureHandler getFailureHandler() {
+    public AuthenticationFailureHandler getFailureHandler() {
     	SureUrlAuthenticationFailureHandler failureHandler = new SureUrlAuthenticationFailureHandler();
     	//failureHandler.setUseForward(true);
     	failureHandler.setTargetUrlParameter("errorGoto");
@@ -138,8 +139,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				// 对于获取token的rest api要允许匿名访问
 				.antMatchers("/security/auth/**", "/security/authcode/**", "/gotoLoginView", "/base/auth").permitAll()
-				// 数据监测API开放访问
+				// APP开放接口
 				.antMatchers("/app/spAnalysis").permitAll()
+				.antMatchers(HttpMethod.GET, "/app/modelConfig/").permitAll()
 				//管理员页面
 				.antMatchers("/admin").hasAnyRole("ADMIN")
 				// 除上面外的所有请求全部需要鉴权认证
@@ -151,7 +153,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.addFilterAfter(loginAction, UsernamePasswordAuthenticationFilter.class);
 
 		// 禁用缓存
-		httpSecurity.headers().cacheControl();
+		//httpSecurity.headers().cacheControl();
 		
 	}
 	
