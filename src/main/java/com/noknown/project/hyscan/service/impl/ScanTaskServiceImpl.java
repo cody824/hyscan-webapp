@@ -2,23 +2,14 @@ package com.noknown.project.hyscan.service.impl;
 
 import java.sql.Date;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Service;
 
+import com.noknown.framework.common.base.BaseServiceImpl;
 import com.noknown.framework.common.exception.DAOException;
 import com.noknown.framework.common.exception.ServiceException;
-import com.noknown.framework.common.util.JpaUtil;
-import com.noknown.framework.common.web.model.PageData;
-import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.project.hyscan.dao.ScanTaskDao;
 import com.noknown.project.hyscan.dao.ScanTaskDataDao;
 import com.noknown.project.hyscan.model.ScanTask;
@@ -27,7 +18,7 @@ import com.noknown.project.hyscan.pojo.AppScanTask;
 import com.noknown.project.hyscan.service.ScanTaskService;
 
 @Service
-public class ScanTaskServiceImpl implements ScanTaskService {
+public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> implements ScanTaskService {
 
 	@Autowired
 	private ScanTaskDao taskDao;
@@ -35,34 +26,6 @@ public class ScanTaskServiceImpl implements ScanTaskService {
 	@Autowired
 	private ScanTaskDataDao taskDataDao;
 	
-
-	@Override
-	public PageData<ScanTask> find(SQLFilter filter, int start, int limit) throws ServiceException, DAOException {
-		
-		Pageable pageable = new PageRequest(start / limit, limit);
-		Specification<ScanTask> spec = new Specification<ScanTask>(){
-
-			@Override
-			public Predicate toPredicate(Root<ScanTask> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				Predicate predicate = JpaUtil.sqlFilterToPredicate(ScanTask.class, root, query, cb, filter);
-				return predicate;
-			}} ;
-		Page<ScanTask> pd = taskDao.findAll(spec , pageable);
-		
-		PageData<ScanTask> pageData = new PageData<>();
-		pageData.setTotal(pd.getTotalElements());
-		pageData.setTotalPage(pd.getTotalPages());
-		pageData.setData(pd.getContent());
-		pageData.setStart(start);
-		pageData.setLimit(limit);
-		
-		return pageData;
-	}
-
-	public Page<ScanTask> find(int page, int size) throws ServiceException, DAOException {
-		Pageable pageable = new PageRequest(page, size);
-		return taskDao.findAll(pageable);
-	}
 
 	@Override
 	public ScanTask saveTask(AppScanTask appTask) throws ServiceException, DAOException {
@@ -150,11 +113,15 @@ public class ScanTaskServiceImpl implements ScanTaskService {
 		return task;
 	}
 
+
 	@Override
-	public ScanTask updateTask(ScanTask task) throws ServiceException, DAOException {
-		task = taskDao.save(task);
-		return task;
+	public JpaRepository<ScanTask, String> getRepository() {
+		return taskDao;
 	}
 
+	@Override
+	public JpaSpecificationExecutor<ScanTask> getSpecificationExecutor() {
+		return taskDao;
+	}
 
 }

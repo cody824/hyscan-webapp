@@ -86,7 +86,7 @@ public class ScanTaskController extends BaseController {
 		if (mf.getHttpStatus() == 200) {
 			ret.put("imagePath", mf.getData().getUrl());
 			task.setImagePath(mf.getData().getUrl());
-			taskService.updateTask(task);
+			taskService.update(task);
 		} else {
 			throw new WebException("图片服务错误：" + mf.getHttpStatus());
 		}
