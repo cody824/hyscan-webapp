@@ -10,7 +10,7 @@ import com.noknown.framework.others.wantu.config.WantuConfig;
 import com.noknown.framework.others.wantu.utils.WantuRepo;
 
 @Configuration
-@PropertySource(value = "classpath:conf/${spring.profiles.active}/wantu.properties", ignoreResourceNotFound = true)
+@PropertySource(value = "${conf.protocol:classpath}:conf/${spring.profiles.active}/wantu.properties", ignoreResourceNotFound = true)
 public class WantuRepoConfig extends WantuConfig {
 
 	
