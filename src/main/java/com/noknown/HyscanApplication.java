@@ -24,6 +24,7 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
         "com.noknown.framework.security",
         "com.noknown.framework.sms",
         "com.noknown.framework.wechat",
+        "com.noknown.framework.admin",
         "com.noknown.project.hyscan"
 })
 public class HyscanApplication  extends SpringBootServletInitializer{
