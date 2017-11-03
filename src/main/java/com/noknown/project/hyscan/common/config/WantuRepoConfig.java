@@ -9,8 +9,8 @@ import com.alibaba.media.upload.UploadPolicy;
 import com.noknown.framework.others.wantu.config.WantuConfig;
 import com.noknown.framework.others.wantu.utils.WantuRepo;
 
-@Configuration
-@PropertySource(value = "${spring.config.custom-path:classpath:}conf/${spring.profiles.active}/wantu.properties", ignoreResourceNotFound = true)
+//@Configuration
+//@PropertySource(value = "${spring.config.custom-path:classpath:}conf/${spring.profiles.active}/wantu.properties", ignoreResourceNotFound = true)
 public class WantuRepoConfig extends WantuConfig {
 
 	
