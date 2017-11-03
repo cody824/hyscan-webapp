@@ -16,7 +16,16 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
 @SpringBootApplication
 @EnableAutoConfiguration
-@ComponentScan(basePackages = {"com.noknown"})
+@ComponentScan(basePackages = {
+        "com.noknown.framework.cache",
+        "com.noknown.framework.common",
+        "com.noknown.framework.email",
+        "com.noknown.framework.fss",
+        "com.noknown.framework.security",
+        "com.noknown.framework.sms",
+        "com.noknown.framework.wechat",
+        "com.noknown.project.hyscan"
+})
 public class HyscanApplication  extends SpringBootServletInitializer{
     public static void main(String[] args) {
         SpringApplication.run(HyscanApplication.class, args);
