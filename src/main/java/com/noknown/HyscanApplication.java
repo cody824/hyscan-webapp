@@ -1,6 +1,7 @@
 package com.noknown;
 
 
+import com.alibaba.fastjson.parser.Feature;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +14,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+
+import static com.alibaba.fastjson.parser.Feature.DisableCircularReferenceDetect;
 
 @SpringBootApplication
 @EnableAutoConfiguration
@@ -45,6 +48,7 @@ public class HyscanApplication  extends SpringBootServletInitializer{
         //2、添加 fastJson 的配置信息，比如: 是否要格式化返回的Json数据；
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect);
 
         //3、在 Convert 中添加配置信息;
         fastConverter.setFastJsonConfig(fastJsonConfig);

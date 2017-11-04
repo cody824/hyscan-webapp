@@ -18,7 +18,7 @@ public class AdminController extends BaseController {
 	@RequestMapping(value = "/")
 	public String gotoMain()
 			throws Exception {
-		return "admin";
+		return "redirect:/admin";
 	}
 	
 }

@@ -42,43 +42,11 @@ Ext.define('Module.Hyscan.User.Portlet', {
 	        },
 	        items: [
 	                {
-					text: USERMANAGE_LABEL.lockUser,
-					disabled:true,
-					name : 'lockuser',
-					iconCls : 'lock'
-				},{
-					text: USERMANAGE_LABEL.resetPwd,
-					disabled:true,
-					name : 'resetuser',
-					iconCls : 'update'
-				},
-//				{
-//					text: USERMANAGE_LABEL.addUsersToGroup,
-//					disabled:true,
-//					name : 'addUserToGroup',
-//					iconCls : 'x-add-icon'
-//				},{
-//					text: USERMANAGE_LABEL.addUsersToRole,
-//					disabled:true,
-//					name : 'addUserToRole',
-//					iconCls : 'x-add-icon'
-//				},{
-//					text:'批量生成用户',
-//					disabled:false,
-//					name : 'createUsesBtn',
-//					iconCls : 'x-add-icon'
-//				}
-//	                ,{
-//					text: USERMANAGE_LABEL.modifyUser,
-//					disabled:true,
-//					name : 'updateuser',
-//					iconCls : 'update'
-//				},{
-//					text: USERMANAGE_LABEL.newUser,
-//					disabled:false,
-//					name : 'adduser',
-//					iconCls : 'x-add-icon'
-//				}
+                    text: "设置/取消管理员",
+                    disabled:true,
+                    name : 'setadmin',
+                    iconCls : 'lock'
+                }
 				]
 	    });
 		return menu;
@@ -87,12 +55,12 @@ Ext.define('Module.Hyscan.User.Portlet', {
     initToolbar : function(){
 		var toolbar = this.callParent(arguments),
 			userMenu = {
-	            text: USERMANAGE_LABEL.operation,
+	            text: "操作",
 	            iconCls: 'pool_setting',  
 	            menu: this.buildUserOptMenu()
 	        };
 
-		//toolbar.push(userMenu);
+		toolbar.push(userMenu);
 		return toolbar;
     }
 });
