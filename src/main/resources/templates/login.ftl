@@ -23,7 +23,7 @@ input.error{
 <body>
 <div class="BbBackLoginWrap">
 	<div class="BbBackLogin">
-    	<h2>HYSCAN管理平台</h2>
+    	<h2>HyScan管理平台</h2>
     	<form name="loginForm" method="post" action="${loginAction}">
     	<div class="logincons">
         	<div class="login_info">

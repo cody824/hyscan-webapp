@@ -33,10 +33,6 @@ Ext.define('Module.Hyscan.User.store.UserStore', {
     remoteSort: true,
     listeners:{
         load : function(store, records, successful, operation, eOpts){
-        	Ext.each(records, function(record, index, itself){
-				var user = record.data;
-				Module.Hyscan.User.Operation.getOperationForUser(user);
-			});
         }
     }
 });
