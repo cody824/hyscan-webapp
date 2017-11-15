@@ -10,8 +10,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.noknown.framework.fss.service.FileStoreService;
-import com.noknown.framework.fss.service.FileStoreServiceRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.HtmlUtils;
 
-import com.alibaba.media.MediaFile;
-import com.alibaba.media.Result;
-import com.alibaba.media.client.MediaClient;
 import com.noknown.framework.common.base.BaseController;
 import com.noknown.framework.common.exception.DAOException;
 import com.noknown.framework.common.exception.ServiceException;
@@ -37,6 +32,8 @@ import com.noknown.framework.common.util.JsonUtil;
 import com.noknown.framework.common.web.model.PageData;
 import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.framework.common.web.model.SQLOrder;
+import com.noknown.framework.fss.service.FileStoreService;
+import com.noknown.framework.fss.service.FileStoreServiceRepo;
 import com.noknown.project.hyscan.common.Constants;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
