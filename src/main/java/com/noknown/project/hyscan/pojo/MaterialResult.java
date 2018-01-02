@@ -1,17 +1,24 @@
 package com.noknown.project.hyscan.pojo;
 
+import com.noknown.project.hyscan.model.ScanTask;
+
 /**
- * @deprecated
  * @author cody
  *
  */
-public class Result {
+public class MaterialResult extends ResultIF{
 
 	private int level;
 	
 	private int materialIndex;
 	
 	private String material;
+
+	@Override
+	void fillTask(ScanTask scanTask) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	/**
 	 * @return the level
@@ -54,7 +61,6 @@ public class Result {
 	public void setMaterialIndex(int materialIndex) {
 		this.materialIndex = materialIndex;
 	}
-	
 	
 	
 }

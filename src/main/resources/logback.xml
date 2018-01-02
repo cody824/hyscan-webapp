@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration scan="true" scanPeriod="30 seconds">
-	<contextName>archive</contextName>
+	<contextName>hyscan</contextName>
 	
 	
-		<jmxConfigurator />
+	<jmxConfigurator />
 	<property name="console" value="${console:-true}" />
-	<property name="email" value="${email:-false}" />
 
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
@@ -17,38 +16,14 @@
 	<appender name="FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<File>/var/log/hyscan.log</File>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>/var/log/hyscan.%d{yyyy-MM-dd}.%i.gz
-			</FileNamePattern>
-
-			<maxHistory>30</maxHistory>
-			<timeBasedFileNamingAndTriggeringPolicy
-				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<MaxFileSize>10MB</MaxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<FileNamePattern>/var/log/hyscan.%d{yyyy-MM-dd}.%i.gz</FileNamePattern>
+			<maxHistory>10</maxHistory>
+			<maxFileSize>10MB</maxFileSize>
 		</rollingPolicy>
-		<layout class="ch.qos.logback.classic.PatternLayout">
-			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}
-				[%mdc{userName}] -%msg%n</Pattern>
-		</layout>
-	</appender>
-
-	<appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
-		<smtpHost>wxmail.soulinfo.com</smtpHost>
-		<smtpPort>25</smtpPort>
-		<SSL>true</SSL>
-		<username>smartprt</username>
-		<password>soulinfo</password>
-		<!--<to>weiwei.xing@soulinfo.com</to> -->
-		<to>${logReceiver:-cody.guo@soulinfo.com}</to>
-		<from>smartprt@soulinfo.com</from>
-		<subject>归档ERROR日志: %logger{20} - %m</subject>
-		<!--<layout class="ch.qos.logback.classic.PatternLayout"> -->
-		<layout class="ch.qos.logback.classic.html.HTMLLayout">
-			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}
-				[%mdc{userName}] -%msg%n</pattern>
-		</layout>
-		<asynchronousSending>false</asynchronousSending>
+		<encoder>
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%msg%n</Pattern>
+		</encoder>
 	</appender>
 
 	<root level="INFO">
@@ -59,14 +34,6 @@
 	<logger name="com.noknown">
 		<level value="DEBUG" />
 	</logger>
-
-<!-- 	<logger name="com.soulinfo.commons.util">
-		<level value="ERROR" />
-	</logger>
-
-	<logger name="com.soulinfo.framework">
-		<level value="ERROR" />
-	</logger> -->
 
 	<logger name="org.springframework">
 		<level value="INFO" />

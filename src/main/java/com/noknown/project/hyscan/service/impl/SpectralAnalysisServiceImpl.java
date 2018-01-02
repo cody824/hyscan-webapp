@@ -16,9 +16,12 @@ import com.noknown.project.hyscan.algorithm.SpectralAnalysisAlgo;
 import com.noknown.project.hyscan.common.Constants;
 import com.noknown.project.hyscan.dao.ModelConfigDao;
 import com.noknown.project.hyscan.model.ModelConfig;
+import com.noknown.project.hyscan.pojo.MaterialResult;
 import com.noknown.project.hyscan.pojo.Result;
+import com.noknown.project.hyscan.pojo.WQResult;
 import com.noknown.project.hyscan.service.SpectralAnalysisService;
 
+@SuppressWarnings("deprecation")
 @Service
 public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 	
@@ -42,6 +45,9 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 	}
 	
 
+	/**
+	 * @deprecated
+	 */
 	@Override
 	public Result analysis(double[] reflectivity, String model, String algoVersion) throws ServiceException, DAOException  {
 		ModelConfig mc = mcDao.getModelConfig(model);
@@ -162,6 +168,97 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		}
 		int materialIndex = algo.material(sampleData, normData, mc.getMaterialThreshold());
 		return materialIndex;
+	}
+
+
+	@Override
+	public MaterialResult materialAnalysis(double[] reflectivity, String model, String algoVersion)
+			throws ServiceException, DAOException {
+		ModelConfig mc = mcDao.getModelConfig(model);
+		if (mc == null)
+			throw new ServiceException("不支持该型号的设备");
+		double[] wavelengths = mc.getWavelengths();
+		if (reflectivity.length != wavelengths.length) {
+			throw new ServiceException("数据长度不正确, 该型号对应数据长度为【" + wavelengths.length + "】,提供长度为【" + reflectivity.length + "】");
+		}
+		SpectralAnalysisAlgo algo = null;
+		if (StringUtil.isNotBlank(algoVersion)){
+			algo = algoLoader.getAlgo(algoVersion);
+		} else {
+			algo = algoLoader.getCurrentAlgo();
+		}
+		if (algo == null)
+			throw new ServiceException("算法未指定，或者没有正确加载，请联系管理员");
+		
+		
+		double[][] sampleData = new double[2][wavelengths.length];
+		sampleData[0] = wavelengths;
+		sampleData[1] = reflectivity;
+		
+		double[][] olderLevelNormData = mc.getOlderLevelNormData();
+		
+		double [][]normData = new double[1 + olderLevelNormData.length][wavelengths.length];
+		normData[0] = wavelengths;
+		for (int i = 1; i < normData.length; i++){
+			normData[i] = olderLevelNormData[i - 1];
+		}
+		int oldLevel = algo.olderLevel(sampleData, normData);
+		
+		double[][] materialNormData = mc.getMaterialNormData();
+		
+		
+		normData = new double[1 + materialNormData.length][wavelengths.length];
+		normData[0] = wavelengths;
+		for (int i = 1; i < normData.length; i++){
+			normData[i] = materialNormData[i - 1];
+		}
+		int materialIndex = algo.material(sampleData, normData, mc.getMaterialThreshold());
+		
+		String material = materialProps.getProperty("" + materialIndex, "未知材料");
+		
+		MaterialResult result = new MaterialResult();
+		result.setMaterialIndex(materialIndex);
+		result.setLevel(oldLevel);
+		result.setMaterial(material);
+		return result;
+	}
+
+
+	@Override
+	public WQResult wqAnalysis(double[] reflectivity, String model, String algoVersion)
+			throws ServiceException, DAOException {
+		ModelConfig mc = mcDao.getModelConfig(model);
+		if (mc == null)
+			throw new ServiceException("不支持该型号的设备");
+		double[] wavelengths = mc.getWavelengths();
+		if (reflectivity.length != wavelengths.length) {
+			throw new ServiceException("数据长度不正确, 该型号对应数据长度为【" + wavelengths.length + "】,提供长度为【" + reflectivity.length + "】");
+		}
+		SpectralAnalysisAlgo algo = null;
+		if (StringUtil.isNotBlank(algoVersion)){
+			algo = algoLoader.getAlgo(algoVersion);
+		} else {
+			algo = algoLoader.getCurrentAlgo();
+		}
+		if (algo == null)
+			throw new ServiceException("算法未指定，或者没有正确加载，请联系管理员");
+		
+		
+		double[][] sampleData = new double[2][wavelengths.length];
+		sampleData[0] = wavelengths;
+		sampleData[1] = reflectivity;
+		
+		//TODO normal数据
+		double[][] normData = null;;
+		
+		int yls = algo.wqYls(sampleData, normData);
+		int xzw = algo.wqXzw(sampleData, normData);
+		int zd = algo.wqZd(sampleData, normData);
+		int ss = algo.wqSs(sampleData, normData);
+		
+		WQResult result = new WQResult();
+		result.setSs(ss).setXzw(xzw).setYls(yls).setZd(zd);
+		return result;
 	}
 
 	

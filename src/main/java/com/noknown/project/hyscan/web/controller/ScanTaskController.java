@@ -38,6 +38,8 @@ import com.noknown.project.hyscan.common.Constants;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
 import com.noknown.project.hyscan.pojo.AppScanTask;
+import com.noknown.project.hyscan.pojo.MaterialResult;
+import com.noknown.project.hyscan.pojo.WQResult;
 import com.noknown.project.hyscan.service.ScanTaskService;
 
 @RestController
@@ -51,13 +53,56 @@ public class ScanTaskController extends BaseController {
     private FileStoreServiceRepo repo;
 
     @RequestMapping(value = "/scanTask/", method = RequestMethod.POST)
-    public ResponseEntity<?> saveTask(@RequestBody AppScanTask appTask)
+    public ResponseEntity<?> saveTask(@RequestBody AppScanTask<MaterialResult> appTask)
             throws Exception {
         Authentication user = loginAuth();
         if (user == null)
             throw new WebException("请登录");
         appTask.setUserId((Integer) user.getPrincipal());
-        ScanTask task = taskService.saveTask(appTask);
+        ScanTaskData data = appTask.toTaskData();
+        taskService.saveScanTaskData(data);
+        ScanTask task = appTask.toTaskInfo();
+        taskService.update(task);
+        return ResponseEntity.ok(task);
+    }
+    
+    /**
+     * 保存材质检测任务
+     * @param appTask
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/scanTask/material", method = RequestMethod.POST)
+    public ResponseEntity<?> saveMaterialTask(@RequestBody AppScanTask<MaterialResult> appTask)
+            throws Exception {
+        Authentication user = loginAuth();
+        if (user == null)
+            throw new WebException("请登录");
+        appTask.setUserId((Integer) user.getPrincipal());
+        ScanTaskData data = appTask.toTaskData();
+        taskService.saveScanTaskData(data);
+        ScanTask task = appTask.toTaskInfo();
+        taskService.update(task);
+        return ResponseEntity.ok(task);
+    }
+    
+    /**
+     * 保存水质检测任务
+     * @param appTask
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/scanTask/wq", method = RequestMethod.POST)
+    public ResponseEntity<?> saveWQTask(@RequestBody AppScanTask<WQResult> appTask)
+            throws Exception {
+        Authentication user = loginAuth();
+        if (user == null)
+            throw new WebException("请登录");
+        appTask.setUserId((Integer) user.getPrincipal());
+        ScanTaskData data = appTask.toTaskData();
+        taskService.saveScanTaskData(data);
+        ScanTask task = appTask.toTaskInfo();
+        taskService.update(task);
         return ResponseEntity.ok(task);
     }
 

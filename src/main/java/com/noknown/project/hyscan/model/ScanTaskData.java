@@ -16,6 +16,11 @@ public class ScanTaskData implements Serializable{
 	 * DN值
 	 */
 	private Integer[] dn;
+
+	/**
+	 * 所有采集数据集合
+	 */
+	private Integer[][] dnList;
 	
 	/**
 	 * 暗电流数据
@@ -119,6 +124,14 @@ public class ScanTaskData implements Serializable{
 	 */
 	public void setRadianceConfig(Float[] radianceConfig) {
 		this.radianceConfig = radianceConfig;
+	}
+
+	public Integer[][] getDnList() {
+		return dnList;
+	}
+
+	public void setDnList(Integer[][] dnList) {
+		this.dnList = dnList;
 	}
 	
 }

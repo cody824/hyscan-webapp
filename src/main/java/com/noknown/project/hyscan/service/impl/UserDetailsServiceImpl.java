@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.noknown.framework.common.exception.ServiceException;
@@ -25,6 +26,12 @@ public class UserDetailsServiceImpl  implements UserDetailsService {
 	@Autowired
 	private UserDetailsDao udDao;
 
+	@Value("${security.auth.email:true}")
+	private boolean emailAuth;
+	
+	@Value("${security.auth.mobile:true}")
+	private boolean mobileAuth;
+
 	@Override
 	public UserDetails updateUserDetails(UserDetails ud) throws ServiceException {
 		UserDetails udDetails = udDao.getOne(ud.getId());
@@ -33,8 +40,10 @@ public class UserDetailsServiceImpl  implements UserDetailsService {
 		
 		if (udDetails instanceof com.noknown.project.hyscan.model.UserDetails){
 			List<String> ignore = new ArrayList<>();
-			ignore.add("email");
-			ignore.add("mobile");
+			if (emailAuth)
+				ignore.add("email");
+			if (mobileAuth)
+				ignore.add("mobile");
 			com.noknown.project.hyscan.model.UserDetails hyUD = (com.noknown.project.hyscan.model.UserDetails) udDetails;
 			ObjectUtil.copy(hyUD, ud, ignore);
 			udDao.save(hyUD);

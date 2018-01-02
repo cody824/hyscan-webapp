@@ -5,19 +5,9 @@ import com.noknown.framework.common.exception.DAOException;
 import com.noknown.framework.common.exception.ServiceException;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
-import com.noknown.project.hyscan.pojo.AppScanTask;
 
 
 public interface ScanTaskService extends BaseService<ScanTask, String> {
-	
-	/**
-	 * 保存任务
-	 * @param appTask
-	 * @return
-	 * @throws ServiceException
-	 * @throws DAOException
-	 */
-	ScanTask saveTask(AppScanTask appTask)throws ServiceException, DAOException;
 
 	
 	/**
@@ -28,6 +18,21 @@ public interface ScanTaskService extends BaseService<ScanTask, String> {
 	 */
 	void removeTask(String taskId) throws ServiceException, DAOException;
 	
+	/**
+	 * 获取扫描任务数据
+	 * @param taskId
+	 * @return
+	 * @throws ServiceException
+	 * @throws DAOException
+	 */
 	ScanTaskData getData(String taskId)throws ServiceException, DAOException;
+	
+	/**
+	 * 保存任务数据
+	 * @param data
+	 * @throws ServiceException
+	 * @throws DAOException
+	 */
+	void saveScanTaskData(ScanTaskData data)throws ServiceException, DAOException;
 	
 }

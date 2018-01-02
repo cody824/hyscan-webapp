@@ -1,8 +1,12 @@
 package com.noknown.project.hyscan.pojo;
 
 import java.io.Serializable;
+import java.sql.Date;
 
-public class AppScanTask implements Serializable {
+import com.noknown.project.hyscan.model.ScanTask;
+import com.noknown.project.hyscan.model.ScanTaskData;
+
+public class AppScanTask<T extends ResultIF> implements Serializable {
 
 	/**
 	 * 
@@ -13,7 +17,7 @@ public class AppScanTask implements Serializable {
 	
 	private Integer userId;
 	
-	private Result result;
+	private T result;
 	
 	private Position position;
 	
@@ -26,6 +30,60 @@ public class AppScanTask implements Serializable {
 	private DataSet data;
 	
 	private long timestamp;
+	
+	private String appId;
+	
+	public ScanTask toTaskInfo() {
+		ScanTask task = new ScanTask();
+		task.setId(getId());
+		task.setUserId(getUserId());
+		task.setAppId(getAppId());
+		
+		task.setImagePath(getImagePath());
+		task.setScanTarget(getName());
+		task.setScanTime(new Date(getTimestamp()));
+		
+		if (getPosition() != null) {
+			task.setCity(getPosition().getCity());
+			task.setLon(getPosition().getLon());
+			task.setLat(getPosition().getLat());
+			task.setAddress(getPosition().getAddress());
+		}
+		
+		if (getResult() != null) {
+			result.fillTask(task);
+		}
+		
+		if (getDevice() != null) {
+			task.setDeviceAddress(getDevice().getAddress());
+			task.setDeviceFirmware(getDevice().getFirmware());
+			task.setDeviceModel(getDevice().getModel());
+			task.setDeviceSerial(getDevice().getSerial());
+		}
+		return task;
+	}
+	
+	public ScanTaskData toTaskData() {
+		ScanTaskData scanTaskData = new ScanTaskData();
+		scanTaskData.setId(getId());
+		
+		if (getDevice() != null) {
+			scanTaskData.setRange(getDevice().getSpectralRange());
+			Float[] radianceConfig = new Float[2];
+			
+			radianceConfig[0] = getDevice().getRadianceA();
+			radianceConfig[1] = getDevice().getRadianceB();
+			scanTaskData.setRadianceConfig(radianceConfig);
+		}
+		
+		if (getData() != null) {
+			scanTaskData.setDn(getData().getDn());
+			scanTaskData.setDnList(getData().getDnList());
+			scanTaskData.setDarkCurrent(getData().getDarkCurrent());
+			scanTaskData.setWhiteboardData(getData().getWhiteboardData());
+		}
+		return scanTaskData;
+	}
 
 	/**
 	 * @return the id
@@ -44,14 +102,14 @@ public class AppScanTask implements Serializable {
 	/**
 	 * @return the result
 	 */
-	public Result getResult() {
+	public T getResult() {
 		return result;
 	}
 
 	/**
 	 * @param result the result to set
 	 */
-	public void setResult(Result result) {
+	public void setResult(T result) {
 		this.result = result;
 	}
 
@@ -151,6 +209,14 @@ public class AppScanTask implements Serializable {
 	 */
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public String getAppId() {
+		return appId;
+	}
+
+	public void setAppId(String appId) {
+		this.appId = appId;
 	}
 	
 	

@@ -3,9 +3,14 @@ package com.noknown.project.hyscan.pojo;
 public class DataSet {
 
 	/**
-	 * DN值
+	 * 采集数据平均值
 	 */
 	private Integer[] dn;
+	
+	/**
+	 * 所有采集数据集合
+	 */
+	private Integer[][] dnList;
 	
 	/**
 	 * 暗电流数据
@@ -57,6 +62,14 @@ public class DataSet {
 	 */
 	public void setWhiteboardData(Integer[] whiteboardData) {
 		this.whiteboardData = whiteboardData;
+	}
+
+	public Integer[][] getDnList() {
+		return dnList;
+	}
+
+	public void setDnList(Integer[][] dnList) {
+		this.dnList = dnList;
 	}
 	
 }
