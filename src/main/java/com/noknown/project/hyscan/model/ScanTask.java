@@ -105,26 +105,56 @@ public class ScanTask implements Serializable {
 	 */
 	@Column(length = 16)
 	private String material;
-
+	
 	/**
-	 * 叶绿素浓度
+	 * 预留结果字段1
 	 */
-	private int yls;
-
+	private Double result1;
+	
 	/**
-	 * 悬浊物浓度
+	 * 预留结果字段2
 	 */
-	private int xzw;
-
+	private Double result2;
+	
 	/**
-	 * 浊度
+	 * 预留结果字段2
 	 */
-	private int zd;
-
+	private Double result3;
+	
 	/**
-	 * 浊度
+	 * 预留结果字段2
 	 */
-	private int ss;
+	private Double result4;
+	
+	/**
+	 * 预留结果字段2
+	 */
+	private Double result5;
+	
+	/**
+	 * 预留结果字段2
+	 */
+	private Double result6;
+	
+	/**
+	 * 预留结果字段2
+	 */
+	private Double result7;
+	
+	/**
+	 * 预留结果字段2
+	 */
+	private Double result8;
+	
+	/**
+	 * 预留结果字段2
+	 */
+	private Double result9;
+	
+	/**
+	 * 预留结果字段2
+	 */
+	private Double result10;
 
 	/**
 	 * @return the id
@@ -321,38 +351,6 @@ public class ScanTask implements Serializable {
 		this.deviceFirmware = deviceFirmware;
 	}
 
-	public int getYls() {
-		return yls;
-	}
-
-	public void setYls(int yls) {
-		this.yls = yls;
-	}
-
-	public int getXzw() {
-		return xzw;
-	}
-
-	public void setXzw(int xzw) {
-		this.xzw = xzw;
-	}
-
-	public int getZd() {
-		return zd;
-	}
-
-	public void setZd(int zd) {
-		this.zd = zd;
-	}
-
-	public int getSs() {
-		return ss;
-	}
-
-	public void setSs(int ss) {
-		this.ss = ss;
-	}
-
 	/**
 	 * @return the userId
 	 */
@@ -389,6 +387,86 @@ public class ScanTask implements Serializable {
 
 	public void setAppId(String appId) {
 		this.appId = appId;
+	}
+
+	public Double getResult1() {
+		return result1;
+	}
+
+	public void setResult1(Double result1) {
+		this.result1 = result1;
+	}
+
+	public Double getResult2() {
+		return result2;
+	}
+
+	public void setResult2(Double result2) {
+		this.result2 = result2;
+	}
+
+	public Double getResult3() {
+		return result3;
+	}
+
+	public void setResult3(Double result3) {
+		this.result3 = result3;
+	}
+
+	public Double getResult4() {
+		return result4;
+	}
+
+	public void setResult4(Double result4) {
+		this.result4 = result4;
+	}
+
+	public Double getResult5() {
+		return result5;
+	}
+
+	public void setResult5(Double result5) {
+		this.result5 = result5;
+	}
+
+	public Double getResult6() {
+		return result6;
+	}
+
+	public void setResult6(Double result6) {
+		this.result6 = result6;
+	}
+
+	public Double getResult7() {
+		return result7;
+	}
+
+	public void setResult7(Double result7) {
+		this.result7 = result7;
+	}
+
+	public Double getResult8() {
+		return result8;
+	}
+
+	public void setResult8(Double result8) {
+		this.result8 = result8;
+	}
+
+	public Double getResult9() {
+		return result9;
+	}
+
+	public void setResult9(Double result9) {
+		this.result9 = result9;
+	}
+
+	public Double getResult10() {
+		return result10;
+	}
+
+	public void setResult10(Double result10) {
+		this.result10 = result10;
 	}
 
 }

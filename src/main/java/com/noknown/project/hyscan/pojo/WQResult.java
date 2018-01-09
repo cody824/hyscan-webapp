@@ -1,5 +1,8 @@
 package com.noknown.project.hyscan.pojo;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import com.noknown.project.hyscan.model.ScanTask;
 
 /**
@@ -9,70 +12,75 @@ import com.noknown.project.hyscan.model.ScanTask;
  */
 public class WQResult extends ResultIF{
 
-	/**
-	 * 叶绿素浓度
-	 */
-	private int yls;
+	private double[] data;
 	
-	/**
-	 * 悬浊物浓度
-	 */
-	private int xzw;
+	private int[] decimal;
 	
-	/**
-	 * 浊度
-	 */
-	private int zd;
+	private String[] unit;
 	
-	/**
-	 * 浊度
-	 */
-	private int ss;
-
+	private String[] name;
+	
+	private String[] chineseName;
+ 	
 	@Override
 	void fillTask(ScanTask scanTask) {
-		scanTask.setYls(yls);
-		scanTask.setXzw(xzw);
-		scanTask.setZd(zd);
-		scanTask.setSs(ss);
+		for (int i = 0; i < data.length; i++) {
+			Method setMethod;
+			try {
+				setMethod = ScanTask.class.getMethod("setResult" + (i + 1), Double.class);
+				setMethod.invoke(scanTask, data[0]);
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
-	public int getYls() {
-		return yls;
+	public double[] getData() {
+		return data;
 	}
 
-	public WQResult setYls(int yls) {
-		this.yls = yls;
-		return this;
+	public void setData(double[] data) {
+		this.data = data;
 	}
 
-	public int getXzw() {
-		return xzw;
+	public String[] getUnit() {
+		return unit;
 	}
 
-	public WQResult setXzw(int xzw) {
-		this.xzw = xzw;
-		return this;
+	public void setUnit(String[] unit) {
+		this.unit = unit;
 	}
 
-	public int getZd() {
-		return zd;
+	public String[] getName() {
+		return name;
 	}
 
-	public WQResult setZd(int zd) {
-		this.zd = zd;
-		return this;
+	public void setName(String[] name) {
+		this.name = name;
 	}
 
-	public int getSs() {
-		return ss;
+	public String[] getChineseName() {
+		return chineseName;
 	}
 
-	public WQResult setSs(int ss) {
-		this.ss = ss;
-		return this;
+	public void setChineseName(String[] chineseName) {
+		this.chineseName = chineseName;
 	}
 
+	public int[] getDecimal() {
+		return decimal;
+	}
 
+	public void setDecimal(int[] decimal) {
+		this.decimal = decimal;
+	}
 	
 }

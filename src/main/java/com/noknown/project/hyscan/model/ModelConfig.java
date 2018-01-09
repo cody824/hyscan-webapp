@@ -1,6 +1,8 @@
 package com.noknown.project.hyscan.model;
 
 import java.io.Serializable;
+import java.util.Map;
+
 
 /**
  * 光谱仪型号对应配置
@@ -53,6 +55,11 @@ public class ModelConfig  implements Serializable{
 	 * 材料检测阈值
 	 */
 	private double materialThreshold;
+	
+	/**
+	 * 水质检测算法配置
+	 */
+	private Map<String, WDAlgoConfig> wdAlgos;
 
 	/**
 	 * @return the model
@@ -164,6 +171,14 @@ public class ModelConfig  implements Serializable{
 	 */
 	public void setWavelengths(double[] wavelengths) {
 		this.wavelengths = wavelengths;
+	}
+
+	public Map<String, WDAlgoConfig> getWdAlgos() {
+		return wdAlgos;
+	}
+
+	public void setWdAlgos(Map<String, WDAlgoConfig> wdAlgos) {
+		this.wdAlgos = wdAlgos;
 	}
 	
 	
