@@ -5,6 +5,8 @@
 	
 	<jmxConfigurator />
 	<property name="console" value="${console:-true}" />
+	
+	<property name="log.root.level" value="${log.root.level:-INFO}" />
 
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
@@ -26,7 +28,7 @@
 		</encoder>
 	</appender>
 
-	<root level="INFO">
+	<root level="${log.root.level}">
 		<appender-ref ref="FILE" />
 		<appender-ref ref="CONSOLE" />
 	</root>
