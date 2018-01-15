@@ -59,7 +59,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		if (reflectivity.length != wavelengths.length) {
 			throw new ServiceException("数据长度不正确, 该型号对应数据长度为【" + wavelengths.length + "】,提供长度为【" + reflectivity.length + "】");
 		}
-		SpectralAnalysisAlgo algo = null;
+		SpectralAnalysisAlgo algo;
 		if (StringUtil.isNotBlank(algoVersion)){
 			algo = algoLoader.getAlgo(algoVersion);
 		} else {
@@ -113,7 +113,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		if (reflectivity.length != wavelengths.length) {
 			throw new ServiceException("数据长度不正确, 该型号对应数据长度为【" + wavelengths.length + "】,提供长度为【" + reflectivity.length + "】");
 		}
-		SpectralAnalysisAlgo algo = null;
+		SpectralAnalysisAlgo algo;
 		if (StringUtil.isNotBlank(algoVersion)){
 			algo = algoLoader.getAlgo(algoVersion);
 		} else {
@@ -135,8 +135,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		for (int i = 1; i < normData.length; i++){
 			normData[i] = olderLevelNormData[i - 1];
 		}
-		int oldLevel = algo.olderLevel(sampleData, normData);
-		return oldLevel;
+		return algo.olderLevel(sampleData, normData);
 	}
 
 
@@ -150,7 +149,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		if (reflectivity.length != wavelengths.length) {
 			throw new ServiceException("数据长度不正确, 该型号对应数据长度为【" + wavelengths.length + "】,提供长度为【" + reflectivity.length + "】");
 		}
-		SpectralAnalysisAlgo algo = null;
+		SpectralAnalysisAlgo algo;
 		if (StringUtil.isNotBlank(algoVersion)){
 			algo = algoLoader.getAlgo(algoVersion);
 		} else {
@@ -171,8 +170,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		for (int i = 1; i < normData.length; i++){
 			normData[i] = materialNormData[i - 1];
 		}
-		int materialIndex = algo.material(sampleData, normData, mc.getMaterialThreshold());
-		return materialIndex;
+		return algo.material(sampleData, normData, mc.getMaterialThreshold());
 	}
 
 
@@ -186,7 +184,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		if (reflectivity.length != wavelengths.length) {
 			throw new ServiceException("数据长度不正确, 该型号对应数据长度为【" + wavelengths.length + "】,提供长度为【" + reflectivity.length + "】");
 		}
-		SpectralAnalysisAlgo algo = null;
+		SpectralAnalysisAlgo algo;
 		if (StringUtil.isNotBlank(algoVersion)){
 			algo = algoLoader.getAlgo(algoVersion);
 		} else {
@@ -240,7 +238,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		if (reflectivity.length != wavelengths.length) {
 			throw new ServiceException("数据长度不正确, 该型号对应数据长度为【" + wavelengths.length + "】,提供长度为【" + reflectivity.length + "】");
 		}
-		SpectralAnalysisAlgo algo = null;
+		SpectralAnalysisAlgo algo;
 		if (StringUtil.isNotBlank(algoVersion)){
 			algo = algoLoader.getAlgo(algoVersion);
 		} else {
@@ -268,6 +266,8 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		
 		for (WDAlgoConfig ac : algos.values()) {
 			double value = algo.waterDetection(sampleData, ac.getWaveIndex(), ac.getKey());
+			if (Double.isInfinite(value))
+				value = -1;
 			data[ac.getSeq()] = value;
 			unit[ac.getSeq()] = ac.getUnit();
 			name[ac.getSeq()] = ac.getKey();

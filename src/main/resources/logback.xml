@@ -7,6 +7,8 @@
 	<property name="console" value="${console:-true}" />
 	
 	<property name="log.root.level" value="${log.root.level:-INFO}" />
+	<property name="log.path" value="${log.path:-/var/log/}" />
+
 
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
@@ -17,9 +19,9 @@
 	<!-- 文件输出日志 (文件时间策略进行文件输出，每天对文件进行备份，超过指定大小对文件备份) -->
 	<appender name="FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>/var/log/hyscan.log</File>
+		<File>${log.path}hyscan.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-			<FileNamePattern>/var/log/hyscan.%d{yyyy-MM-dd}.%i.gz</FileNamePattern>
+			<FileNamePattern>${log.path}hyscan.%d{yyyy-MM-dd}.%i.gz</FileNamePattern>
 			<maxHistory>10</maxHistory>
 			<maxFileSize>10MB</maxFileSize>
 		</rollingPolicy>

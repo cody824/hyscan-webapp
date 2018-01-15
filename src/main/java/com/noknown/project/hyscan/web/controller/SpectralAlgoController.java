@@ -34,7 +34,7 @@ public class SpectralAlgoController extends BaseController {
 	@Autowired
 	private Loader loader;
 	
-	@Value("${hyscan.algo.libPath:D:/var/hyscan/algo/lib/}")
+	@Value("${hyscan.algo.libPath:/var/hyscan/algo/lib/}")
 	private String basePath;
 
 	@RequestMapping(value = "/algorithm/", method = RequestMethod.POST)
@@ -56,8 +56,7 @@ public class SpectralAlgoController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/algorithm/{version}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteAlgo(@PathVariable String version)
-			throws Exception {
+	public ResponseEntity<?> deleteAlgo(@PathVariable String version) {
 		Properties props = gcService.getProperties(Constants.algoConfig, Constants.appId, false);
 		if (props != null) {
 			String key = "algo_" + version;	
@@ -88,8 +87,7 @@ public class SpectralAlgoController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/algorithm/{version}/current", method = RequestMethod.PUT)
-	public ResponseEntity<?> currentAlgo(@PathVariable String version)
-			throws Exception {
+	public ResponseEntity<?> currentAlgo(@PathVariable String version) {
 		
 		gcService.updateValue(Constants.algoConfig, Constants.appId, "currentAlgoVersion", version);
 		loader.setCurrentAlgoVersion(version);
