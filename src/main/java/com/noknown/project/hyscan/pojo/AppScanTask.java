@@ -1,10 +1,10 @@
 package com.noknown.project.hyscan.pojo;
 
-import java.io.Serializable;
-import java.sql.Date;
-
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
+
+import java.io.Serializable;
+import java.sql.Date;
 
 public class AppScanTask<T extends ResultIF> implements Serializable {
 

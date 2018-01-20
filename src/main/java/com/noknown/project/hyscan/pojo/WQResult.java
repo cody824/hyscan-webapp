@@ -1,9 +1,9 @@
 package com.noknown.project.hyscan.pojo;
 
+import com.noknown.project.hyscan.model.ScanTask;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import com.noknown.project.hyscan.model.ScanTask;
 
 /**
  * 水质监测结果
@@ -24,11 +24,12 @@ public class WQResult extends ResultIF{
  	
 	@Override
 	void fillTask(ScanTask scanTask) {
-		for (int i = 0; i < data.length; i++) {
+		int length = data.length > 10 ? 10 : data.length;
+		for (int i = 0; i < length; i++) {
 			Method setMethod;
 			try {
-				setMethod = ScanTask.class.getMethod("setResult" + (i + 1), Double.class);
-				setMethod.invoke(scanTask, data[0]);
+				setMethod = ScanTask.class.getMethod("setResult" + i, Double.class);
+				setMethod.invoke(scanTask, data[i]);
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
 			} catch (SecurityException e) {

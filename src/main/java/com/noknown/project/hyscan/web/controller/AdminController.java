@@ -1,9 +1,8 @@
 package com.noknown.project.hyscan.web.controller;
 
+import com.noknown.framework.common.base.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.noknown.framework.common.base.BaseController;
 
 
 @Controller

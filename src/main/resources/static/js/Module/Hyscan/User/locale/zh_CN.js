@@ -171,5 +171,10 @@ USER_PROPERTY = {
 	type : "类型",
 	firstLoginTime : "首次登陆时间",
 	lastLoginTime : "上次登陆时间",
-	source : "来源"
+	source : "来源",
+	avatar : '头像',
+	avatarHd : '头像',
+	fullName : '名称',
+	mobile : '手机号'
+
 }

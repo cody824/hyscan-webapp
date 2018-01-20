@@ -1,70 +1,51 @@
 package com.noknown.project.hyscan.model;
 
-public class WDAlgoConfig {
+import com.noknown.framework.common.base.BaseObj;
 
-	private String key;
-	
-	private String chineseName;
-	
-	private int[] waveIndex;
-	
-	private String unit;
-	
-	private int decimal;
-	
-	private int seq;
+import java.io.Serializable;
+import java.util.Map;
 
+
+/**
+ * 光谱仪型号对应配置
+ * @author cody
+ *
+ */
+public class WDAlgoConfig implements Serializable, BaseObj{
+
+
+    private static final long serialVersionUID = -2333771196492515115L;
+
+    /**
+	 * 型号
+	 */
+	private String model;
+
+	/**
+	 * 水质检测算法配置
+	 */
+	private Map<String, WDAlgoItem> wdAlgos;
+
+	public String getModel() {
+		return model;
+	}
+
+	public WDAlgoConfig setModel(String model) {
+		this.model = model;
+		return this;
+	}
+
+	public Map<String, WDAlgoItem> getWdAlgos() {
+		return wdAlgos;
+	}
+
+	public WDAlgoConfig setWdAlgos(Map<String, WDAlgoItem> wdAlgos) {
+		this.wdAlgos = wdAlgos;
+		return this;
+	}
+
+	@Override
 	public String getKey() {
-		return key;
-	}
-
-	public WDAlgoConfig setKey(String key) {
-		this.key = key;
-		return this;
-	}
-
-	public String getChineseName() {
-		return chineseName;
-	}
-
-	public WDAlgoConfig setChineseName(String chineseName) {
-		this.chineseName = chineseName;
-		return this;
-	}
-
-	public int[] getWaveIndex() {
-		return waveIndex;
-	}
-
-	public WDAlgoConfig setWaveIndex(int[] waveIndex) {
-		this.waveIndex = waveIndex;
-		return this;
-	}
-
-	public String getUnit() {
-		return unit;
-	}
-
-	public WDAlgoConfig setUnit(String unit) {
-		this.unit = unit;
-		return this;
-	}
-
-	public int getSeq() {
-		return seq;
-	}
-
-	public WDAlgoConfig setSeq(int seq) {
-		this.seq = seq;
-		return this;
-	}
-
-	public int getDecimal() {
-		return decimal;
-	}
-
-	public WDAlgoConfig setDecimal(int decimal) {
-		this.decimal = decimal;
-		return this;
+		return model;
 	}
 }

@@ -1,5 +1,15 @@
 package com.noknown.project.hyscan.common.config;
 
+import com.noknown.framework.security.authentication.SMSAuthenticationProvider;
+import com.noknown.framework.security.authentication.TpaAuthenticationProvider;
+import com.noknown.framework.security.authentication.UPAuthenticationProvider;
+import com.noknown.framework.security.authentication.filter.JwtAuthenticationTokenFilter;
+import com.noknown.framework.security.authentication.oauth2.handler.QQOauth2Handler;
+import com.noknown.framework.security.authentication.oauth2.handler.WechatOauth2Handler;
+import com.noknown.framework.security.authentication.oauth2.handler.WeiboOauth2Handler;
+import com.noknown.framework.security.web.authentication.AjaxLoginUrlAuthenticationEntryPoint;
+import com.noknown.framework.security.web.authentication.SureProcessingFilter;
+import com.noknown.framework.security.web.authentication.SureUrlAuthenticationFailureHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,17 +27,6 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import com.noknown.framework.security.authentication.SMSAuthenticationProvider;
-import com.noknown.framework.security.authentication.TpaAuthenticationProvider;
-import com.noknown.framework.security.authentication.UPAuthenticationProvider;
-import com.noknown.framework.security.authentication.filter.JwtAuthenticationTokenFilter;
-import com.noknown.framework.security.authentication.oauth2.handler.QQOauth2Handler;
-import com.noknown.framework.security.authentication.oauth2.handler.WechatOauth2Handler;
-import com.noknown.framework.security.authentication.oauth2.handler.WeiboOauth2Handler;
-import com.noknown.framework.security.web.authentication.AjaxLoginUrlAuthenticationEntryPoint;
-import com.noknown.framework.security.web.authentication.SureProcessingFilter;
-import com.noknown.framework.security.web.authentication.SureUrlAuthenticationFailureHandler;
 
 @Configuration
 // @EnableWebSecurity: 禁用Boot的默认Security配置，配合@Configuration启用自定义配置

@@ -1,34 +1,13 @@
 package com.noknown.project.hyscan.web.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.HtmlUtils;
-
 import com.noknown.framework.common.base.BaseController;
 import com.noknown.framework.common.exception.DAOException;
 import com.noknown.framework.common.exception.ServiceException;
 import com.noknown.framework.common.exception.WebException;
 import com.noknown.framework.common.util.DateUtil;
+import com.noknown.framework.common.util.FileUtil;
 import com.noknown.framework.common.util.JsonUtil;
+import com.noknown.framework.common.util.StringUtil;
 import com.noknown.framework.common.web.model.PageData;
 import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.framework.common.web.model.SQLOrder;
@@ -38,9 +17,28 @@ import com.noknown.project.hyscan.common.Constants;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
 import com.noknown.project.hyscan.pojo.AppScanTask;
+import com.noknown.project.hyscan.pojo.DownloadInfo;
 import com.noknown.project.hyscan.pojo.MaterialResult;
 import com.noknown.project.hyscan.pojo.WQResult;
 import com.noknown.project.hyscan.service.ScanTaskService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.HtmlUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = Constants.appBaseUrl)
@@ -52,6 +50,10 @@ public class ScanTaskController extends BaseController {
     @Autowired
     private FileStoreServiceRepo repo;
 
+    @Value("${hyscan.exportPath:/export/}")
+    private String exportPath;
+
+    @Deprecated
     @RequestMapping(value = "/scanTask/", method = RequestMethod.POST)
     public ResponseEntity<?> saveTask(@RequestBody AppScanTask<MaterialResult> appTask)
             throws Exception {
@@ -145,10 +147,12 @@ public class ScanTaskController extends BaseController {
     @RequestMapping(value = "/scanTask/", method = RequestMethod.GET)
     public ResponseEntity<?> findScanTask(HttpServletRequest request,
                                           HttpServletResponse response,
-                                          @RequestParam(value = "filter", required = false) String filter,
-                                          @RequestParam(value = "sort", required = false) String sort,
-                                          @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-                                          @RequestParam(value = "limit", required = false, defaultValue = "-1") int limit)
+                                          @RequestParam(required = false) String appId,
+                                          @RequestParam(required = false) String model,
+                                          @RequestParam(required = false) String filter,
+                                          @RequestParam(required = false) String sort,
+                                          @RequestParam(required = false, defaultValue = "0") int start,
+                                          @RequestParam(required = false, defaultValue = "-1") int limit)
             throws Exception {
         filter = HtmlUtils.htmlUnescape(filter);
         sort = HtmlUtils.htmlUnescape(sort);
@@ -168,6 +172,16 @@ public class ScanTaskController extends BaseController {
         } else {
             sqlFilter.addSQLOrder(new SQLOrder("scanTime", "desc"));
         }
+        if (StringUtil.isNotBlank(appId)){
+            if (sqlFilter == null)
+                sqlFilter = new SQLFilter();
+            sqlFilter.addSQLExpression("appId", "=", appId);
+        }
+        if (StringUtil.isNotBlank(model)){
+            if (sqlFilter == null)
+                sqlFilter = new SQLFilter();
+            sqlFilter.addSQLExpression("deviceModel", "=", model);
+        }
         tasks = taskService.find(sqlFilter, start, limit);
         return ResponseEntity.ok(tasks);
     }
@@ -186,7 +200,6 @@ public class ScanTaskController extends BaseController {
     public ResponseEntity<?> removeScanTask(@PathVariable String taskId)
             throws Exception {
         taskService.removeTask(taskId);
-        ;
         return ResponseEntity.ok(null);
     }
 
@@ -198,6 +211,45 @@ public class ScanTaskController extends BaseController {
             throw new WebException("数据不存在", HttpStatus.NOT_FOUND);
         else
             return ResponseEntity.ok(data);
+    }
+
+    @RequestMapping(value = "/scanTask/export/", method = RequestMethod.POST)
+    public ResponseEntity<?> exportByFilter(@RequestParam(required = false) String appId,
+                                                @RequestParam(required = false) String model,
+                                                @RequestParam(required = false) String filter)
+            throws Exception {
+        filter = HtmlUtils.htmlUnescape(filter);
+        SQLFilter sqlFilter = null;
+        if (filter != null) {
+            sqlFilter = JsonUtil.toObject(filter, SQLFilter.class);
+        }
+        if (StringUtil.isNotBlank(appId)){
+            if (sqlFilter == null)
+                sqlFilter = new SQLFilter();
+            sqlFilter.addSQLExpression("appId", "=", appId);
+        }
+        if (StringUtil.isNotBlank(model)){
+            if (sqlFilter == null)
+                sqlFilter = new SQLFilter();
+            sqlFilter.addSQLExpression("deviceModel", "=", model);
+        }
+        DownloadInfo downloadInfo = taskService.exportScanTaskPackage(sqlFilter);
+        File file = new File(downloadInfo.getFilePath());
+        String url = exportPath + file.getName();
+        downloadInfo.setUrl(url);
+        return ResponseEntity.ok(downloadInfo);
+
+    }
+
+    @RequestMapping(value = "/scanTask/export/{taskId}", method = RequestMethod.POST)
+    public ResponseEntity<?> exportOne(@PathVariable String taskId)
+            throws Exception {
+        DownloadInfo downloadInfo = taskService.exportScanTask(taskId);
+        File file = new File(downloadInfo.getFilePath());
+        String url = exportPath + file.getName();
+        downloadInfo.setUrl(url);
+        return ResponseEntity.ok(downloadInfo);
+
     }
 
 

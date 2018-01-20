@@ -40,8 +40,8 @@ Ext.define('Module.Hyscan.MaterialConfig.view.ParameterGrid', {
 				selectionchange: function(sm2) {
 					var records = sm2.getSelection();
 					
-					var rightEI = me.contextMenu.down('menuitem[name=editparam]');
-					var rightDI = me.contextMenu.down('menuitem[name=delparam]');
+					var rightEI = me.contextMenu.down('menuitem[name=editIndex]');
+					var rightDI = me.contextMenu.down('menuitem[name=delIndex]');
 					var editIndex = me.portlet.down('menuitem[name=editIndex]');
 					var delIndex = me.portlet.down('menuitem[name=delIndex]');
 					if (sm2.getCount() == 1) {

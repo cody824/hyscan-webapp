@@ -3,8 +3,10 @@ package com.noknown.project.hyscan.service;
 import com.noknown.framework.common.base.BaseService;
 import com.noknown.framework.common.exception.DAOException;
 import com.noknown.framework.common.exception.ServiceException;
+import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
+import com.noknown.project.hyscan.pojo.DownloadInfo;
 
 
 public interface ScanTaskService extends BaseService<ScanTask, String> {
@@ -34,5 +36,23 @@ public interface ScanTaskService extends BaseService<ScanTask, String> {
 	 * @throws DAOException
 	 */
 	void saveScanTaskData(ScanTaskData data)throws ServiceException, DAOException;
+
+	/**
+	 * 导出选择的任务数据包
+	 * @param filter
+	 * @return
+	 * @throws ServiceException
+	 * @throws DAOException
+	 */
+	DownloadInfo exportScanTaskPackage(SQLFilter filter)throws ServiceException, DAOException;
+
+	/**
+	 * 导出单个任务
+	 * @param taskId
+	 * @return
+	 * @throws ServiceException
+	 * @throws DAOException
+	 */
+	DownloadInfo exportScanTask(String taskId)throws ServiceException, DAOException;
 	
 }

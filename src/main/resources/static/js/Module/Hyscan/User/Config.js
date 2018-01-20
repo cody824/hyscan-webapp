@@ -3,9 +3,7 @@ Ext.define('Module.Hyscan.User.Config', {
 
 	requires : [ 'Soul.util.RendererUtil' ],
 	
-	showProperties : [ 'name', 'email', 'status', 'registAppId',
-	               			'registdate', 'updatedate', 'field1', 'field2', 'field3', 'type',
-	               			'source'],
+	showProperties : [ 'fullName', 'email', 'mobile'],
 
 	getRendererConfig : function() {
 		var ret = {

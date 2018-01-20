@@ -42,11 +42,22 @@ Ext.define('Module.Hyscan.User.Portlet', {
 	        },
 	        items: [
 	                {
-                    text: "设置/取消管理员",
+                    text: "设置/取消系统管理员",
                     disabled:true,
-                    name : 'setadmin',
+                    name : 'setAdmin',
+                    iconCls : 'lock'
+                }, {
+                    text: "设置/取消HYSCAN管理员",
+                    disabled:true,
+                    name : 'setHyscanAdmin',
+                    iconCls : 'lock'
+                },  {
+                    text: "设置/取消水色管理员",
+                    disabled:true,
+                    name : 'setWQAdmin',
                     iconCls : 'lock'
                 }
+
 				]
 	    });
 		return menu;

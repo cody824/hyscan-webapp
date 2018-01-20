@@ -1,19 +1,5 @@
 package com.noknown.project.hyscan.web.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.noknown.framework.common.base.BaseController;
 import com.noknown.framework.common.exception.DAOException;
 import com.noknown.framework.common.exception.ServiceException;
@@ -23,6 +9,18 @@ import com.noknown.framework.fss.service.FileStoreServiceRepo;
 import com.noknown.framework.security.model.UserDetails;
 import com.noknown.framework.security.service.UserDetailsService;
 import com.noknown.project.hyscan.common.Constants;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 
 @RestController
 @RequestMapping(value = Constants.appBaseUrl)

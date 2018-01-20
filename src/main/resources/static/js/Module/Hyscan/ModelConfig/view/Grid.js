@@ -33,12 +33,14 @@ Ext.define('Module.Hyscan.ModelConfig.view.Grid', {
 	            align: 'center',
 	            fix : 1,
 	            width: 200
-	        }, {
+	        },
+            {
                 text: "辐亮度参数",
 	            dataIndex: 'radianceParams',
 	            align: 'center',
 	            width: 100
-	        },{
+	        },
+			{
                 text: "坐标范围",
 	            dataIndex: 'spectralRange',
 	            align: 'center',
@@ -47,23 +49,25 @@ Ext.define('Module.Hyscan.ModelConfig.view.Grid', {
 	            text: "波长范围",
 	            dataIndex: 'wavelengths',
 	            align: 'center',
-	            width: 150
-	        }, {
-	            text: "标准光谱数据",
-	            dataIndex: 'olderLevelNormData',
-	            align: 'center',
-	            width: 150
-	        }, {
-                text: "材质光谱数据",
-	            dataIndex: 'materialNormData',
-	            align: 'center',
-	            width: 150
-	        }, {
-                text: "材质检测阈值",
-	            dataIndex: 'materialThreshold',
-	            align: 'center',
-	            width: 100
-	        }, {
+	            flex : 1,
+	        },
+            // {
+	        //     text: "标准光谱数据",
+	        //     dataIndex: 'olderLevelNormData',
+	        //     align: 'center',
+	        //     width: 150
+	        // }, {
+             //    text: "材质光谱数据",
+	        //     dataIndex: 'materialNormData',
+	        //     align: 'center',
+	        //     width: 150
+	        // }, {
+             //    text: "材质检测阈值",
+	        //     dataIndex: 'materialThreshold',
+	        //     align: 'center',
+	        //     width: 100
+	        // },
+			{
                 text: "删除",
 	            xtype: 'actioncolumn',
 	            width: 100,

@@ -1,6 +1,9 @@
 package com.noknown;
 
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,13 +12,11 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.converter.HttpMessageConverter;
-
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableAutoConfiguration
+@EnableTransactionManagement
 @ComponentScan(basePackages = {
         "com.noknown.framework.cache",
         "com.noknown.framework.common",
@@ -46,6 +47,7 @@ public class HyscanApplication  extends SpringBootServletInitializer{
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
         fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect);
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.WriteMapNullValue);
 
         //3、在 Convert 中添加配置信息;
         fastConverter.setFastJsonConfig(fastJsonConfig);

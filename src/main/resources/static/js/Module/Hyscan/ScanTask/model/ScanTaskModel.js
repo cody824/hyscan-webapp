@@ -19,13 +19,14 @@ Ext.define('Module.Hyscan.ScanTask.model.ScanTaskModel', {
 	 * 结果 ：老化等级
 	 */
 	"level",
+
+
+        /**
+         * 结果 ：材质
+         */
+        "material",
 	
 	"address",
-
-	/**
-	 * 结果 ：材质
-	 */
-	"material",
 
 	/**
 	 * 设备：名称

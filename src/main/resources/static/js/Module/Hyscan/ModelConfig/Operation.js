@@ -123,67 +123,7 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 				allowBlank : false,
 				readOnly : true,
 				fieldLabel: "波长范围"
-			},{
-				name: 'olderLevelNormData',
-				xtype : 'textarea',
-				allowBlank : false,
-				fieldLabel: "标准光谱数据"
-			},{
-	        	name : 'materialThreshold',
-	        	xtype: 'numberfield',
-	        	allowBlank : false,
-	        	fieldLabel: "材料检测阈值"
-	        },{
-		        // Fieldset in Column 1 - collapsible via toggle button
-		        xtype:'fieldset',
-		        columnWidth: 0.5,
-		        title: '材质光谱数据',
-		        collapsible: true,
-		        defaultType: 'textarea',
-		        defaults: {anchor: '100%'},
-		        layout: 'anchor',
-		        items :[{
-		        	xtype: 'fieldcontainer',
-			        fieldLabel: '',
-			        labelWidth: 100,
-			        layout: 'hbox',
-			        items: [{
-			        	name : 'materialNormData',
-			        	xtype: 'textarea',
-			        	allowBlank : false,
-			        	flex: 1
-			        }, {
-			            xtype: 'splitter'
-			        }, {
-			        	iconCls : 'x-add-icon',
-			            xtype: 'button',
-			            handler : function(addBtn){
-				        	formpanel.down('fieldset').add({
-					        	xtype: 'fieldcontainer',
-						        fieldLabel: '',
-						        labelWidth: 100,
-						        layout: 'hbox',
-						        items: [{
-						        	name : 'materialNormData',
-						        	xtype: 'textarea',
-						        	flex: 1
-						        }, {
-						            xtype: 'splitter'
-						        }, {
-						        	iconCls : 'x-del-icon',
-						            xtype: 'button',
-						            handler : function(delBtn){
-						        		var cner = delBtn.up('fieldcontainer');
-						        		var fset = delBtn.up('fieldset');
-						        		fset.remove(cner);
-						        	}
-						        }]
-							})
-			        	}
-			            
-			        }]
-				}]
-		    }]
+			}]
 		});
 		
 		function calRange(bv, ev){
@@ -199,32 +139,6 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 			formpanel.getForm().setValues(record.data);
 			formpanel.down('[name=radianceParams]').next('[name=radianceParams]').setValue(record.data.radianceParams[1]);
 			formpanel.down('[name=spectralRange]').next('[name=spectralRange]').setValue(record.data.spectralRange[1]);
-			if (record.data.materialNormData.length > 1) {
-				for (var i = 1; i < record.data.materialNormData.length; i++){
-					formpanel.down('fieldset').add({
-			        	xtype: 'fieldcontainer',
-				        fieldLabel: '',
-				        labelWidth: 100,
-				        layout: 'hbox',
-				        items: [{
-				        	name : 'materialNormData',
-				        	xtype: 'textarea',
-				        	value : record.data.materialNormData[i],
-				        	flex: 1
-				        }, {
-				            xtype: 'splitter'
-				        }, {
-				        	iconCls : 'x-del-icon',
-				            xtype: 'button',
-				            handler : function(delBtn){
-				        		var cner = delBtn.up('fieldcontainer');
-				        		var fset = delBtn.up('fieldset');
-				        		fset.remove(cner);
-				        	}
-				        }]
-					})
-				}
-			}
 			formpanel.down('[name=model]').setReadOnly(true);
 			title = "编辑型号";
 		}
@@ -254,50 +168,7 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 					}
 					params.wavelengths = wavelengths;
 					var dataNum = wavelengths.length;
-					
 
-					var olderLevelNormData = [];
-					if (Ext.isArray(params.olderLevelNormData)){
-						for (var i = 0; i < params.olderLevelNormData.length; i++) {
-							var strs = params.olderLevelNormData[i];
-							var array = strs.split(',');
-							if (dataNum != array.length) {
-								Soul.util.MessageUtil.showErrorInfo("错误", "数据长度不正确，请检查后再次提交");
-								return;
-							}
-							olderLevelNormData.push(array);
-						}
-					} else {
-						var array = params.olderLevelNormData.split(',');
-						if (dataNum != array.length) {
-							Soul.util.MessageUtil.showErrorInfo("错误", "数据长度不正确，请检查后再次提交");
-							return;
-						}
-						olderLevelNormData.push(array);
-					}
-					params.olderLevelNormData = olderLevelNormData;
-					
-					var materialNormData = [];
-					if (Ext.isArray(params.materialNormData)){
-						for (var i = 0; i < params.materialNormData.length; i++) {
-							var strs = params.materialNormData[i];
-							var array = strs.split(',');
-							materialNormData.push(array);
-							if (dataNum != array.length) {
-								Soul.util.MessageUtil.showErrorInfo("错误", "数据长度不正确，请检查后再次提交");
-								return;
-							}
-						}
-					} else {
-						var array = params.materialNormData.split(',');
-						materialNormData.push(array);
-						if (dataNum != array.length) {
-							Soul.util.MessageUtil.showErrorInfo("错误", "数据长度不正确，请检查后再次提交");
-							return;
-						}
-					}
-					params.materialNormData = materialNormData;
-					
 					Soul.Ajax.request({
 						url : '/app/modelConfig/',
 						method : 'post',

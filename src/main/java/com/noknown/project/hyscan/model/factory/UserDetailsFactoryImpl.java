@@ -1,10 +1,9 @@
 package com.noknown.project.hyscan.model.factory;
 
-import org.springframework.stereotype.Component;
-
 import com.noknown.framework.common.util.JsonUtil;
 import com.noknown.framework.security.model.UserDetails;
 import com.noknown.framework.security.model.factory.UserDetailsFactory;
+import org.springframework.stereotype.Component;
 
 @Component
 public class UserDetailsFactoryImpl implements UserDetailsFactory {

@@ -1,11 +1,10 @@
 package com.noknown.project.hyscan.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.context.annotation.Lazy;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "hyscan_user_details")

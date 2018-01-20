@@ -1,9 +1,9 @@
 package com.noknown.project.hyscan.common.filter;
 
+import com.alibaba.druid.support.http.WebStatFilter;
+
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
-
-import com.alibaba.druid.support.http.WebStatFilter;
 
 /**
  * 配置druid监控统计功能

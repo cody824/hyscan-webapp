@@ -33,9 +33,37 @@
     background-image:url(../img/icon32/user.png);
 }
 .md-AlgoConfig {
-    background-image:url(../img/icon/quota.png);
+    background-image:url(../img/icon/cal.png);
 }
 
 .md-AlgoConfig-32 {
-    background-image:url(../img/icon32/quota.png);
+    background-image:url(../img/icon32/cal.png);
+}
+.md-WqAlgo {
+    background-image:url(../img/icon/water.png);
+}
+
+.md-WqAlgo-32 {
+    background-image:url(../img/icon32/water.png);
+}
+.md-MaterialAlgo {
+    background-image:url(../img/icon/object.png);
+}
+
+.md-MaterialAlgo-32 {
+    background-image:url(../img/icon32/object.png);
+}
+.md-WQScanTask {
+    background-image:url(../img/icon/water.png);
+}
+
+.md-WQScanTask-32 {
+    background-image:url(../img/icon32/water.png);
+}
+.md-MaterialScanTask {
+    background-image:url(../img/icon/object.png);
+}
+
+.md-MaterialScanTask-32 {
+    background-image:url(../img/icon32/object.png);
 }

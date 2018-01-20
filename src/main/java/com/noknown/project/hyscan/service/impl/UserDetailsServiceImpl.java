@@ -1,21 +1,19 @@
 package com.noknown.project.hyscan.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.transaction.Transactional;
-
+import com.noknown.framework.common.exception.ServiceException;
+import com.noknown.framework.common.util.ObjectUtil;
+import com.noknown.framework.security.model.UserDetails;
+import com.noknown.framework.security.service.UserDetailsService;
+import com.noknown.project.hyscan.dao.UserDetailsDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.noknown.framework.common.exception.ServiceException;
-import com.noknown.framework.common.util.ObjectUtil;
-import com.noknown.framework.security.model.UserDetails;
-import com.noknown.framework.security.service.UserDetailsService;
-import com.noknown.project.hyscan.dao.UserDetailsDao;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional

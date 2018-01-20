@@ -5,17 +5,25 @@ MODULE_GROUP = {
 };
 
 MODULE_NAME = {
-"Module.Hyscan.AlgoConfig" : '算法配置',
+	"Module.Hyscan.AlgoConfig" : '算法包',
+    "Module.Hyscan.WqAlgo" : '水质监测算法',
+    "Module.Hyscan.MaterialAlgo" : '材质检测算法',
      "Module.Hyscan.User" : '用户信息',
 	"Module.Hyscan.ScanTask" : '扫描任务',
+    "Module.Hyscan.MaterialScanTask" : '材质检测扫描任务',
+    "Module.Hyscan.WQScanTask" : '水质监测扫描任务',
 	"Module.Hyscan.MaterialConfig" : '材料索引',
 	"Module.Hyscan.ModelConfig" : '型号配置'
 };
 
 MODULE_HELP = {
-"Module.Hyscan.AlgoConfig" : '配置管理算法',
+	"Module.Hyscan.AlgoConfig" : '配置管理算法包',
+    "Module.Hyscan.WqAlgo" : '配置水质监测算法参数',
+    "Module.Hyscan.MaterialAlgo" : '配置材质检测算法参数',
     "Module.Hyscan.User" : '显示系统已经注册用户',
 	"Module.Hyscan.ScanTask" : '记录客户端的扫描结果',
+    "Module.Hyscan.MaterialScanTask" : '记录客户端材质检测的扫描结果',
+    "Module.Hyscan.WQScanTask" : '记录客户端水质监测的扫描结果',
 	"Module.Hyscan.MaterialConfig" : '配置材料索引解释！',
 	"Module.Hyscan.ModelConfig" : '配置型号，辐亮度参数，参考数据等！'
 };

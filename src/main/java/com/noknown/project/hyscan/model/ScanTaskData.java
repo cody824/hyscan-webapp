@@ -1,9 +1,11 @@
 package com.noknown.project.hyscan.model;
 
+import com.noknown.framework.common.base.BaseObj;
+
 import java.io.Serializable;
 
 
-public class ScanTaskData implements Serializable{
+public class ScanTaskData implements Serializable, BaseObj{
 
 	/**
 	 * 
@@ -133,5 +135,9 @@ public class ScanTaskData implements Serializable{
 	public void setDnList(Integer[][] dnList) {
 		this.dnList = dnList;
 	}
-	
+
+	@Override
+	public String getKey() {
+		return id;
+	}
 }

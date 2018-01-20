@@ -1,20 +1,18 @@
 package com.noknown.project.hyscan.algorithm;
 
-import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.annotation.PostConstruct;
-
+import com.noknown.framework.common.dao.GlobalConfigDao;
+import com.noknown.framework.common.util.ClassUtil;
+import com.noknown.project.hyscan.common.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.noknown.framework.common.dao.GlobalConfigDao;
-import com.noknown.framework.common.util.ClassUtil;
-import com.noknown.project.hyscan.common.Constants;
+import javax.annotation.PostConstruct;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 @Component
 public class Loader {

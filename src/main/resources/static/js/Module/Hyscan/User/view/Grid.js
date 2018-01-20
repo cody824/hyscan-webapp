@@ -23,7 +23,7 @@ Ext.define('Module.Hyscan.User.view.Grid', {
         };
         var renders = Module.Hyscan.User.Renderer;
         columns.push(
-            new Ext.grid.RowNumberer(),
+            // new Ext.grid.RowNumberer(),
             {
                 text: "ID", sortable: true, dataIndex: 'id', searchType: 'number',
                 width: 60
@@ -60,7 +60,19 @@ Ext.define('Module.Hyscan.User.view.Grid', {
             {
                 text: "管理员", width: 80, dataIndex: 'roles', searchType: 'date',
                 renderer: function (val, u, r, rowIndex, columnIndex, s, v) {
-                    return me.isAdmin(r.data) ? "是" : "否";
+                    return me.isAdmin(r.data, "ROLE_ADMIN") ? "是" : "否";
+                }
+            },
+            {
+                text: "HYSCAN管理员", width: 80, dataIndex: 'roles', searchType: 'date',
+                renderer: function (val, u, r, rowIndex, columnIndex, s, v) {
+                    return me.isAdmin(r.data, "ROLE_HYSCAN_ADMIN") ? "是" : "否";
+                }
+            },
+            {
+                text: "水色管理员", width: 80, dataIndex: 'roles', searchType: 'date',
+                renderer: function (val, u, r, rowIndex, columnIndex, s, v) {
+                    return me.isAdmin(r.data, "ROLE_WQ_ADMIN") ? "是" : "否";
                 }
             }
         );
@@ -71,25 +83,62 @@ Ext.define('Module.Hyscan.User.view.Grid', {
                 selectionchange: function (sm2) {
                     var records = sm2.getSelection();
 
-                    var setadminR = me.contextMenu.down('menuitem[name=setadmin]');
-                    var setadmin = me.portlet.down('menuitem[name=setadmin]');
+                    var setAdminR = me.contextMenu.down('menuitem[name=setAdmin]');
+                    var setAdmin = me.portlet.down('menuitem[name=setAdmin]');
+
+                    var setHyscanAdminR = me.contextMenu.down('menuitem[name=setHyscanAdmin]');
+                    var setHyscanAdmin = me.portlet.down('menuitem[name=setHyscanAdmin]');
+
+                    var setWQAdminR = me.contextMenu.down('menuitem[name=setWQAdmin]');
+                    var setWQAdmin = me.portlet.down('menuitem[name=setWQAdmin]');
 
                     if (records.length == 1) {
-                        setadminR.enable();
-                        setadmin.enable();
-                        var isAdmin = me.isAdmin(records[0].data);
+                        setAdminR.enable();
+                        setAdmin.enable();
+                        setHyscanAdminR.enable();
+                        setHyscanAdmin.enable();
+                        setWQAdminR.enable();
+                        setWQAdmin.enable();
+
+                        var isAdmin = me.isAdmin(records[0].data, "ROLE_ADMIN");
                         if (isAdmin) {
-                            setadminR.setText("取消管理员");
-                            setadmin.setText("取消管理员");
+                            setAdminR.setText("取消管理员");
+                            setAdmin.setText("取消管理员");
                         } else {
-                            setadminR.setText("设置管理员");
-                            setadmin.setText("设置管理员");
+                            setAdminR.setText("设置管理员");
+                            setAdmin.setText("设置管理员");
+                        }
+
+                        var isHyscanAdmin = me.isAdmin(records[0].data, "ROLE_HYSCAN_ADMIN");
+                        if (isHyscanAdmin) {
+                            setHyscanAdminR.setText("取消HYSCAN管理员");
+                            setHyscanAdmin.setText("取消HYSCAN管理员");
+                        } else {
+                            setHyscanAdminR.setText("设置HYSCAN管理员");
+                            setHyscanAdmin.setText("设置HYSCAN管理员");
+                        }
+
+                        var isWQAdmin = me.isAdmin(records[0].data, "ROLE_WQ_ADMIN");
+                        if (isWQAdmin) {
+                            setWQAdminR.setText("取消水色管理员");
+                            setWQAdmin.setText("取消水色管理员");
+                        } else {
+                            setWQAdminR.setText("设置水色管理员");
+                            setWQAdmin.setText("设置水色管理员");
                         }
                     } else {
-                        setadminR.setText("设置/取消管理员");
-                        setadmin.setText("设置/取消管理员");
-                        setadminR.disable();
-                        setadmin.disable();
+                        setAdminR.setText("设置/取消管理员");
+                        setAdmin.setText("设置/取消管理员");
+                        setAdminR.disable();
+                        setAdmin.disable();
+                        setHyscanAdminR.setText("设置/取消HYSCAN管理员");
+                        setHyscanAdmin.setText("设置/取消HYSCAN管理员");
+                        setHyscanAdminR.disable();
+                        setHyscanAdmin.disable();
+                        setWQAdminR.setText("设置/取消水色管理员");
+                        setWQAdmin.setText("设置/取消水色管理员");
+                        setWQAdminR.disable();
+                        setWQAdmin.disable();
                     }
 
                 }
@@ -110,10 +159,10 @@ Ext.define('Module.Hyscan.User.view.Grid', {
         this.callParent(arguments);
     },
 
-    isAdmin: function (user) {
+    isAdmin: function (user, adminRole) {
         var isAdmin = false;
         Ext.each(user.roles, function (role, index, self) {
-            if (role.name == "ROLE_ADMIN") {
+            if (role.name == adminRole) {
                 isAdmin = true;
                 return false;
             }
@@ -121,12 +170,12 @@ Ext.define('Module.Hyscan.User.view.Grid', {
         return isAdmin;
     },
 
-    setAdmin: function (user, callback) {
+    setAdmin: function (user, adminRole,callback) {
         var me = this;
-        var isAdmin = me.isAdmin(user);
+        var isAdmin = me.isAdmin(user, adminRole);
         var method = isAdmin ? "delete" : "put";
         Soul.Ajax.request({
-            url: "/security/user/" + user.id + "/role?roleName=ROLE_ADMIN",
+            url: "/security/user/" + user.id + "/role?roleName=" + adminRole,
             method: method,
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
@@ -157,16 +206,45 @@ Ext.define('Module.Hyscan.User.view.Grid', {
             sm.deselectAll();
         };
 
-        var setadminR = me.contextMenu.down('menuitem[name=setadmin]');
-        var setadmin = me.portlet.down('menuitem[name=setadmin]');
+        var setAdminR = me.contextMenu.down('menuitem[name=setAdmin]');
+        var setAdmin = me.portlet.down('menuitem[name=setAdmin]');
 
-        setadminR.on('click', function () {
+        var setHyscanAdminR = me.contextMenu.down('menuitem[name=setHyscanAdmin]');
+        var setHyscanAdmin = me.portlet.down('menuitem[name=setHyscanAdmin]');
+
+        var setWQAdminR = me.contextMenu.down('menuitem[name=setWQAdmin]');
+        var setWQAdmin = me.portlet.down('menuitem[name=setWQAdmin]');
+
+        setAdminR.on('click', function () {
             var records = sm.getSelection();
-            me.setAdmin(records[0].data, callbackFn);
+            me.setAdmin(records[0].data, 'ROLE_ADMIN', callbackFn);
         });
-        setadmin.on('click', function () {
+        setAdmin.on('click', function () {
             var records = sm.getSelection();
-            me.setAdmin(records[0].data, callbackFn);
+            me.setAdmin(records[0].data, 'ROLE_ADMIN', callbackFn);
         });
+
+
+        setHyscanAdminR.on('click', function () {
+            var records = sm.getSelection();
+            me.setAdmin(records[0].data, 'ROLE_HYSCAN_ADMIN', callbackFn);
+        });
+        setHyscanAdmin.on('click', function () {
+            var records = sm.getSelection();
+            me.setAdmin(records[0].data, 'ROLE_HYSCAN_ADMIN', callbackFn);
+        });
+
+
+        setWQAdminR.on('click', function () {
+            var records = sm.getSelection();
+            me.setAdmin(records[0].data, 'ROLE_WQ_ADMIN', callbackFn);
+        });
+        setWQAdmin.on('click', function () {
+            var records = sm.getSelection();
+            me.setAdmin(records[0].data, 'ROLE_WQ_ADMIN', callbackFn);
+        });
+
+
+
     }
 });
