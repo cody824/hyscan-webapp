@@ -47,8 +47,6 @@ public class HyscanApplication  extends SpringBootServletInitializer{
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
         fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect);
-        fastJsonConfig.setSerializerFeatures(SerializerFeature.WriteMapNullValue);
-
         //3、在 Convert 中添加配置信息;
         fastConverter.setFastJsonConfig(fastJsonConfig);
 
