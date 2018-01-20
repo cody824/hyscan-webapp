@@ -146,10 +146,9 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		
 		double[][] olderLevelNormData = mac.getOlderLevelNormData();
 		
-		double [][]normData = new double[1 + olderLevelNormData.length][wavelengths.length];
-		normData[0] = wavelengths;
-		for (int i = 1; i < normData.length; i++){
-			normData[i] = olderLevelNormData[i - 1];
+		double [][]normData = new double[wavelengths.length][2];
+		for (int i = 0; i < normData.length; i++){
+			normData[i] = new double[]{wavelengths[i], olderLevelNormData[0][i]};
 		}
 		return algo.olderLevel(sampleData, normData);
 	}
@@ -184,10 +183,12 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		}
 		
 		double[][] materialNormData = mac.getMaterialNormData();
-		double [][] normData = new double[1 + materialNormData.length][wavelengths.length];
-		normData[0] = wavelengths;
-		for (int i = 1; i < normData.length; i++){
-			normData[i] = materialNormData[i - 1];
+		double [][] normData = new double[wavelengths.length][materialNormData[0].length + 1];
+		for (int i = 0; i < normData.length; i++){
+			normData[i][0] = wavelengths[i];
+			for (int j = 1; j <= materialNormData.length; j++){
+				normData[i][j] = materialNormData[i][j - 1];
+			}
 		}
 		return algo.material(sampleData, normData, mac.getMaterialThreshold());
 	}
@@ -220,28 +221,26 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		for (int i = 0; i < wavelengths.length; i++) {
 			sampleData[i] = new double[]{wavelengths[i], reflectivity[i]};
 		}
-		
+
 		double[][] olderLevelNormData = mac.getOlderLevelNormData();
-		
-		double [][]normData = new double[1 + olderLevelNormData.length][wavelengths.length];
-		normData[0] = wavelengths;
-		for (int i = 1; i < normData.length; i++){
-			normData[i] = olderLevelNormData[i - 1];
+
+		double [][]normData = new double[wavelengths.length][2];
+		for (int i = 0; i < normData.length; i++){
+			normData[i] = new double[]{wavelengths[i], olderLevelNormData[0][i]};
 		}
 		int oldLevel = algo.olderLevel(sampleData, normData);
-		
+
 		double[][] materialNormData = mac.getMaterialNormData();
-		
-		
-		normData = new double[1 + materialNormData.length][wavelengths.length];
-		normData[0] = wavelengths;
-		for (int i = 1; i < normData.length; i++){
-			normData[i] = materialNormData[i - 1];
+		normData = new double[wavelengths.length][materialNormData.length + 1];
+		for (int i = 0; i < normData.length; i++){
+			normData[i][0] = wavelengths[i];
+			for (int j = 1; j <= materialNormData.length; j++){
+				normData[i][j] = materialNormData[j - 1][i];
+			}
 		}
 		int materialIndex = algo.material(sampleData, normData, mac.getMaterialThreshold());
 		
 		String material = materialProps.getProperty("" + materialIndex, "未知材料");
-		
 		MaterialResult result = new MaterialResult();
 		result.setMaterialIndex(materialIndex);
 		result.setLevel(oldLevel);

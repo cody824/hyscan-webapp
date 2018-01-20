@@ -10,7 +10,7 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
  		
  	VIEW : {
         'Module.Hyscan.MaterialScanTask.view.Panel' : '表格模式',
-		'Module.Hyscan.MaterialScanTask.view.DataGrid' : '数据信息'
+		'Module.Hyscan.Public.view.ScanTaskDataGrid' : '数据信息'
 	},
     
 	title: "材质检测扫描任务",
@@ -27,7 +27,7 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
 	
     defaultView : 'Module.Hyscan.MaterialScanTask.view.Panel',
 	
-    supportView :['Module.Hyscan.MaterialScanTask.view.Panel', 'Module.Hyscan.MaterialScanTask.view.DataGrid'],
+    supportView :['Module.Hyscan.MaterialScanTask.view.Panel', 'Module.Hyscan.Public.view.ScanTaskDataGrid'],
     
     havUpdateButton : false,
     
@@ -36,7 +36,7 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
 	},
 
     buildDataOptMenu : function(){
-        var menu = Ext.create('Ext.menu.Menu', {
+       return Ext.create('Ext.menu.Menu', {
             name : 'datapt',
             style: {
                 overflow: 'visible'     // For the Combo popup
@@ -52,7 +52,6 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
                 }
             ]
         });
-        return menu;
     },
 
 	doExport : function(){
@@ -66,7 +65,7 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
 				return;
 			}
 			var model = grid.title;
-			var appId = "wq";
+			var appId = "material";
 			var filter = grid.store.proxy.extraParams;
 			console.log(model, filter);
 
@@ -76,6 +75,7 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
 				loadMask : "生成压缩包",
                 params : {
 					filter : filter,
+                    appId : appId,
 					model : model
 				},
                 timeout : 1000 * 60 * 10,
@@ -100,7 +100,6 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
 	},
 
     initToolbar : function(){
-		var me = this;
 		var toolbar = this.callParent(arguments),
             optMenu = {
                 text: "操作",

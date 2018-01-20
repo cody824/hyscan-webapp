@@ -36,7 +36,7 @@ Ext.define('Module.Hyscan.WQScanTask.Portlet', {
 	},
 
     buildDataOptMenu : function(){
-        var menu = Ext.create('Ext.menu.Menu', {
+        return Ext.create('Ext.menu.Menu', {
             name : 'datapt',
             style: {
                 overflow: 'visible'     // For the Combo popup
@@ -52,7 +52,6 @@ Ext.define('Module.Hyscan.WQScanTask.Portlet', {
                 }
             ]
         });
-        return menu;
     },
 
 	doExport : function(){
@@ -76,7 +75,8 @@ Ext.define('Module.Hyscan.WQScanTask.Portlet', {
 				loadMask : "生成压缩包",
                 params : {
 					filter : filter,
-					model : model
+					model : model,
+                    appId : appId
 				},
                 timeout : 1000 * 60 * 10,
 				method : 'post',
@@ -100,7 +100,6 @@ Ext.define('Module.Hyscan.WQScanTask.Portlet', {
 	},
 
     initToolbar : function(){
-		var me = this;
 		var toolbar = this.callParent(arguments),
             optMenu = {
                 text: "操作",

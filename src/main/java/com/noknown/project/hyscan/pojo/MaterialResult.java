@@ -16,8 +16,9 @@ public class MaterialResult extends ResultIF{
 
 	@Override
 	void fillTask(ScanTask scanTask) {
-		// TODO Auto-generated method stub
-		
+		scanTask.setMaterial(material);
+		scanTask.setLevel(level);
+
 	}
 
 	/**
