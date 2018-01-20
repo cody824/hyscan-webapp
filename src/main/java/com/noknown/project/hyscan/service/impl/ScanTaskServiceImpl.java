@@ -3,7 +3,6 @@ package com.noknown.project.hyscan.service.impl;
 import com.noknown.framework.common.base.BaseServiceImpl;
 import com.noknown.framework.common.exception.DAOException;
 import com.noknown.framework.common.exception.ServiceException;
-import com.noknown.framework.common.exception.WebException;
 import com.noknown.framework.common.util.BaseUtil;
 import com.noknown.framework.common.util.FileUtil;
 import com.noknown.framework.common.util.JsonUtil;
@@ -25,7 +24,8 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
 
 @Service
 public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> implements ScanTaskService {
@@ -41,18 +41,18 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 	
 
 	@Override
-	public void removeTask(String taskId) throws ServiceException, DAOException {
+	public void removeTask(String taskId) throws DAOException {
 		taskDao.delete(taskId);
 		taskDataDao.delete(taskId);
 	}
 
 	@Override
-	public ScanTask get(String taskId) throws ServiceException, DAOException {
+	public ScanTask get(String taskId) {
 		return taskDao.findOne(taskId);
 	}
 	
 	@Override
-	public ScanTaskData getData(String taskId) throws ServiceException, DAOException {
+	public ScanTaskData getData(String taskId) throws DAOException {
 		return taskDataDao.get(taskId);
 	}
 
@@ -68,7 +68,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 
 	@Override
-	public void saveScanTaskData(ScanTaskData data) throws ServiceException, DAOException {
+	public void saveScanTaskData(ScanTaskData data) throws DAOException {
 		taskDataDao.save(data);
 		
 	}
@@ -166,7 +166,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 		return taskDir;
 	}
 
-	synchronized void freeSpaceIfNeeded() {
+	private synchronized void freeSpaceIfNeeded() {
 		if (freeRun)
 			return;
 		Runnable runnable = new CacheClean();
@@ -183,12 +183,9 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 		public void run() {
 			File file = new File(tmpDir);
 			if (file.exists() && file.isDirectory()) {
-				File[] fs = file.listFiles(new FilenameFilter() {
-					@Override
-					public boolean accept(File dir, String name) {
-						return !name.endsWith(".zip");
-					}
-				});
+				File[] fs = file.listFiles((dir, name) -> name.endsWith(".zip"));
+				if (fs == null)
+					return;
 				long now = System.currentTimeMillis();
 				long keepSec = 1000 * 60 * 60;
 				for (File f : fs) {

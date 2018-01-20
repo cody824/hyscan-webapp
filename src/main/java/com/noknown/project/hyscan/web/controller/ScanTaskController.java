@@ -5,7 +5,6 @@ import com.noknown.framework.common.exception.DAOException;
 import com.noknown.framework.common.exception.ServiceException;
 import com.noknown.framework.common.exception.WebException;
 import com.noknown.framework.common.util.DateUtil;
-import com.noknown.framework.common.util.FileUtil;
 import com.noknown.framework.common.util.JsonUtil;
 import com.noknown.framework.common.util.StringUtil;
 import com.noknown.framework.common.web.model.PageData;
@@ -70,9 +69,6 @@ public class ScanTaskController extends BaseController {
     
     /**
      * 保存材质检测任务
-     * @param appTask
-     * @return
-     * @throws Exception
      */
     @RequestMapping(value = "/scanTask/material", method = RequestMethod.POST)
     public ResponseEntity<?> saveMaterialTask(@RequestBody AppScanTask<MaterialResult> appTask)
@@ -90,9 +86,6 @@ public class ScanTaskController extends BaseController {
     
     /**
      * 保存水质检测任务
-     * @param appTask
-     * @return
-     * @throws Exception
      */
     @RequestMapping(value = "/scanTask/wq", method = RequestMethod.POST)
     public ResponseEntity<?> saveWQTask(@RequestBody AppScanTask<WQResult> appTask)
@@ -129,7 +122,7 @@ public class ScanTaskController extends BaseController {
 
         String key = "taskImg/" + DateUtil.getCurrentYear(taskTime) + "/" +
                 DateUtil.getCurrentMonth(taskTime) + "/" + DateUtil.getCurrentDay(taskTime) + "/" + taskId + ".png";
-        String url = null;
+        String url;
         try {
             url = fss.put(is, key);
         } catch (IOException e) {
@@ -161,25 +154,21 @@ public class ScanTaskController extends BaseController {
         if (filter != null) {
             sqlFilter = JsonUtil.toObject(filter, SQLFilter.class);
         }
+        if (sqlFilter == null)
+            sqlFilter = new SQLFilter();
         if (sort != null) {
-            if (sqlFilter == null)
-                sqlFilter = new SQLFilter();
-
             List<SQLOrder> sortL = JsonUtil.toList(sort, SQLOrder.class);
-            for (SQLOrder order : sortL) {
-                sqlFilter.addSQLOrder(order);
-            }
+            if (sortL != null)
+                for (SQLOrder order : sortL) {
+                    sqlFilter.addSQLOrder(order);
+                }
         } else {
             sqlFilter.addSQLOrder(new SQLOrder("scanTime", "desc"));
         }
         if (StringUtil.isNotBlank(appId)){
-            if (sqlFilter == null)
-                sqlFilter = new SQLFilter();
             sqlFilter.addSQLExpression("appId", "=", appId);
         }
         if (StringUtil.isNotBlank(model)){
-            if (sqlFilter == null)
-                sqlFilter = new SQLFilter();
             sqlFilter.addSQLExpression("deviceModel", "=", model);
         }
         tasks = taskService.find(sqlFilter, start, limit);
