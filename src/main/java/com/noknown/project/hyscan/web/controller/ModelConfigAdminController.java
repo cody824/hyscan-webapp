@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = Constants.appBaseUrl)
+@RequestMapping(value = Constants.APP_BASE_URL)
 public class ModelConfigAdminController extends BaseController {
 
 	@Autowired
@@ -36,10 +36,11 @@ public class ModelConfigAdminController extends BaseController {
 	public ResponseEntity<?> getModelConfig(@PathVariable String model)
 			throws Exception {
 		ModelConfig modelConfig = mcRepo.get(model);
-		if (modelConfig == null)
+		if (modelConfig == null) {
 			return ResponseEntity.notFound().build();
-		else 
+		} else {
 			return ResponseEntity.ok(modelConfig);
+		}
 	}
 	
 	@RequestMapping(value = "/modelConfig/", method = RequestMethod.DELETE)

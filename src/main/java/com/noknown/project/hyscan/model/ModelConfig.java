@@ -23,6 +23,11 @@ public class ModelConfig  implements Serializable, BaseObj {
 	private String model;
 
 	/**
+	 * 光谱检测DN最大值
+	 */
+	private int dnMaxValue;
+
+	/**
 	 * 辐亮度参数
 	 */
 	private float[] radianceParams;
@@ -89,6 +94,15 @@ public class ModelConfig  implements Serializable, BaseObj {
 
 	public ModelConfig setRadianceParams(float[] radianceParams) {
 		this.radianceParams = radianceParams;
+		return this;
+	}
+
+	public int getDnMaxValue() {
+		return dnMaxValue;
+	}
+
+	public ModelConfig setDnMaxValue(int dnMaxValue) {
+		this.dnMaxValue = dnMaxValue;
 		return this;
 	}
 

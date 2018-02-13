@@ -33,7 +33,12 @@ Ext.define('Module.Hyscan.ModelConfig.view.Grid', {
 	            align: 'center',
 	            fix : 1,
 	            width: 200
-	        },
+            }, {
+                text: "DN最大值",
+                dataIndex: 'dnMaxValue',
+                align: 'center',
+                width: 100
+            },
             {
                 text: "辐亮度参数",
 	            dataIndex: 'radianceParams',

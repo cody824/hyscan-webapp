@@ -1,23 +1,24 @@
 package com.noknown.project.hyscan.model.factory;
 
 import com.noknown.framework.common.util.JsonUtil;
-import com.noknown.framework.security.model.UserDetails;
+import com.noknown.framework.security.model.BaseUserDetails;
 import com.noknown.framework.security.model.factory.UserDetailsFactory;
+import com.noknown.project.hyscan.model.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserDetailsFactoryImpl implements UserDetailsFactory {
 
 	@Override
-	public UserDetails createUD(Integer id) {
-		UserDetails udDetails = new com.noknown.project.hyscan.model.UserDetails();
+	public BaseUserDetails createUD(Integer id) {
+		BaseUserDetails udDetails = new com.noknown.project.hyscan.model.UserDetails();
 		udDetails.setId(id);
 		return udDetails;
 	}
 
 	@Override
-	public UserDetails parseUD(String text) {
-		UserDetails udDetails = (UserDetails) JsonUtil.toObject(text, com.noknown.project.hyscan.model.UserDetails.class);
+	public BaseUserDetails parseUD(String text) {
+		BaseUserDetails udDetails = (UserDetails) JsonUtil.toObject(text, UserDetails.class);
 		return udDetails;
 	}
 	

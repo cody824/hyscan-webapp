@@ -1,6 +1,7 @@
 package com.noknown.project.hyscan.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.noknown.framework.security.model.BaseUserDetails;
 import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.Entity;
@@ -10,7 +11,7 @@ import javax.persistence.Table;
 @Table(name = "hyscan_user_details")
 @JsonIgnoreProperties({ "handler","hibernateLazyInitializer" }) 
 @Lazy(value=false)
-public class UserDetails extends com.noknown.framework.security.model.UserDetails {
+public class UserDetails extends BaseUserDetails {
 
 	/**
 	 * 

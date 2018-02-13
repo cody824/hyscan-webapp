@@ -54,24 +54,28 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 				allowBlank : true,
 				fieldLabel: "描述"
 			},{
-		        xtype: 'fieldcontainer',
-		        fieldLabel: '辐亮度参数',
-		        labelWidth: 100,
-		        layout: 'hbox',
-		        items: [{
-		        	name : 'radianceParams',
-		        	xtype: 'numberfield',
-		        	allowBlank : false,
-		        	flex: 1
-		        }, {
-		            xtype: 'splitter'
-		        }, {
-		        	name : 'radianceParams',
-		            xtype: 'numberfield',
-		            allowBlank : false,
-		            flex: 1
-		        }]
-			},{
+                name: 'dnMaxValue',
+                xtype: 'numberfield',
+                fieldLabel: "DN最大值"
+            }, {
+                xtype: 'fieldcontainer',
+                fieldLabel: '辐亮度参数',
+                labelWidth: 100,
+                layout: 'hbox',
+                items: [{
+                    name : 'radianceParams',
+                    xtype: 'numberfield',
+                    allowBlank : false,
+                    flex: 1
+                }, {
+                    xtype: 'splitter'
+                }, {
+                    name : 'radianceParams',
+                    xtype: 'numberfield',
+                    allowBlank : false,
+                    flex: 1
+                }]
+            },{
 		        xtype: 'fieldcontainer',
 		        fieldLabel: '光谱坐标范围',
 		        labelWidth: 100,

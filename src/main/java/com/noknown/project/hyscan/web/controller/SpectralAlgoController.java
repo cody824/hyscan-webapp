@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @RestController
-@RequestMapping(value = Constants.adminBaseUrl)
+@RequestMapping(value = Constants.ADMIN_BASE_URL)
 public class SpectralAlgoController extends BaseController {
 
 	@Autowired

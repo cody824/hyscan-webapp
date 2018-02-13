@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = Constants.appBaseUrl)
+@RequestMapping(value = Constants.APP_BASE_URL)
 public class WDAlgoConfigAdminController extends BaseController {
 
 	@Autowired
@@ -36,10 +36,11 @@ public class WDAlgoConfigAdminController extends BaseController {
 	public ResponseEntity<?> getModelConfig(@PathVariable String model)
 			throws Exception {
 		WDAlgoConfig wdac = wdacRepo.get(model);
-		if (wdac == null)
+		if (wdac == null) {
 			return ResponseEntity.notFound().build();
-		else 
+		} else {
 			return ResponseEntity.ok(wdac);
+		}
 	}
 	
 	@RequestMapping(value = "/wdAlgoConfig/", method = RequestMethod.DELETE)

@@ -2,7 +2,7 @@ package com.noknown.project.hyscan.common.config;
 
 import com.noknown.framework.security.authentication.SMSAuthenticationProvider;
 import com.noknown.framework.security.authentication.TpaAuthenticationProvider;
-import com.noknown.framework.security.authentication.UPAuthenticationProvider;
+import com.noknown.framework.security.authentication.UserPasswordAuthenticationProvider;
 import com.noknown.framework.security.authentication.filter.JwtAuthenticationTokenFilter;
 import com.noknown.framework.security.authentication.oauth2.handler.QQOauth2Handler;
 import com.noknown.framework.security.authentication.oauth2.handler.WechatOauth2Handler;
@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private SureProcessingFilter loginAction;
     
     @Autowired
-    private UPAuthenticationProvider upProvider;
+    private UserPasswordAuthenticationProvider upProvider;
     
     @Autowired
     private SMSAuthenticationProvider smsProvider;
@@ -96,14 +96,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     	if (supportSMSLogin) {
     		authenticationManagerBuilder.authenticationProvider(smsProvider);
     	}
-    	if (supportQQLogin)
-    		tpaProvider.addHandler("qq", qqOauth2Handler);
-    	if (supportWechatLogin)
-    		tpaProvider.addHandler("wechat", wechatOauth2Handler);
-    	if (supportWeiboLogin)
-    		tpaProvider.addHandler("weibo", weibiOauth2Handler);
-    	if (supportQQLogin || supportWechatLogin || supportWeiboLogin)
-    		authenticationManagerBuilder.authenticationProvider(tpaProvider);
+	    if (supportQQLogin) {
+		    tpaProvider.addHandler("qq", qqOauth2Handler);
+	    }
+	    if (supportWechatLogin) {
+		    tpaProvider.addHandler("wechat", wechatOauth2Handler);
+	    }
+	    if (supportWeiboLogin) {
+		    tpaProvider.addHandler("weibo", weibiOauth2Handler);
+	    }
+	    if (supportQQLogin || supportWechatLogin || supportWeiboLogin) {
+		    authenticationManagerBuilder.authenticationProvider(tpaProvider);
+	    }
     }
     
     @Bean

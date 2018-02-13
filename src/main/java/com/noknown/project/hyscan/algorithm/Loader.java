@@ -29,8 +29,9 @@ public class Loader {
 	@PostConstruct
 	public void init(){
 		Properties properties = gcDao.getProperties(Constants.algoConfig, Constants.appId);
-		if (properties == null)
+		if (properties == null) {
 			properties = new Properties();
+		}
 		map = new HashMap<String, SpectralAnalysisAlgo>();
 		logger.info("开始初始化算法库");
 		for(String key : properties.stringPropertyNames()){

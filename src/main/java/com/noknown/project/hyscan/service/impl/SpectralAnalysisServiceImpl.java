@@ -49,8 +49,9 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 	@PostConstruct
 	public void init(){
 		Properties materialProps = gcDao.getProperties(Constants.materialConfig, Constants.appId);
-		if (materialProps == null)
+		if (materialProps == null) {
 			materialProps = new Properties();
+		}
 		SpectralAnalysisServiceImpl.materialProps = materialProps;
 	}
 	
@@ -61,11 +62,13 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 	@Override
 	public Result analysis(double[] reflectivity, String model, String algoVersion) throws ServiceException, DAOException  {
 		ModelConfig mc = mcDao.get(model);
-		if (mc == null)
+		if (mc == null) {
 			throw new ServiceException("不支持该型号的设备");
+		}
 		MaterialAlgoConfig mac = macDao.get(model);
-		if (mac == null)
+		if (mac == null) {
 			throw new ServiceException("不支持该型号的设备");
+		}
 
 
 		double[] wavelengths = mc.getWavelengths();
@@ -78,8 +81,9 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		} else {
 			algo = algoLoader.getCurrentAlgo();
 		}
-		if (algo == null)
+		if (algo == null) {
 			throw new ServiceException("算法未指定，或者没有正确加载，请联系管理员");
+		}
 		
 		
 		double[][] sampleData = new double[wavelengths.length][2];
@@ -120,11 +124,13 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 	public int analysisOldLevel(double[] reflectivity, String model, String algoVersion)
 			throws ServiceException, DAOException {
 		ModelConfig mc = mcDao.get(model);
-		if (mc == null)
+		if (mc == null) {
 			throw new ServiceException("不支持该型号的设备");
+		}
 		MaterialAlgoConfig mac = macDao.get(model);
-		if (mac == null)
+		if (mac == null) {
 			throw new ServiceException("不支持该型号的设备");
+		}
 		double[] wavelengths = mc.getWavelengths();
 		if (reflectivity.length != wavelengths.length) {
 			throw new ServiceException("数据长度不正确, 该型号对应数据长度为【" + wavelengths.length + "】,提供长度为【" + reflectivity.length + "】");
@@ -135,8 +141,9 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		} else {
 			algo = algoLoader.getCurrentAlgo();
 		}
-		if (algo == null)
+		if (algo == null) {
 			throw new ServiceException("算法未指定，或者没有正确加载，请联系管理员");
+		}
 		
 		
 		double[][] sampleData = new double[wavelengths.length][2];
@@ -158,11 +165,13 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 	public int analysisMaterial(double[] reflectivity, String model, String algoVersion)
 			throws ServiceException, DAOException {
 		ModelConfig mc = mcDao.get(model);
-		if (mc == null)
+		if (mc == null) {
 			throw new ServiceException("不支持该型号的设备");
+		}
 		MaterialAlgoConfig mac = macDao.get(model);
-		if (mac == null)
+		if (mac == null) {
 			throw new ServiceException("不支持该型号的设备");
+		}
 		double[] wavelengths = mc.getWavelengths();
 		if (reflectivity.length != wavelengths.length) {
 			throw new ServiceException("数据长度不正确, 该型号对应数据长度为【" + wavelengths.length + "】,提供长度为【" + reflectivity.length + "】");
@@ -173,8 +182,9 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		} else {
 			algo = algoLoader.getCurrentAlgo();
 		}
-		if (algo == null)
+		if (algo == null) {
 			throw new ServiceException("算法未指定，或者没有正确加载，请联系管理员");
+		}
 		
 		
 		double[][] sampleData = new double[wavelengths.length][2];
@@ -198,11 +208,13 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 	public MaterialResult materialAnalysis(double[] reflectivity, String model, String algoVersion)
 			throws ServiceException, DAOException {
 		ModelConfig mc = mcDao.get(model);
-		if (mc == null)
+		if (mc == null) {
 			throw new ServiceException("不支持该型号的设备");
+		}
 		MaterialAlgoConfig mac = macDao.get(model);
-		if (mac == null)
+		if (mac == null) {
 			throw new ServiceException("不支持该型号的设备");
+		}
 		double[] wavelengths = mc.getWavelengths();
 		if (reflectivity.length != wavelengths.length) {
 			throw new ServiceException("数据长度不正确, 该型号对应数据长度为【" + wavelengths.length + "】,提供长度为【" + reflectivity.length + "】");
@@ -213,8 +225,9 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		} else {
 			algo = algoLoader.getCurrentAlgo();
 		}
-		if (algo == null)
+		if (algo == null) {
 			throw new ServiceException("算法未指定，或者没有正确加载，请联系管理员");
+		}
 		
 		
 		double[][] sampleData = new double[wavelengths.length][2];
@@ -253,11 +266,13 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 	public WQResult wqAnalysis(double[] reflectivity, String model, String algoVersion)
 			throws ServiceException, DAOException {
 		ModelConfig mc = mcDao.get(model);
-		if (mc == null)
+		if (mc == null) {
 			throw new ServiceException("不支持该型号的设备");
+		}
 		WDAlgoConfig wdac = wdacDao.get(model);
-		if (wdac == null)
+		if (wdac == null) {
 			throw new ServiceException("不支持该型号的设备");
+		}
 
 		double[] wavelengths = mc.getWavelengths();
 		if (reflectivity.length != wavelengths.length) {
@@ -269,8 +284,9 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		} else {
 			algo = algoLoader.getCurrentAlgo();
 		}
-		if (algo == null)
+		if (algo == null) {
 			throw new ServiceException("算法未指定，或者没有正确加载，请联系管理员");
+		}
 		
 		double[][] sampleData = new double[wavelengths.length][2];
 		for (int i = 0; i < wavelengths.length; i++) {
@@ -290,8 +306,9 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		
 		for (WDAlgoItem ac : algos.values()) {
 			double value = algo.waterDetection(sampleData, ac.getWaveIndex(), ac.getKey());
-			if (Double.isInfinite(value))
+			if (Double.isInfinite(value)) {
 				value = 0;
+			}
 			data[ac.getSeq()] = value;
 			unit[ac.getSeq()] = ac.getUnit();
 			name[ac.getSeq()] = ac.getKey();

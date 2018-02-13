@@ -22,7 +22,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
@@ -78,8 +77,9 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 		Collection<ScanTask> taskList = this.find(filter);
 		String taskKey = BaseUtil.getTimeCode(new Date());
 		File dir = new File(tmpDir, taskKey);
-		if (dir.exists())
+		if (dir.exists()) {
 			FileUtil.delFile(dir.getAbsolutePath());
+		}
 		dir.mkdirs();
 		for (ScanTask scanTask : taskList) {
 			exportOne(scanTask, dir);
@@ -108,12 +108,14 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 	@Override
 	public DownloadInfo exportScanTask(String taskId) throws ServiceException, DAOException {
 		ScanTask task = taskDao.findOne(taskId);
-		if (task == null)
+		if (task == null) {
 			throw new ServiceException("任务不存在", 404);
+		}
 		String taskKey = BaseUtil.getTimeCode(new Date());
 		File dir = new File(tmpDir, taskKey);
-		if (dir.exists())
+		if (dir.exists()) {
 			FileUtil.delFile(dir.getAbsolutePath());
+		}
 		dir.mkdirs();
 		File taskDir = exportOne(task, dir);
 		File zipFile = new File(tmpDir, taskKey + ".zip");
@@ -167,8 +169,9 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 	}
 
 	private synchronized void freeSpaceIfNeeded() {
-		if (freeRun)
+		if (freeRun) {
 			return;
+		}
 		Runnable runnable = new CacheClean();
 		Thread thread = new Thread(runnable);
 		freeRun = true;
@@ -184,8 +187,9 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 			File file = new File(tmpDir);
 			if (file.exists() && file.isDirectory()) {
 				File[] fs = file.listFiles((dir, name) -> name.endsWith(".zip"));
-				if (fs == null)
+				if (fs == null) {
 					return;
+				}
 				long now = System.currentTimeMillis();
 				long keepSec = 1000 * 60 * 60;
 				for (File f : fs) {

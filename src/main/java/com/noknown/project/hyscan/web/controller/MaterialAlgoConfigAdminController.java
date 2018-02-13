@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = Constants.appBaseUrl)
+@RequestMapping(value = Constants.APP_BASE_URL)
 public class MaterialAlgoConfigAdminController extends BaseController {
 
 	@Autowired
@@ -36,10 +36,11 @@ public class MaterialAlgoConfigAdminController extends BaseController {
 	public ResponseEntity<?> getModelConfig(@PathVariable String model)
 			throws Exception {
 		MaterialAlgoConfig modelConfig = mcRepo.get(model);
-		if (modelConfig == null)
+		if (modelConfig == null) {
 			return ResponseEntity.notFound().build();
-		else 
+		} else {
 			return ResponseEntity.ok(modelConfig);
+		}
 	}
 	
 	@RequestMapping(value = "/materialAlgoConfig/", method = RequestMethod.DELETE)

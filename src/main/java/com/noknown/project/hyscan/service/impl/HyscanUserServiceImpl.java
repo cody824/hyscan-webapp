@@ -2,11 +2,11 @@ package com.noknown.project.hyscan.service.impl;
 
 import com.noknown.framework.common.exception.DAOException;
 import com.noknown.framework.common.exception.ServiceException;
-import com.noknown.framework.common.util.StringUtil;
+import com.noknown.framework.security.model.BaseUserDetails;
 import com.noknown.framework.security.model.ThirdPartyAccount;
-import com.noknown.framework.security.model.User;
+import com.noknown.framework.security.pojo.UserWarpForReg;
 import com.noknown.framework.security.service.UserService;
-import com.noknown.framework.security.service.impl.UserServiceImpl;
+import com.noknown.framework.security.service.impl.AbstractUserServiceImpl;
 import com.noknown.project.hyscan.dao.UserDetailsDao;
 import com.noknown.project.hyscan.model.UserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,88 +14,56 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+/**
+ * @author guodong
+ */
 @Service
-@Transactional
-public  class HyscanUserServiceImpl extends UserServiceImpl implements UserService {
-	
+@Transactional(rollbackOn = Exception.class)
+public class HyscanUserServiceImpl extends AbstractUserServiceImpl implements UserService {
+
+	private final UserDetailsDao udDao;
+
 	@Autowired
-	private UserDetailsDao udDao;
+	public HyscanUserServiceImpl(UserDetailsDao udDao) {
+		this.udDao = udDao;
+	}
 
 	@Override
-	public com.noknown.framework.security.model.UserDetails addUser(User userToAdd) throws ServiceException{
-		super.addUser(userToAdd);
-		UserDetails udDetails = new UserDetails();
-		udDetails.setId(userToAdd.getId());
-        udDetails.setNick(userToAdd.getNick());
-        if (StringUtil.isNotBlank(userToAdd.getMobile())){
-        	udDetails.setMobile(userToAdd.getMobile());
-        }
-        if (StringUtil.isNotBlank(userToAdd.getEmail())){
-        	udDetails.setEmail(userToAdd.getEmail());
-        }
-        udDetails.setFullName(userToAdd.getNick());
-        udDao.save(udDetails);
+	public BaseUserDetails addUser(UserWarpForReg userToAdd) throws ServiceException {
+		UserDetails udDetails = (UserDetails) this.addUser(userToAdd, UserDetails.class);
+		if (udDetails != null) {
+			udDao.save(udDetails);
+		}
 		return udDetails;
 	}
-	
-	@Override
-	public com.noknown.framework.security.model.UserDetails  addUserFromTpa(String tpaType, String tpaId, String avatar, String avatar_hd,
-			String nickname) throws ServiceException, DAOException {
-		User userToAdd = super.addUserFromTpaBase(tpaType, tpaId, avatar, avatar_hd, nickname);
-		UserDetails udDetails = new UserDetails();
-		udDetails.setId(userToAdd.getId());
-        udDetails.setNick(userToAdd.getNick());
-        if (StringUtil.isNotBlank(userToAdd.getMobile())){
-        	udDetails.setMobile(userToAdd.getMobile());
-        }
-        if (StringUtil.isNotBlank(userToAdd.getEmail())){
-        	udDetails.setEmail(userToAdd.getEmail());
-        }
-        udDetails.setAvatar(avatar);
-        udDetails.setAvatarHd(avatar_hd);
-        udDetails.setFullName(nickname);
-        udDao.save(udDetails);
-		return udDetails;
-	}
-	
 
 	@Override
-	public com.noknown.framework.security.model.UserDetails addUserFromTpa(ThirdPartyAccount tpa)
-			throws ServiceException, DAOException {
-		User userToAdd = super.addUserFromTpaBase(tpa);
-		UserDetails udDetails = new UserDetails();
-		udDetails.setId(userToAdd.getId());
-        udDetails.setNick(userToAdd.getNick());
-        if (StringUtil.isNotBlank(userToAdd.getMobile())){
-        	udDetails.setMobile(userToAdd.getMobile());
-        }
-        if (StringUtil.isNotBlank(userToAdd.getEmail())){
-        	udDetails.setEmail(userToAdd.getEmail());
-        }
-        udDetails.setAvatar(tpa.getAvatar());
-        udDetails.setAvatarHd(tpa.getAvatar_hd());
-        udDetails.setFullName(tpa.getNickname());
-        udDao.save(udDetails);
-        return udDetails;
+	public BaseUserDetails addUserFromTpa(String tpaType, String tpaId, String avatar, String avatarHd,
+	                                      String nickname) {
+		UserDetails udDetails = (UserDetails) super.addUserFromTpaBase(tpaType, tpaId, avatar, avatarHd, nickname, UserDetails.class);
+		if (udDetails != null) {
+			udDao.save(udDetails);
+		}
+		return udDetails;
 	}
-	
+
+
 	@Override
-	public com.noknown.framework.security.model.UserDetails  addUserFromWx(String wxId, String unionId, String openId, String avatar,
-			String avatar_hd, String nickname) throws ServiceException, DAOException {
-		User userToAdd = super.addUserFromWxBase(wxId, unionId, openId, avatar, avatar_hd, nickname);
-		UserDetails udDetails = new UserDetails();
-		udDetails.setId(userToAdd.getId());
-        udDetails.setNick(userToAdd.getNick());
-        if (StringUtil.isNotBlank(userToAdd.getMobile())){
-        	udDetails.setMobile(userToAdd.getMobile());
-        }
-        if (StringUtil.isNotBlank(userToAdd.getEmail())){
-        	udDetails.setEmail(userToAdd.getEmail());
-        }
-        udDetails.setAvatar(avatar);
-        udDetails.setAvatarHd(avatar_hd);
-        udDetails.setFullName(nickname);
-        udDao.save(udDetails);
+	public BaseUserDetails addUserFromTpa(ThirdPartyAccount tpa) {
+		UserDetails udDetails = (UserDetails) super.addUserFromTpaBase(tpa, UserDetails.class);
+		if (udDetails != null) {
+			udDao.save(udDetails);
+		}
+		return udDetails;
+	}
+
+	@Override
+	public BaseUserDetails addUserFromWx(String wxId, String unionId, String openId, String avatar,
+	                                     String avatarHd, String nickname) {
+		UserDetails udDetails = (UserDetails) super.addUserFromWxBase(wxId, unionId, openId, avatar, avatarHd, nickname, UserDetails.class);
+		if (udDetails != null) {
+			udDao.save(udDetails);
+		}
 		return udDetails;
 	}
 

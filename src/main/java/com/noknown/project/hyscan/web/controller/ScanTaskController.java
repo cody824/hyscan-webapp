@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = Constants.appBaseUrl)
+@RequestMapping(value = Constants.APP_BASE_URL)
 public class ScanTaskController extends BaseController {
 
     @Autowired
@@ -57,8 +57,9 @@ public class ScanTaskController extends BaseController {
     public ResponseEntity<?> saveTask(@RequestBody AppScanTask<MaterialResult> appTask)
             throws Exception {
         Authentication user = loginAuth();
-        if (user == null)
-            throw new WebException("请登录");
+	    if (user == null) {
+		    throw new WebException("请登录");
+	    }
         appTask.setUserId((Integer) user.getPrincipal());
         ScanTaskData data = appTask.toTaskData();
         taskService.saveScanTaskData(data);
@@ -74,8 +75,9 @@ public class ScanTaskController extends BaseController {
     public ResponseEntity<?> saveMaterialTask(@RequestBody AppScanTask<MaterialResult> appTask)
             throws Exception {
         Authentication user = loginAuth();
-        if (user == null)
-            throw new WebException("请登录");
+	    if (user == null) {
+		    throw new WebException("请登录");
+	    }
         appTask.setUserId((Integer) user.getPrincipal());
         ScanTaskData data = appTask.toTaskData();
         taskService.saveScanTaskData(data);
@@ -91,8 +93,9 @@ public class ScanTaskController extends BaseController {
     public ResponseEntity<?> saveWQTask(@RequestBody AppScanTask<WQResult> appTask)
             throws Exception {
         Authentication user = loginAuth();
-        if (user == null)
-            throw new WebException("请登录");
+	    if (user == null) {
+		    throw new WebException("请登录");
+	    }
         appTask.setUserId((Integer) user.getPrincipal());
         ScanTaskData data = appTask.toTaskData();
         taskService.saveScanTaskData(data);
@@ -104,8 +107,9 @@ public class ScanTaskController extends BaseController {
     @RequestMapping(value = "/scanTask/img", method = RequestMethod.POST)
     public ResponseEntity<?> saveTaskImg(HttpServletResponse response, @RequestParam("file") MultipartFile uploadFile, @RequestParam String taskId) throws WebException, ServiceException, DAOException {
         ScanTask task = taskService.get(taskId);
-        if (task == null)
-            throw new WebException("任务不存在");
+	    if (task == null) {
+		    throw new WebException("任务不存在");
+	    }
 
         InputStream is;
         try {
@@ -117,8 +121,9 @@ public class ScanTaskController extends BaseController {
         DateUtil.getCurrentYear(taskTime);
 
         FileStoreService fss = repo.getOS(null);
-        if (fss == null)
-            throw new WebException("没有配置图片服务器");
+	    if (fss == null) {
+		    throw new WebException("没有配置图片服务器");
+	    }
 
         String key = "taskImg/" + DateUtil.getCurrentYear(taskTime) + "/" +
                 DateUtil.getCurrentMonth(taskTime) + "/" + DateUtil.getCurrentDay(taskTime) + "/" + taskId + ".png";
@@ -154,14 +159,16 @@ public class ScanTaskController extends BaseController {
         if (filter != null) {
             sqlFilter = JsonUtil.toObject(filter, SQLFilter.class);
         }
-        if (sqlFilter == null)
-            sqlFilter = new SQLFilter();
+	    if (sqlFilter == null) {
+		    sqlFilter = new SQLFilter();
+	    }
         if (sort != null) {
             List<SQLOrder> sortL = JsonUtil.toList(sort, SQLOrder.class);
-            if (sortL != null)
-                for (SQLOrder order : sortL) {
-                    sqlFilter.addSQLOrder(order);
-                }
+	        if (sortL != null) {
+		        for (SQLOrder order : sortL) {
+			        sqlFilter.addSQLOrder(order);
+		        }
+	        }
         } else {
             sqlFilter.addSQLOrder(new SQLOrder("scanTime", "desc"));
         }
@@ -179,10 +186,11 @@ public class ScanTaskController extends BaseController {
     public ResponseEntity<?> getScanTask(@PathVariable String taskId)
             throws Exception {
         ScanTask task = taskService.get(taskId);
-        if (task == null)
-            return ResponseEntity.notFound().build();
-        else
-            return ResponseEntity.ok(task);
+	    if (task == null) {
+		    return ResponseEntity.notFound().build();
+	    } else {
+		    return ResponseEntity.ok(task);
+	    }
     }
 
     @RequestMapping(value = "/scanTask/info/{taskId}", method = RequestMethod.DELETE)
@@ -196,10 +204,11 @@ public class ScanTaskController extends BaseController {
     public ResponseEntity<?> getScanTaskData(@PathVariable String taskId)
             throws Exception {
         ScanTaskData data = taskService.getData(taskId);
-        if (data == null)
-            throw new WebException("数据不存在", HttpStatus.NOT_FOUND);
-        else
-            return ResponseEntity.ok(data);
+	    if (data == null) {
+		    throw new WebException("数据不存在", HttpStatus.NOT_FOUND);
+	    } else {
+		    return ResponseEntity.ok(data);
+	    }
     }
 
     @RequestMapping(value = "/scanTask/export/", method = RequestMethod.POST)
@@ -213,13 +222,15 @@ public class ScanTaskController extends BaseController {
             sqlFilter = JsonUtil.toObject(filter, SQLFilter.class);
         }
         if (StringUtil.isNotBlank(appId)){
-            if (sqlFilter == null)
-                sqlFilter = new SQLFilter();
+	        if (sqlFilter == null) {
+		        sqlFilter = new SQLFilter();
+	        }
             sqlFilter.addSQLExpression("appId", "=", appId);
         }
         if (StringUtil.isNotBlank(model)){
-            if (sqlFilter == null)
-                sqlFilter = new SQLFilter();
+	        if (sqlFilter == null) {
+		        sqlFilter = new SQLFilter();
+	        }
             sqlFilter.addSQLExpression("deviceModel", "=", model);
         }
         DownloadInfo downloadInfo = taskService.exportScanTaskPackage(sqlFilter);

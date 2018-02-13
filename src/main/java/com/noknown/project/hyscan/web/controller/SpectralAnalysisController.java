@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = Constants.appBaseUrl)
+@RequestMapping(value = Constants.APP_BASE_URL)
 public class SpectralAnalysisController extends BaseController {
 
 	@Autowired
