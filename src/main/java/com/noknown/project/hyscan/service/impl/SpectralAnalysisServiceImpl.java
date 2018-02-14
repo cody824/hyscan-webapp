@@ -1,7 +1,7 @@
 package com.noknown.project.hyscan.service.impl;
 
 import com.noknown.framework.common.dao.GlobalConfigDao;
-import com.noknown.framework.common.exception.DAOException;
+import com.noknown.framework.common.exception.DaoException;
 import com.noknown.framework.common.exception.ServiceException;
 import com.noknown.framework.common.util.StringUtil;
 import com.noknown.project.hyscan.algorithm.Loader;
@@ -25,10 +25,13 @@ import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * @author guodong
+ */
 @SuppressWarnings("deprecation")
 @Service
 public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
-	
+
 	@Autowired
 	private ModelConfigRepo mcDao;
 
@@ -37,15 +40,15 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 
 	@Autowired
 	private WDAlgoConfigRepo wdacDao;
-	
+
 	@Autowired
 	private GlobalConfigDao gcDao;
-	
+
 	@Autowired
 	private Loader algoLoader;
-	
+
 	private static Properties materialProps;
-	
+
 	@PostConstruct
 	public void init(){
 		Properties materialProps = gcDao.getProperties(Constants.materialConfig, Constants.appId);
@@ -54,13 +57,13 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		}
 		SpectralAnalysisServiceImpl.materialProps = materialProps;
 	}
-	
+
 
 	/**
 	 * @deprecated
 	 */
 	@Override
-	public Result analysis(double[] reflectivity, String model, String algoVersion) throws ServiceException, DAOException  {
+	public Result analysis(double[] reflectivity, String model, String algoVersion) throws ServiceException, DaoException {
 		ModelConfig mc = mcDao.get(model);
 		if (mc == null) {
 			throw new ServiceException("不支持该型号的设备");
@@ -84,34 +87,34 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		if (algo == null) {
 			throw new ServiceException("算法未指定，或者没有正确加载，请联系管理员");
 		}
-		
-		
+
+
 		double[][] sampleData = new double[wavelengths.length][2];
 		for (int i = 0; i < wavelengths.length; i++) {
 			sampleData[i] = new double[]{wavelengths[i], reflectivity[i]};
 		}
-		
+
 		double[][] olderLevelNormData = mac.getOlderLevelNormData();
-		
+
 		double [][]normData = new double[1 + olderLevelNormData.length][wavelengths.length];
 		normData[0] = wavelengths;
 		for (int i = 1; i < normData.length; i++){
 			normData[i] = olderLevelNormData[i - 1];
 		}
 		int oldLevel = algo.olderLevel(sampleData, normData);
-		
+
 		double[][] materialNormData = mac.getMaterialNormData();
-		
-		
+
+
 		normData = new double[1 + materialNormData.length][wavelengths.length];
 		normData[0] = wavelengths;
 		for (int i = 1; i < normData.length; i++){
 			normData[i] = materialNormData[i - 1];
 		}
 		int materialIndex = algo.material(sampleData, normData, mac.getMaterialThreshold());
-		
+
 		String material = materialProps.getProperty("" + materialIndex, "未知材料");
-		
+
 		Result result = new Result();
 		result.setMaterialIndex(materialIndex);
 		result.setLevel(oldLevel);
@@ -122,7 +125,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 
 	@Override
 	public int analysisOldLevel(double[] reflectivity, String model, String algoVersion)
-			throws ServiceException, DAOException {
+			throws ServiceException, DaoException {
 		ModelConfig mc = mcDao.get(model);
 		if (mc == null) {
 			throw new ServiceException("不支持该型号的设备");
@@ -144,15 +147,15 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		if (algo == null) {
 			throw new ServiceException("算法未指定，或者没有正确加载，请联系管理员");
 		}
-		
-		
+
+
 		double[][] sampleData = new double[wavelengths.length][2];
 		for (int i = 0; i < wavelengths.length; i++) {
 			sampleData[i] = new double[]{wavelengths[i], reflectivity[i]};
 		}
-		
+
 		double[][] olderLevelNormData = mac.getOlderLevelNormData();
-		
+
 		double [][]normData = new double[wavelengths.length][2];
 		for (int i = 0; i < normData.length; i++){
 			normData[i] = new double[]{wavelengths[i], olderLevelNormData[0][i]};
@@ -163,7 +166,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 
 	@Override
 	public int analysisMaterial(double[] reflectivity, String model, String algoVersion)
-			throws ServiceException, DAOException {
+			throws ServiceException, DaoException {
 		ModelConfig mc = mcDao.get(model);
 		if (mc == null) {
 			throw new ServiceException("不支持该型号的设备");
@@ -185,13 +188,13 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		if (algo == null) {
 			throw new ServiceException("算法未指定，或者没有正确加载，请联系管理员");
 		}
-		
-		
+
+
 		double[][] sampleData = new double[wavelengths.length][2];
 		for (int i = 0; i < wavelengths.length; i++) {
 			sampleData[i] = new double[]{wavelengths[i], reflectivity[i]};
 		}
-		
+
 		double[][] materialNormData = mac.getMaterialNormData();
 		double [][] normData = new double[wavelengths.length][materialNormData[0].length + 1];
 		for (int i = 0; i < normData.length; i++){
@@ -206,7 +209,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 
 	@Override
 	public MaterialResult materialAnalysis(double[] reflectivity, String model, String algoVersion)
-			throws ServiceException, DAOException {
+			throws ServiceException, DaoException {
 		ModelConfig mc = mcDao.get(model);
 		if (mc == null) {
 			throw new ServiceException("不支持该型号的设备");
@@ -228,8 +231,8 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		if (algo == null) {
 			throw new ServiceException("算法未指定，或者没有正确加载，请联系管理员");
 		}
-		
-		
+
+
 		double[][] sampleData = new double[wavelengths.length][2];
 		for (int i = 0; i < wavelengths.length; i++) {
 			sampleData[i] = new double[]{wavelengths[i], reflectivity[i]};
@@ -252,7 +255,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 			}
 		}
 		int materialIndex = algo.material(sampleData, normData, mac.getMaterialThreshold());
-		
+
 		String material = materialProps.getProperty("" + materialIndex, "未知材料");
 		MaterialResult result = new MaterialResult();
 		result.setMaterialIndex(materialIndex);
@@ -264,7 +267,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 
 	@Override
 	public WQResult wqAnalysis(double[] reflectivity, String model, String algoVersion)
-			throws ServiceException, DAOException {
+			throws ServiceException, DaoException {
 		ModelConfig mc = mcDao.get(model);
 		if (mc == null) {
 			throw new ServiceException("不支持该型号的设备");
@@ -287,23 +290,23 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		if (algo == null) {
 			throw new ServiceException("算法未指定，或者没有正确加载，请联系管理员");
 		}
-		
+
 		double[][] sampleData = new double[wavelengths.length][2];
 		for (int i = 0; i < wavelengths.length; i++) {
 			sampleData[i] = new double[]{wavelengths[i], reflectivity[i] * 0.01};
 		}
-		
+
 		Map<String, WDAlgoItem> algos = wdac.getWdAlgos();
 		if (algos == null || algos.isEmpty()) {
 			throw new ServiceException("没有水质检测算法配置");
 		}
-		
+
 		double[] data = new double[algos.size()];
 		String[] unit = new String[algos.size()];
 		String[] name = new String[algos.size()];
 		int[] decimal = new int[algos.size()];
 		String[] chineseName =  new String[algos.size()];
-		
+
 		for (WDAlgoItem ac : algos.values()) {
 			double value = algo.waterDetection(sampleData, ac.getWaveIndex(), ac.getKey());
 			if (Double.isInfinite(value)) {
@@ -324,6 +327,5 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		return result;
 	}
 
-	
 
 }

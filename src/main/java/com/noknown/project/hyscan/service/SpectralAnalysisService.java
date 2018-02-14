@@ -1,11 +1,14 @@
 package com.noknown.project.hyscan.service;
 
-import com.noknown.framework.common.exception.DAOException;
+import com.noknown.framework.common.exception.DaoException;
 import com.noknown.framework.common.exception.ServiceException;
 import com.noknown.project.hyscan.pojo.MaterialResult;
 import com.noknown.project.hyscan.pojo.Result;
 import com.noknown.project.hyscan.pojo.WQResult;
 
+/**
+ * @author guodong
+ */
 @SuppressWarnings("deprecation")
 public interface SpectralAnalysisService {
 
@@ -17,10 +20,10 @@ public interface SpectralAnalysisService {
 	 * @param algoVersion
 	 * @return
 	 * @throws ServiceException
-	 * @throws DAOException
+	 * @throws DaoException
 	 */
-	Result analysis(double[] reflectivity, String model, String algoVersion) throws ServiceException, DAOException;
-	
+	Result analysis(double[] reflectivity, String model, String algoVersion) throws ServiceException, DaoException;
+
 	/**
 	 * 分析结果
 	 * @param reflectivity
@@ -28,9 +31,9 @@ public interface SpectralAnalysisService {
 	 * @param algoVersion
 	 * @return
 	 * @throws ServiceException
-	 * @throws DAOException
+	 * @throws DaoException
 	 */
-	MaterialResult materialAnalysis(double[] reflectivity, String model, String algoVersion) throws ServiceException, DAOException;
+	MaterialResult materialAnalysis(double[] reflectivity, String model, String algoVersion) throws ServiceException, DaoException;
 
 	/**
 	 * 水质检测
@@ -38,9 +41,11 @@ public interface SpectralAnalysisService {
 	 * @param model
 	 * @param algo
 	 * @return
+	 * @throws ServiceException
+	 * @throws DaoException
 	 */
-	WQResult wqAnalysis(double[] reflectivitys, String model, String algo) throws ServiceException, DAOException;
-	
+	WQResult wqAnalysis(double[] reflectivitys, String model, String algo) throws ServiceException, DaoException;
+
 	/**
 	 * 分析老化等级
 	 * @param reflectivity
@@ -48,10 +53,10 @@ public interface SpectralAnalysisService {
 	 * @param algoVersion
 	 * @return
 	 * @throws ServiceException
-	 * @throws DAOException
+	 * @throws DaoException
 	 */
-	int analysisOldLevel(double[] reflectivity, String model, String algoVersion) throws ServiceException, DAOException;
-	
+	int analysisOldLevel(double[] reflectivity, String model, String algoVersion) throws ServiceException, DaoException;
+
 	/**
 	 * 分析材质
 	 * @param reflectivity
@@ -59,8 +64,8 @@ public interface SpectralAnalysisService {
 	 * @param algoVersion
 	 * @return
 	 * @throws ServiceException
-	 * @throws DAOException
+	 * @throws DaoException
 	 */
-	int analysisMaterial(double[] reflectivity, String model, String algoVersion) throws ServiceException, DAOException;
-	
+	int analysisMaterial(double[] reflectivity, String model, String algoVersion) throws ServiceException, DaoException;
+
 }

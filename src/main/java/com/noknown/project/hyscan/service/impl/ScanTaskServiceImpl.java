@@ -1,7 +1,7 @@
 package com.noknown.project.hyscan.service.impl;
 
 import com.noknown.framework.common.base.BaseServiceImpl;
-import com.noknown.framework.common.exception.DAOException;
+import com.noknown.framework.common.exception.DaoException;
 import com.noknown.framework.common.exception.ServiceException;
 import com.noknown.framework.common.util.BaseUtil;
 import com.noknown.framework.common.util.FileUtil;
@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+ * @author guodong
+ */
 @Service
 public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> implements ScanTaskService {
 
@@ -37,10 +40,10 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 	@Value("${hyscan.tmpDir:/var/hyscan/tmp/}")
 	private String tmpDir;
-	
+
 
 	@Override
-	public void removeTask(String taskId) throws DAOException {
+	public void removeTask(String taskId) throws DaoException {
 		taskDao.delete(taskId);
 		taskDataDao.delete(taskId);
 	}
@@ -49,9 +52,9 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 	public ScanTask get(String taskId) {
 		return taskDao.findOne(taskId);
 	}
-	
+
 	@Override
-	public ScanTaskData getData(String taskId) throws DAOException {
+	public ScanTaskData getData(String taskId) throws DaoException {
 		return taskDataDao.get(taskId);
 	}
 
@@ -67,13 +70,13 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 
 	@Override
-	public void saveScanTaskData(ScanTaskData data) throws DAOException {
+	public void saveScanTaskData(ScanTaskData data) throws DaoException {
 		taskDataDao.save(data);
-		
+
 	}
 
 	@Override
-	public DownloadInfo exportScanTaskPackage(SQLFilter filter) throws ServiceException, DAOException {
+	public DownloadInfo exportScanTaskPackage(SQLFilter filter) throws ServiceException, DaoException {
 		Collection<ScanTask> taskList = this.find(filter);
 		String taskKey = BaseUtil.getTimeCode(new Date());
 		File dir = new File(tmpDir, taskKey);
@@ -106,7 +109,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 	}
 
 	@Override
-	public DownloadInfo exportScanTask(String taskId) throws ServiceException, DAOException {
+	public DownloadInfo exportScanTask(String taskId) throws ServiceException, DaoException {
 		ScanTask task = taskDao.findOne(taskId);
 		if (task == null) {
 			throw new ServiceException("任务不存在", 404);
@@ -139,7 +142,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 		return downloadInfo;
 	}
 
-	private File exportOne(ScanTask scanTask, File dir) throws ServiceException, DAOException {
+	private File exportOne(ScanTask scanTask, File dir) throws ServiceException, DaoException {
 		File taskDir = new File(dir, scanTask.getId());
 		taskDir.mkdirs();
 		String infoStr = JsonUtil.toJson(scanTask);

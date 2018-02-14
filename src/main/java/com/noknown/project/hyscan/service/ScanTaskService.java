@@ -1,7 +1,7 @@
 package com.noknown.project.hyscan.service;
 
 import com.noknown.framework.common.base.BaseService;
-import com.noknown.framework.common.exception.DAOException;
+import com.noknown.framework.common.exception.DaoException;
 import com.noknown.framework.common.exception.ServiceException;
 import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.project.hyscan.model.ScanTask;
@@ -9,50 +9,53 @@ import com.noknown.project.hyscan.model.ScanTaskData;
 import com.noknown.project.hyscan.pojo.DownloadInfo;
 
 
+/**
+ * @author guodong
+ */
 public interface ScanTaskService extends BaseService<ScanTask, String> {
 
-	
+
 	/**
 	 * 删除任务以及任务数据
 	 * @param taskId
 	 * @throws ServiceException
-	 * @throws DAOException
+	 * @throws DaoException
 	 */
-	void removeTask(String taskId) throws ServiceException, DAOException;
-	
+	void removeTask(String taskId) throws ServiceException, DaoException;
+
 	/**
 	 * 获取扫描任务数据
 	 * @param taskId
 	 * @return
 	 * @throws ServiceException
-	 * @throws DAOException
+	 * @throws DaoException
 	 */
-	ScanTaskData getData(String taskId)throws ServiceException, DAOException;
-	
+	ScanTaskData getData(String taskId) throws ServiceException, DaoException;
+
 	/**
 	 * 保存任务数据
 	 * @param data
 	 * @throws ServiceException
-	 * @throws DAOException
+	 * @throws DaoException
 	 */
-	void saveScanTaskData(ScanTaskData data)throws ServiceException, DAOException;
+	void saveScanTaskData(ScanTaskData data) throws ServiceException, DaoException;
 
 	/**
 	 * 导出选择的任务数据包
 	 * @param filter
 	 * @return
 	 * @throws ServiceException
-	 * @throws DAOException
+	 * @throws DaoException
 	 */
-	DownloadInfo exportScanTaskPackage(SQLFilter filter)throws ServiceException, DAOException;
+	DownloadInfo exportScanTaskPackage(SQLFilter filter) throws ServiceException, DaoException;
 
 	/**
 	 * 导出单个任务
 	 * @param taskId
 	 * @return
 	 * @throws ServiceException
-	 * @throws DAOException
+	 * @throws DaoException
 	 */
-	DownloadInfo exportScanTask(String taskId)throws ServiceException, DAOException;
-	
+	DownloadInfo exportScanTask(String taskId) throws ServiceException, DaoException;
+
 }

@@ -1,6 +1,6 @@
 package com.noknown.project.hyscan.service.impl;
 
-import com.noknown.framework.common.exception.DAOException;
+import com.noknown.framework.common.exception.DaoException;
 import com.noknown.framework.common.exception.ServiceException;
 import com.noknown.framework.security.model.BaseUserDetails;
 import com.noknown.framework.security.model.ThirdPartyAccount;
@@ -68,7 +68,7 @@ public class HyscanUserServiceImpl extends AbstractUserServiceImpl implements Us
 	}
 
 	@Override
-	public void bindEmail(Integer userId, String email) throws DAOException, ServiceException {
+	public void bindEmail(Integer userId, String email) throws DaoException, ServiceException {
 		super.bindEmail(userId, email);
 		UserDetails ud = udDao.getOne(userId);
 		if (ud != null) {
@@ -78,7 +78,7 @@ public class HyscanUserServiceImpl extends AbstractUserServiceImpl implements Us
 	}
 
 	@Override
-	public void unbindEmail(Integer userId) throws DAOException, ServiceException {
+	public void unbindEmail(Integer userId) throws DaoException, ServiceException {
 		super.unbindEmail(userId);
 		UserDetails ud = udDao.getOne(userId);
 		if (ud != null) {
@@ -88,7 +88,7 @@ public class HyscanUserServiceImpl extends AbstractUserServiceImpl implements Us
 	}
 
 	@Override
-	public void bindMobile(Integer userId, String mobile) throws DAOException, ServiceException {
+	public void bindMobile(Integer userId, String mobile) throws DaoException, ServiceException {
 		super.bindMobile(userId, mobile);
 		UserDetails ud = udDao.getOne(userId);
 		if (ud != null) {
@@ -98,7 +98,7 @@ public class HyscanUserServiceImpl extends AbstractUserServiceImpl implements Us
 	}
 
 	@Override
-	public void unbindMobile(Integer userId) throws DAOException, ServiceException {
+	public void unbindMobile(Integer userId) throws DaoException, ServiceException {
 		super.unbindMobile(userId);
 		UserDetails ud = udDao.getOne(userId);
 		if (ud != null) {
