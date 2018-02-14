@@ -12,8 +12,6 @@ Ext.define('Module.Hyscan.MaterialAlgo.Portlet', {
     
 	title: "材质检测算法",
 	
-	iconCls : 'md-MaterialAlgo',
-			
 	moduleName : 'Module.Hyscan.MaterialAlgo',
     
     moduleSessionView : 'Module.Hyscan.MaterialAlgoCurrentView',

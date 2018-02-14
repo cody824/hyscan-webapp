@@ -13,8 +13,6 @@ Ext.define('Module.Hyscan.AlgoConfig.Portlet', {
     
 	title: "算法管理",
 			
-	iconCls : 'md-AlgoConfig',
-	
 	moduleName : 'Module.Hyscan.AlgoConfig',
     
     moduleSessionView : 'Module.Hyscan.AlgoConfigCurrentView',

@@ -12,8 +12,6 @@ Ext.define('Module.Hyscan.ModelConfig.Portlet', {
     
 	title: "型号配置",
 	
-	iconCls : 'md-ModelConfig',
-			
 	moduleName : 'Module.Hyscan.ModelConfig',
     
     moduleSessionView : 'Module.Hyscan.ModelConfigCurrentView',

@@ -14,8 +14,6 @@ Ext.define('Module.Hyscan.ScanTask.Portlet', {
     
 	title: "扫描任务",
 
-	iconCls : 'md-ScanTask',
-	
 	moduleName : 'Module.Hyscan.ScanTask',
     
     moduleSessionView : 'Module.Hyscan.ScanTaskCurrentView',

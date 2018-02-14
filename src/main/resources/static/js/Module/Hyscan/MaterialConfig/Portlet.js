@@ -13,8 +13,6 @@ Ext.define('Module.Hyscan.MaterialConfig.Portlet', {
     
 	title: "材料索引",
 			
-	icon : '/img/icon/repository.png',
-	
 	moduleName : 'Module.Hyscan.MaterialConfig',
     
     moduleSessionView : 'Module.Hyscan.MaterialConfigCurrentView',

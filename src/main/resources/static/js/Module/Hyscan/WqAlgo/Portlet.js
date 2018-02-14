@@ -13,8 +13,6 @@ Ext.define('Module.Hyscan.WqAlgo.Portlet', {
     
 	title: "水质监测算法",
 
-	iconCls : 'md-WqAlgo',
-	
 	moduleName : 'Module.Hyscan.WqAlgo',
     
     moduleSessionView : 'Module.Hyscan.WqAlgoCurrentView',

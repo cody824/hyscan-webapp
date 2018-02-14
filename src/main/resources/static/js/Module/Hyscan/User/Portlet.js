@@ -14,8 +14,6 @@ Ext.define('Module.Hyscan.User.Portlet', {
     
 	title: USERMANAGE_LABEL.userInfo,
 			
-	iconCls : 'md-User',
-	
 	moduleName : 'Module.Hyscan.User',
     
     moduleSessionView : 'Module.Hyscan.UserCurrentView',

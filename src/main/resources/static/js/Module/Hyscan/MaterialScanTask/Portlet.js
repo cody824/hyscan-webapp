@@ -15,8 +15,6 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
     
 	title: "材质检测扫描任务",
 
-	iconCls : 'md-MaterialScanTask',
-	
 	moduleName : 'Module.Hyscan.MaterialScanTask',
     
     moduleSessionView : 'Module.Hyscan.MaterialScanTaskCurrentView',

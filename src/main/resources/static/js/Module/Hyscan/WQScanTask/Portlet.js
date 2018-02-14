@@ -15,8 +15,6 @@ Ext.define('Module.Hyscan.WQScanTask.Portlet', {
     
 	title: "水质监测扫描任务",
 
-	iconCls : 'md-WQScanTask',
-	
 	moduleName : 'Module.Hyscan.WQScanTask',
     
     moduleSessionView : 'Module.Hyscan.WQScanTaskCurrentView',
