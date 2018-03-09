@@ -15,8 +15,11 @@ Ext.define('Module.Hyscan.Public.Tools', {
 	getReflectivity : function(datas, dc, wd) {
 		var newData = [];
 		for (i = 0; i < datas.length; i++) {
-			var data = 1.0 * (datas[i] - dc[i]) / (wd[i] - dc[i]);
-			newData.push(data);
+            var data = 0;
+            if (wd[i] - dc[i] != 0) {
+                data = 1.0 * (datas[i] - dc[i]) / (wd[i] - dc[i]);
+            }
+            newData.push(data);
 		}
 		return newData;
 	},

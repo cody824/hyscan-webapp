@@ -15,7 +15,9 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
 	initComponent : function() {
 		var columns = new Array();
 		columns.push(
-			new Ext.grid.RowNumberer(),
+            new Ext.grid.RowNumberer({
+                width: 40
+            }),
 			{
 				text: "波长",flex:1, sortable: false, 
 				menuDisabled:true, dataIndex: 'wavelength', align : 'center',
@@ -34,7 +36,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
 				menuDisabled:true, align : 'center',
 				renderer : function(v){
 					var show = Ext.Number.toFixed(parseFloat(v), 2);
-					return '<span data-qtip="'+ v +'">' + show + '%</span>';
+                    return '<span data-qtip="' + v + '">' + show + '</span>';
 				}
 			},
 			{
@@ -101,13 +103,16 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
 				success : function(ret){
 					var range = ret.range;
 					var wavelength = [];
-					for (var i = range[0]; i < range[1]; i++) {
+                    for (var i = range[0]; i <= range[1]; i++) {
 						wavelength.push(1.9799 * i - 934.5831);
 			        }
 					var radiance = tools.getRadiance(ret.dn, ret.radianceConfig[0], ret.radianceConfig[1]);
 					var reflectivity = tools.getReflectivity(ret.dn, ret.darkCurrent, ret.whiteboardData);
-					var rmPacketLine = tools.getRmPacketLine(ret.dn, wavelength, reflectivity);
-
+                    var refForRm = [];
+                    for (var i = 0; i < reflectivity.length; i++) {
+                        refForRm.push(reflectivity[i])
+                    }
+                    var rmPacketLine = tools.getRmPacketLine(ret.dn, wavelength, refForRm);
 					var datas = [];
 					for (var i = 0; i < wavelength.length; i++){
 						var data = {};
