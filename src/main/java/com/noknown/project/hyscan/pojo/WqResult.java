@@ -7,21 +7,21 @@ import java.lang.reflect.Method;
 
 /**
  * 水质监测结果
- * @author cody
  *
+ * @author cody
  */
 public class WqResult extends AbstractResult {
 
 	private double[] data;
-	
+
 	private int[] decimal;
-	
+
 	private String[] unit;
-	
+
 	private String[] name;
-	
+
 	private String[] chineseName;
- 	
+
 	@Override
 	public void fillTask(ScanTask scanTask) {
 		int length = data.length > 10 ? 10 : data.length;
@@ -75,5 +75,5 @@ public class WqResult extends AbstractResult {
 	public void setDecimal(int[] decimal) {
 		this.decimal = decimal;
 	}
-	
+
 }
