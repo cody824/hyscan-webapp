@@ -1,40 +1,23 @@
 package com.noknown.project.hyscan.pojo;
 
-import com.noknown.project.hyscan.model.ScanTask;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 /**
- * 水质监测结果
- * @author cody
+ * 通用监测结果
  *
+ * @author cody
  */
-public class WqResult extends AbstractResult {
+public class ResultWrap {
 
 	private double[] data;
-	
+
 	private int[] decimal;
-	
+
 	private String[] unit;
-	
+
 	private String[] name;
-	
+
 	private String[] chineseName;
- 	
-	@Override
-	public void fillTask(ScanTask scanTask) {
-		int length = data.length > 10 ? 10 : data.length;
-		for (int i = 0; i < length; i++) {
-			Method setMethod;
-			try {
-				setMethod = ScanTask.class.getMethod("setResult" + i, Double.class);
-				setMethod.invoke(scanTask, data[i]);
-			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+
+	private String[] render;
 
 	public double[] getData() {
 		return data;
@@ -75,5 +58,13 @@ public class WqResult extends AbstractResult {
 	public void setDecimal(int[] decimal) {
 		this.decimal = decimal;
 	}
-	
+
+	public String[] getRender() {
+		return render;
+	}
+
+	public ResultWrap setRender(String[] render) {
+		this.render = render;
+		return this;
+	}
 }

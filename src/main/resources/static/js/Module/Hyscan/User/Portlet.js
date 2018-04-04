@@ -54,6 +54,11 @@ Ext.define('Module.Hyscan.User.Portlet', {
                     disabled:true,
                     name : 'setWQAdmin',
                     iconCls : 'lock'
+                }, {
+                    text: "生成APIKey",
+                    disabled: true,
+                    name: 'buildApiKey',
+                    iconCls: 'lock'
                 }
 
 				]

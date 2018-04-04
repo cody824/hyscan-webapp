@@ -1,70 +1,62 @@
 package com.noknown.project.hyscan.pojo;
 
+/**
+ * @author guodong
+ */
 public class Position {
 
 	private Float lon;
 
 	private Float lat;
-	
+
 	private String city;
-	
+
 	private String address;
 
-	/**
-	 * @return the lon
-	 */
+	private String type;
+
 	public Float getLon() {
 		return lon;
 	}
 
-	/**
-	 * @param lon the lon to set
-	 */
-	public void setLon(Float lon) {
+	public Position setLon(Float lon) {
 		this.lon = lon;
+		return this;
 	}
 
-	/**
-	 * @return the lat
-	 */
 	public Float getLat() {
 		return lat;
 	}
 
-	/**
-	 * @param lat the lat to set
-	 */
-	public void setLat(Float lat) {
+	public Position setLat(Float lat) {
 		this.lat = lat;
+		return this;
 	}
 
-	/**
-	 * @return the city
-	 */
 	public String getCity() {
 		return city;
 	}
 
-	/**
-	 * @param city the city to set
-	 */
-	public void setCity(String city) {
+	public Position setCity(String city) {
 		this.city = city;
+		return this;
 	}
 
-	/**
-	 * @return the address
-	 */
 	public String getAddress() {
 		return address;
 	}
 
-	/**
-	 * @param address the address to set
-	 */
-	public void setAddress(String address) {
+	public Position setAddress(String address) {
 		this.address = address;
+		return this;
 	}
-	
-	
+
+	public String getType() {
+		return type;
+	}
+
+	public Position setType(String type) {
+		this.type = type;
+		return this;
+	}
 }

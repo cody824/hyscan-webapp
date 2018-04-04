@@ -7,21 +7,21 @@ import com.noknown.framework.common.util.StringUtil;
 import com.noknown.project.hyscan.algorithm.Loader;
 import com.noknown.project.hyscan.algorithm.SpectralAnalysisAlgo;
 import com.noknown.project.hyscan.common.Constants;
-import com.noknown.project.hyscan.dao.MaterialAlgoConfigRepo;
-import com.noknown.project.hyscan.dao.ModelConfigRepo;
-import com.noknown.project.hyscan.dao.WDAlgoConfigRepo;
-import com.noknown.project.hyscan.model.MaterialAlgoConfig;
-import com.noknown.project.hyscan.model.ModelConfig;
-import com.noknown.project.hyscan.model.WDAlgoConfig;
-import com.noknown.project.hyscan.model.WDAlgoItem;
+import com.noknown.project.hyscan.dao.*;
+import com.noknown.project.hyscan.model.*;
+import com.noknown.project.hyscan.pojo.AbstractResult;
 import com.noknown.project.hyscan.pojo.MaterialResult;
 import com.noknown.project.hyscan.pojo.Result;
-import com.noknown.project.hyscan.pojo.WQResult;
+import com.noknown.project.hyscan.pojo.WqResult;
 import com.noknown.project.hyscan.service.SpectralAnalysisService;
+import com.noknown.project.hyscan.util.AlgoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Properties;
 
@@ -30,28 +30,32 @@ import java.util.Properties;
  */
 @SuppressWarnings("deprecation")
 @Service
+@Transactional(rollbackOn = Exception.class)
 public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 
-	@Autowired
-	private ModelConfigRepo mcDao;
-
-	@Autowired
-	private MaterialAlgoConfigRepo macDao;
-
-	@Autowired
-	private WDAlgoConfigRepo wdacDao;
-
-	@Autowired
-	private GlobalConfigDao gcDao;
-
-	@Autowired
-	private Loader algoLoader;
-
 	private static Properties materialProps;
+	private final ModelConfigRepo mcDao;
+	private final MaterialAlgoConfigRepo macDao;
+	private final WDAlgoConfigRepo wdacDao;
+	private final GlobalConfigDao gcDao;
+	private final Loader algoLoader;
+	private final ScanTaskDao scanTaskDao;
+	private final ScanTaskDataRepo scanTaskDataDao;
+
+	@Autowired
+	public SpectralAnalysisServiceImpl(ModelConfigRepo mcDao, MaterialAlgoConfigRepo macDao, WDAlgoConfigRepo wdacDao, GlobalConfigDao gcDao, Loader algoLoader, ScanTaskDao scanTaskDao, ScanTaskDataRepo scanTaskDataDao) {
+		this.mcDao = mcDao;
+		this.macDao = macDao;
+		this.wdacDao = wdacDao;
+		this.gcDao = gcDao;
+		this.algoLoader = algoLoader;
+		this.scanTaskDao = scanTaskDao;
+		this.scanTaskDataDao = scanTaskDataDao;
+	}
 
 	@PostConstruct
 	public void init(){
-		Properties materialProps = gcDao.getProperties(Constants.materialConfig, Constants.appId);
+		Properties materialProps = gcDao.getProperties(Constants.MATERIAL_CONFIG, Constants.APP_ID);
 		if (materialProps == null) {
 			materialProps = new Properties();
 		}
@@ -98,9 +102,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 
 		double [][]normData = new double[1 + olderLevelNormData.length][wavelengths.length];
 		normData[0] = wavelengths;
-		for (int i = 1; i < normData.length; i++){
-			normData[i] = olderLevelNormData[i - 1];
-		}
+		System.arraycopy(olderLevelNormData, 0, normData, 1, normData.length - 1);
 		int oldLevel = algo.olderLevel(sampleData, normData);
 
 		double[][] materialNormData = mac.getMaterialNormData();
@@ -108,9 +110,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 
 		normData = new double[1 + materialNormData.length][wavelengths.length];
 		normData[0] = wavelengths;
-		for (int i = 1; i < normData.length; i++){
-			normData[i] = materialNormData[i - 1];
-		}
+		System.arraycopy(materialNormData, 0, normData, 1, normData.length - 1);
 		int materialIndex = algo.material(sampleData, normData, mac.getMaterialThreshold());
 
 		String material = materialProps.getProperty("" + materialIndex, "未知材料");
@@ -199,11 +199,37 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		double [][] normData = new double[wavelengths.length][materialNormData[0].length + 1];
 		for (int i = 0; i < normData.length; i++){
 			normData[i][0] = wavelengths[i];
-			for (int j = 1; j <= materialNormData.length; j++){
-				normData[i][j] = materialNormData[i][j - 1];
-			}
+			System.arraycopy(materialNormData[i], 0, normData[i], 1, materialNormData.length);
 		}
 		return algo.material(sampleData, normData, mac.getMaterialThreshold());
+	}
+
+	@Override
+	public AbstractResult analysis(String taskId, String algo) throws ServiceException, DaoException {
+		ScanTask task = scanTaskDao.findOne(taskId);
+		if (task == null) {
+			throw new ServiceException("任务不存在");
+		}
+		ScanTaskData taskData = scanTaskDataDao.get(taskId);
+		if (taskData == null) {
+			throw new ServiceException("任务数据不存在");
+		}
+		String methodName = gcDao.getConfig(Constants.APP_ALGO_CONFIG, task.getAppId(), "algo");
+		if (methodName == null) {
+			throw new ServiceException("算法配置不存在");
+		}
+		try {
+			Method method = this.getClass().getMethod(methodName, double[].class, String.class, String.class);
+			double[] ref = AlgoUtil.getReflectivity(taskData.getDn(), taskData.getDarkCurrent(), taskData.getWhiteboardData());
+			AbstractResult resultIF = (AbstractResult) method.invoke(this, ref, task.getDeviceModel(), algo);
+			resultIF.fillTask(task);
+			scanTaskDao.save(task);
+			return resultIF;
+		} catch (NoSuchMethodException e) {
+			throw new ServiceException(e);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			throw new ServiceException(e.getCause());
+		}
 	}
 
 
@@ -266,7 +292,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 
 
 	@Override
-	public WQResult wqAnalysis(double[] reflectivity, String model, String algoVersion)
+	public WqResult wqAnalysis(double[] reflectivity, String model, String algoVersion)
 			throws ServiceException, DaoException {
 		ModelConfig mc = mcDao.get(model);
 		if (mc == null) {
@@ -318,7 +344,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 			chineseName[ac.getSeq()] = ac.getChineseName();
 			decimal[ac.getSeq()] = ac.getDecimal();
 		}
-		WQResult result = new WQResult();
+		WqResult result = new WqResult();
 		result.setChineseName(chineseName);
 		result.setData(data);
 		result.setName(name);

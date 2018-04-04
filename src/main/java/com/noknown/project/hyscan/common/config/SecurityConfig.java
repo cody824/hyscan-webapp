@@ -28,101 +28,101 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * @author guodong
+ */
 @Configuration
-// @EnableWebSecurity: 禁用Boot的默认Security配置，配合@Configuration启用自定义配置
-// （需要扩展WebSecurityConfigurerAdapter）
 @EnableWebSecurity
-// @EnableGlobalMethodSecurity(prePostEnabled = true): 启用Security注解，
-// 例如最常用的@PreAuthorize
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+	private final AjaxLoginUrlAuthenticationEntryPoint unauthorizedHandler;
+
+	private final SureProcessingFilter loginAction;
+
+	private final UserPasswordAuthenticationProvider upProvider;
+
+	private final SMSAuthenticationProvider smsProvider;
+
+	private final TpaAuthenticationProvider tpaProvider;
+
+	private final QQOauth2Handler qqOauth2Handler;
+
+	private final WechatOauth2Handler wechatOauth2Handler;
+
+	private final WeiboOauth2Handler weibiOauth2Handler;
+
+	@Value("${security.login.smsLogin:false}")
+	private boolean supportSMSLogin;
+
+	@Value("${security.login.qq:false}")
+	private boolean supportQQLogin;
+
+	@Value("${security.login.weibo:false}")
+	private boolean supportWeiboLogin;
+
+	@Value("${security.login.wechat:false}")
+	private boolean supportWechatLogin;
+
 	@Autowired
-    private AjaxLoginUrlAuthenticationEntryPoint unauthorizedHandler;
-	
+	public SecurityConfig(AjaxLoginUrlAuthenticationEntryPoint unauthorizedHandler, SureProcessingFilter loginAction, UserPasswordAuthenticationProvider upProvider, SMSAuthenticationProvider smsProvider, TpaAuthenticationProvider tpaProvider, QQOauth2Handler qqOauth2Handler, WechatOauth2Handler wechatOauth2Handler, WeiboOauth2Handler weibiOauth2Handler) {
+		this.unauthorizedHandler = unauthorizedHandler;
+		this.loginAction = loginAction;
+		this.upProvider = upProvider;
+		this.smsProvider = smsProvider;
+		this.tpaProvider = tpaProvider;
+		this.qqOauth2Handler = qqOauth2Handler;
+		this.wechatOauth2Handler = wechatOauth2Handler;
+		this.weibiOauth2Handler = weibiOauth2Handler;
+	}
+
+	@Bean
+	public AuthenticationFailureHandler getFailureHandler() {
+		SureUrlAuthenticationFailureHandler failureHandler = new SureUrlAuthenticationFailureHandler();
+		failureHandler.setTargetUrlParameter("errorGoto");
+		return failureHandler;
+	}
+
+	@Bean
+	public AuthenticationSuccessHandler getSuccessHandler() {
+		SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler();
+		successHandler.setAlwaysUseDefaultTargetUrl(true);
+		successHandler.setDefaultTargetUrl("/");
+		return successHandler;
+	}
+
+
 	@Autowired
-	private SureProcessingFilter loginAction;
-    
-    @Autowired
-    private UserPasswordAuthenticationProvider upProvider;
-    
-    @Autowired
-    private SMSAuthenticationProvider smsProvider;
-    
-    @Autowired
-    private TpaAuthenticationProvider tpaProvider;
-    
-    @Autowired
-    private QQOauth2Handler qqOauth2Handler;
-    
-    @Autowired
-    private WechatOauth2Handler wechatOauth2Handler;
-    
-    @Autowired
-    private WeiboOauth2Handler weibiOauth2Handler;
-    
-    @Value("${security.login.smsLogin:false}")
-    private boolean supportSMSLogin;
-    
-    @Value("${security.login.qq:false}")
-    private boolean supportQQLogin;
-    
-    @Value("${security.login.weibo:false}")
-    private boolean supportWeiboLogin;
-    
-    @Value("${security.login.wechat:false}")
-    private boolean supportWechatLogin;
-    
-    @Bean
-    public AuthenticationFailureHandler getFailureHandler() {
-    	SureUrlAuthenticationFailureHandler failureHandler = new SureUrlAuthenticationFailureHandler();
-    	//failureHandler.setUseForward(true);
-    	failureHandler.setTargetUrlParameter("errorGoto");
-    	return failureHandler;
-    }
-    
-    @Bean
-    public AuthenticationSuccessHandler getSuccessHandler() {
-    	SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler();
-    	successHandler.setAlwaysUseDefaultTargetUrl(true);
-    	successHandler.setDefaultTargetUrl("/");
-    	return successHandler;
-    }
-    
-    
-    @Autowired
-    public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-    	authenticationManagerBuilder.authenticationProvider(upProvider);
-    	if (supportSMSLogin) {
-    		authenticationManagerBuilder.authenticationProvider(smsProvider);
-    	}
-	    if (supportQQLogin) {
-		    tpaProvider.addHandler("qq", qqOauth2Handler);
-	    }
-	    if (supportWechatLogin) {
-		    tpaProvider.addHandler("wechat", wechatOauth2Handler);
-	    }
-	    if (supportWeiboLogin) {
-		    tpaProvider.addHandler("weibo", weibiOauth2Handler);
-	    }
-	    if (supportQQLogin || supportWechatLogin || supportWeiboLogin) {
-		    authenticationManagerBuilder.authenticationProvider(tpaProvider);
-	    }
-    }
-    
-    @Bean
-    public PasswordEncoder getPasswordEncoderBean(){
-    	return new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
-    }
-    
-    @Bean
-    public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-        return new JwtAuthenticationTokenFilter();
-    }
+	public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) {
+		authenticationManagerBuilder.authenticationProvider(upProvider);
+		if (supportSMSLogin) {
+			authenticationManagerBuilder.authenticationProvider(smsProvider);
+		}
+		if (supportQQLogin) {
+			tpaProvider.addHandler("qq", qqOauth2Handler);
+		}
+		if (supportWechatLogin) {
+			tpaProvider.addHandler("wechat", wechatOauth2Handler);
+		}
+		if (supportWeiboLogin) {
+			tpaProvider.addHandler("weibo", weibiOauth2Handler);
+		}
+		if (supportQQLogin || supportWechatLogin || supportWeiboLogin) {
+			authenticationManagerBuilder.authenticationProvider(tpaProvider);
+		}
+	}
+
+	@Bean
+	public PasswordEncoder getPasswordEncoderBean() {
+		return new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public JwtAuthenticationTokenFilter authenticationTokenFilterBean() {
+		return new JwtAuthenticationTokenFilter();
+	}
 
 	@Override
-	// configure(HttpSecurity): Request层面的配置，对应XML Configuration中的<http>元素
-	// 定义URL路径应该受到保护，哪些不应该
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity
 				.csrf().disable()
@@ -143,7 +143,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				// 对于获取token的rest api要允许匿名访问
 				.antMatchers("/security/auth/**", "/security/authcode/**", "/gotoLoginView", "/base/auth").permitAll()
 				// APP开放接口
-				.antMatchers("/app/spAnalysis").permitAll()
+				.antMatchers("/app/spAnalysis", "/api/task/**").permitAll()
 				.antMatchers(HttpMethod.GET, "/app/modelConfig/").permitAll()
 				//管理员页面
 				.antMatchers("/admin").hasAnyRole("ADMIN")
@@ -152,17 +152,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// 添加JWT filter
 		httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-		
+
 		httpSecurity.addFilterAfter(loginAction, UsernamePasswordAuthenticationFilter.class);
 
 		// 禁用缓存
 		//httpSecurity.headers().cacheControl();
-		
+
 	}
-	
+
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
-	return super.authenticationManagerBean();
+		return super.authenticationManagerBean();
 	}
 }

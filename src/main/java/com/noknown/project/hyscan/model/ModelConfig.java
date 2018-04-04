@@ -30,7 +30,7 @@ public class ModelConfig  implements Serializable, BaseObj {
 	/**
 	 * 辐亮度参数
 	 */
-	private float[] radianceParams;
+	private Float[] radianceParams;
 
 
 	/**
@@ -41,7 +41,7 @@ public class ModelConfig  implements Serializable, BaseObj {
 	/**
 	 * 光谱坐标范围
 	 */
-	private int[] spectralRange;
+	private Integer[] spectralRange;
 	
 	/**
 	 * 波长范围
@@ -70,11 +70,11 @@ public class ModelConfig  implements Serializable, BaseObj {
 		return this;
 	}
 
-	public int[] getSpectralRange() {
+	public Integer[] getSpectralRange() {
 		return spectralRange;
 	}
 
-	public ModelConfig setSpectralRange(int[] spectralRange) {
+	public ModelConfig setSpectralRange(Integer[] spectralRange) {
 		this.spectralRange = spectralRange;
 		return this;
 	}
@@ -88,11 +88,11 @@ public class ModelConfig  implements Serializable, BaseObj {
 		return this;
 	}
 
-	public float[] getRadianceParams() {
+	public Float[] getRadianceParams() {
 		return radianceParams;
 	}
 
-	public ModelConfig setRadianceParams(float[] radianceParams) {
+	public ModelConfig setRadianceParams(Float[] radianceParams) {
 		this.radianceParams = radianceParams;
 		return this;
 	}

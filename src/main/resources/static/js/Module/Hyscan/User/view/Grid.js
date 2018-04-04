@@ -92,6 +92,9 @@ Ext.define('Module.Hyscan.User.view.Grid', {
                     var setWQAdminR = me.contextMenu.down('menuitem[name=setWQAdmin]');
                     var setWQAdmin = me.portlet.down('menuitem[name=setWQAdmin]');
 
+                    var buildApiKeyR = me.contextMenu.down('menuitem[name=buildApiKey]');
+                    var buildApiKey = me.portlet.down('menuitem[name=buildApiKey]');
+
                     if (records.length == 1) {
                         setAdminR.enable();
                         setAdmin.enable();
@@ -99,6 +102,8 @@ Ext.define('Module.Hyscan.User.view.Grid', {
                         setHyscanAdmin.enable();
                         setWQAdminR.enable();
                         setWQAdmin.enable();
+                        buildApiKeyR.enable();
+                        buildApiKey.enable();
 
                         var isAdmin = me.isAdmin(records[0].data, "ROLE_ADMIN");
                         if (isAdmin) {
@@ -139,6 +144,8 @@ Ext.define('Module.Hyscan.User.view.Grid', {
                         setWQAdmin.setText("设置/取消水色管理员");
                         setWQAdminR.disable();
                         setWQAdmin.disable();
+                        buildApiKeyR.disable();
+                        buildApiKey.disable();
                     }
 
                 }
@@ -215,6 +222,10 @@ Ext.define('Module.Hyscan.User.view.Grid', {
         var setWQAdminR = me.contextMenu.down('menuitem[name=setWQAdmin]');
         var setWQAdmin = me.portlet.down('menuitem[name=setWQAdmin]');
 
+
+        var buildApiKeyR = me.contextMenu.down('menuitem[name=buildApiKey]');
+        var buildApiKey = me.portlet.down('menuitem[name=buildApiKey]');
+
         setAdminR.on('click', function () {
             var records = sm.getSelection();
             me.setAdmin(records[0].data, 'ROLE_ADMIN', callbackFn);
@@ -244,6 +255,14 @@ Ext.define('Module.Hyscan.User.view.Grid', {
             me.setAdmin(records[0].data, 'ROLE_WQ_ADMIN', callbackFn);
         });
 
+        buildApiKeyR.on('click', function () {
+            var records = sm.getSelection();
+            opt.showApiKey(records[0].data);
+        });
+        buildApiKey.on('click', function () {
+            var records = sm.getSelection();
+            opt.showApiKey(records[0].data);
+        });
 
 
     }

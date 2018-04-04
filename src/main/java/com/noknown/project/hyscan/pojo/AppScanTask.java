@@ -6,7 +6,11 @@ import com.noknown.project.hyscan.model.ScanTaskData;
 import java.io.Serializable;
 import java.sql.Date;
 
-public class AppScanTask<T extends ResultIF> implements Serializable {
+/**
+ * @param <T> 结果配置
+ * @author guodong
+ */
+public class AppScanTask<T extends AbstractResult> implements Serializable {
 
 	/**
 	 * 
@@ -85,139 +89,93 @@ public class AppScanTask<T extends ResultIF> implements Serializable {
 		return scanTaskData;
 	}
 
-	/**
-	 * @return the id
-	 */
 	public String getId() {
 		return id;
 	}
 
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(String id) {
+	public AppScanTask<T> setId(String id) {
 		this.id = id;
+		return this;
 	}
 
-	/**
-	 * @return the result
-	 */
-	public T getResult() {
-		return result;
-	}
-
-	/**
-	 * @param result the result to set
-	 */
-	public void setResult(T result) {
-		this.result = result;
-	}
-
-	/**
-	 * @return the position
-	 */
-	public Position getPosition() {
-		return position;
-	}
-
-	/**
-	 * @param position the position to set
-	 */
-	public void setPosition(Position position) {
-		this.position = position;
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * @return the imagePath
-	 */
-	public String getImagePath() {
-		return imagePath;
-	}
-
-	/**
-	 * @param imagePath the imagePath to set
-	 */
-	public void setImagePath(String imagePath) {
-		this.imagePath = imagePath;
-	}
-
-	/**
-	 * @return the device
-	 */
-	public Device getDevice() {
-		return device;
-	}
-
-	/**
-	 * @param device the device to set
-	 */
-	public void setDevice(Device device) {
-		this.device = device;
-	}
-
-	/**
-	 * @return the data
-	 */
-	public DataSet getData() {
-		return data;
-	}
-
-	/**
-	 * @param data the data to set
-	 */
-	public void setData(DataSet data) {
-		this.data = data;
-	}
-
-	/**
-	 * @return the timestamp
-	 */
-	public long getTimestamp() {
-		return timestamp;
-	}
-
-	/**
-	 * @param timestamp the timestamp to set
-	 */
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	/**
-	 * @return the userId
-	 */
 	public Integer getUserId() {
 		return userId;
 	}
 
-	/**
-	 * @param userId the userId to set
-	 */
-	public void setUserId(Integer userId) {
+	public AppScanTask<T> setUserId(Integer userId) {
 		this.userId = userId;
+		return this;
+	}
+
+	public T getResult() {
+		return result;
+	}
+
+	public AppScanTask<T> setResult(T result) {
+		this.result = result;
+		return this;
+	}
+
+	public Position getPosition() {
+		return position;
+	}
+
+	public AppScanTask<T> setPosition(Position position) {
+		this.position = position;
+		return this;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public AppScanTask<T> setName(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public AppScanTask<T> setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+		return this;
+	}
+
+	public Device getDevice() {
+		return device;
+	}
+
+	public AppScanTask<T> setDevice(Device device) {
+		this.device = device;
+		return this;
+	}
+
+	public DataSet getData() {
+		return data;
+	}
+
+	public AppScanTask<T> setData(DataSet data) {
+		this.data = data;
+		return this;
+	}
+
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public AppScanTask<T> setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+		return this;
 	}
 
 	public String getAppId() {
 		return appId;
 	}
 
-	public void setAppId(String appId) {
+	public AppScanTask<T> setAppId(String appId) {
 		this.appId = appId;
+		return this;
 	}
-	
-	
 }

@@ -18,7 +18,7 @@ import com.noknown.project.hyscan.model.ScanTaskData;
 import com.noknown.project.hyscan.pojo.AppScanTask;
 import com.noknown.project.hyscan.pojo.DownloadInfo;
 import com.noknown.project.hyscan.pojo.MaterialResult;
-import com.noknown.project.hyscan.pojo.WQResult;
+import com.noknown.project.hyscan.pojo.WqResult;
 import com.noknown.project.hyscan.service.ScanTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -95,7 +95,7 @@ public class ScanTaskController extends BaseController {
 	 * 保存水质检测任务
 	 */
 	@RequestMapping(value = "/scanTask/wq", method = RequestMethod.POST)
-	public ResponseEntity<?> saveWQTask(@RequestBody AppScanTask<WQResult> appTask)
+	public ResponseEntity<?> saveWQTask(@RequestBody AppScanTask<WqResult> appTask)
 			throws Exception {
 		Authentication user = loginAuth();
 		if (user == null) {

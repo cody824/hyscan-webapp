@@ -14,25 +14,30 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * @author guodong
+ */
 @Component
 public class Loader {
 
-	public final Logger logger = LoggerFactory.getLogger(getClass());
-	
-	@Autowired 
-	private GlobalConfigDao gcDao;
-	
-	private static Map<String, SpectralAnalysisAlgo> map = new HashMap<String, SpectralAnalysisAlgo>();
-	
+	private static Map<String, SpectralAnalysisAlgo> map = new HashMap<>();
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private final GlobalConfigDao gcDao;
+
 	private String currentAlgoVersion;
-	
+
+	@Autowired
+	public Loader(GlobalConfigDao gcDao) {
+		this.gcDao = gcDao;
+	}
+
 	@PostConstruct
 	public void init(){
-		Properties properties = gcDao.getProperties(Constants.algoConfig, Constants.appId);
+		Properties properties = gcDao.getProperties(Constants.ALGO_CONFIG, Constants.APP_ID);
 		if (properties == null) {
 			properties = new Properties();
 		}
-		map = new HashMap<String, SpectralAnalysisAlgo>();
+		map = new HashMap<>(10);
 		logger.info("开始初始化算法库");
 		for(String key : properties.stringPropertyNames()){
 			if (key.startsWith("algo_") && !key.endsWith("_invalid")) {
@@ -52,10 +57,10 @@ public class Loader {
 			}
 		}
 		logger.info(MessageFormat.format("算法库加载完成，共{0}个算法", map.size()));
-		gcDao.updateProperties(Constants.algoConfig, Constants.appId, properties);
+		gcDao.updateProperties(Constants.ALGO_CONFIG, Constants.APP_ID, properties);
 		currentAlgoVersion = properties.getProperty("currentAlgoVersion");
 	}
-	
+
 	public SpectralAnalysisAlgo getCurrentAlgo(){
 		SpectralAnalysisAlgo algo = null;
 		if (currentAlgoVersion != null) {
@@ -66,7 +71,7 @@ public class Loader {
 		}
 		return algo;
 	}
-	
+
 	public SpectralAnalysisAlgo getAlgo(String key){
 		return map.get(key);
 	}
@@ -84,5 +89,5 @@ public class Loader {
 	public void setCurrentAlgoVersion(String currentAlgoVersion) {
 		this.currentAlgoVersion = currentAlgoVersion;
 	}
-	
+
 }

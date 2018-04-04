@@ -6,7 +6,7 @@ import com.noknown.project.hyscan.model.ScanTask;
  * @author cody
  *
  */
-public class MaterialResult extends ResultIF{
+public class MaterialResult extends AbstractResult {
 
 	private int level;
 	
@@ -15,7 +15,7 @@ public class MaterialResult extends ResultIF{
 	private String material;
 
 	@Override
-	void fillTask(ScanTask scanTask) {
+	public void fillTask(ScanTask scanTask) {
 		scanTask.setMaterial(material);
 		scanTask.setLevel(level);
 
