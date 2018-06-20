@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+/**
+ * @author guodong
+ * @deprecated 合并通通用算法配置中
+ */
 @RestController
 @RequestMapping(value = Constants.APP_BASE_URL)
-public class WDAlgoConfigAdminController extends BaseController {
+public class WdAlgoConfigAdminController extends BaseController {
 
 	@Autowired
 	private WDAlgoConfigRepo wdacRepo;
@@ -44,8 +47,7 @@ public class WDAlgoConfigAdminController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/wdAlgoConfig/", method = RequestMethod.DELETE)
-	public ResponseEntity<?> removeModelConfigs(@RequestParam String models)
-			throws Exception {
+	public ResponseEntity<?> removeModelConfigs(@RequestParam String models) {
 		String[] modelArray = models.split(",");
 		for (String model : modelArray) {
 			try {

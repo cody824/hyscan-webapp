@@ -4,7 +4,6 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
 	requires  : [
 		'Soul.util.RendererUtil', 
 		'Soul.util.GridRendererUtil',
-		'Module.Hyscan.WQScanTask.Renderer',
 		'Module.Hyscan.Public.Tools'
 	],
 	

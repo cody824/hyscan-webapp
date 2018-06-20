@@ -1,12 +1,11 @@
-Ext.define('Module.Hyscan.WqAlgo.view.Grid', {
+Ext.define('Module.Hyscan.AlgoCommon.view.Grid', {
 	extend : 'Ext.grid.Panel',
 	
 	requires  : [
 		'Soul.util.RendererUtil', 
 		'Soul.util.GridRendererUtil',
-		'Module.Hyscan.WqAlgo.Data',
-		'Module.Hyscan.WqAlgo.Renderer',
 		'Soul.util.ObjectView',
+        'Module.Hyscan.AlgoCommon.Opt',
 		'Soul.ux.grid.feature.Searching'
 	],
 
@@ -23,8 +22,6 @@ Ext.define('Module.Hyscan.WqAlgo.view.Grid', {
 		var columns = new Array();
 		var renders = Module.Hyscan.WqAlgo.Renderer;
 
-
-
 		columns.push(
             // new Ext.grid.RowNumberer(),
 			{
@@ -32,7 +29,7 @@ Ext.define('Module.Hyscan.WqAlgo.view.Grid', {
 				menuDisabled:true, dataIndex: 'seq', align : 'center'
 			},
 			{
-				text: "算法key", width: 80, dataIndex:'key',
+                text: "算法key", flex: 1, width: 80, dataIndex: 'key',
 				menuDisabled:true, align : 'center',editor: {
                     xtype: 'textfield',
                     maxLength : 20,
@@ -40,7 +37,7 @@ Ext.define('Module.Hyscan.WqAlgo.view.Grid', {
                 }
 			},
 			{
-				text: "显示名",  width: 100,dataIndex:'chineseName',
+                text: "显示名", flex: 1, width: 100, dataIndex: 'chineseName',
 				menuDisabled:true, align : 'center',
                 editor: {
                     xtype: 'textfield',
@@ -48,16 +45,16 @@ Ext.define('Module.Hyscan.WqAlgo.view.Grid', {
                     allowBlank: false
                 }
 			},
-			{
-				text: "光谱索引",  flex:1, dataIndex:'waveIndex',
-				menuDisabled:true, align : 'center',
-                editor: {
-                    xtype: 'textfield',
-                    regex : /([0-9]+,)*[0-9]+/,
-                    regexText : '请输入多个数字中间用","号间隔',
-                    allowBlank: false,
-                }
-			},
+            // {
+            // 	text: "光谱索引",  flex:1, dataIndex:'waveIndex',
+            // 	menuDisabled:true, align : 'center',
+            //    editor: {
+            //        xtype: 'textfield',
+            //        regex : /([0-9]+,)*[0-9]+/,
+            //        regexText : '请输入多个数字中间用","号间隔',
+            //        allowBlank: false,
+            //    }
+            // },
 			{
 				text: "小数保留", width: 80, dataIndex:'decimal',
 				menuDisabled:true, align : 'center', editor: {
@@ -81,26 +78,16 @@ Ext.define('Module.Hyscan.WqAlgo.view.Grid', {
 	            editor: false,
 	            align: 'center',
 	            items: [
-	             //    {
-                //     icon: '/img/icon/up.png',
-                //     // tooltip: '',
-                //     name: 'view',
-                //     scope: this,
-                //     hidden : true,
-                //     handler: this.onUpClick,
-                //     isDisabled: function (v, r, c, item, r) {
-                //         console.log(v, r, c, item, r);
-                //     }
-                // }, {
-                //     icon: '/img/icon/down.png',
-                //     // tooltip: '删除',
-                //     name: 'view',
-                //     scope: this,
-                //     hidden : true,
-                //     handler: this.onDownClick,
-                //     isDisabled: function (v, r, c, item, r) {
-                //     }
-                // },
+                    {
+                        icon: '/img/icon/fileoperation.png',
+                        tooltip: '字典配置',
+                        name: 'view',
+                        scope: this,
+                        hidden: true,
+                        handler: this.onDictClick,
+                        isDisabled: function (v, r, c, item, r) {
+                        }
+                    },
                     {
 	                icon: '/img/icon/del.png',
 	                tooltip: '删除',
@@ -165,9 +152,7 @@ Ext.define('Module.Hyscan.WqAlgo.view.Grid', {
 	
 	loadData : function(data){
 		var me = this;
-		// console.log(me.wdItems);
 		data = data || me.wdItems;
-		console.log(data);
 		var storeData = [];
         Ext.Object.each(data, function (key, value) {
             value.chineseName = value.chineseName.replace(new RegExp("&nbsp;","gm"), " ");
@@ -183,38 +168,37 @@ Ext.define('Module.Hyscan.WqAlgo.view.Grid', {
 
     doSave : function(){
 	    var me  = this;
-	    var wdAlgos = {};
+        var algos = {};
         var orgData = [];
 	    me.store.each(function (r) {
             var data = r.data;
-            if(!Array.isArray(data.waveIndex)){
-                var waveIndex = data.waveIndex.split(',');
-                data.waveIndex = [];
-                Ext.each(waveIndex, function (index) {
-                    var i = parseInt(index);
-                    console.log(i);
-                    if (isNaN(i) || i < 0){
-                        Soul.util.MessageUtil.showErrorInfo("错误", data.key + "输入了无效的索引值");
-                        return;
-                    }
-                    data.waveIndex.push(i);
-                });
-            }
+            // if(!Array.isArray(data.waveIndex)){
+            //     var waveIndex = data.waveIndex.split(',');
+            //     data.waveIndex = [];
+            //     Ext.each(waveIndex, function (index) {
+            //         var i = parseInt(index);
+            //         if (isNaN(i) || i < 0){
+            //             Soul.util.MessageUtil.showErrorInfo("错误", data.key + "输入了无效的索引值");
+            //             return;
+            //         }
+            //         data.waveIndex.push(i);
+            //     });
+            // }
             data.chineseName = data.chineseName.replace(new RegExp(" ","gm"), "&nbsp;");
             if (data.unit.length == 0)
                 data.unit = " ";
             data.unit = data.unit.replace(new RegExp(" ","gm"), "&nbsp;");
-            wdAlgos[r.data.key] = r.data;
+            algos[r.data.key] = r.data;
             orgData.push(r.data);
         });
-	    console.log(wdAlgos);
         Soul.Ajax.request({
-            url : '/app/wdAlgoConfig/',
+            url: '/app/algo-config/',
             successMsg : '载入完成',
             method : 'post',
             jsonData : {
+                appId: me.appId,
                 model : me.title,
-                wdAlgos : wdAlgos
+                algos: algos
             },
             success : function(ret){
                 me.orgData = orgData;
@@ -240,12 +224,9 @@ Ext.define('Module.Hyscan.WqAlgo.view.Grid', {
 		me.store.removeAt(rowIndex);
 	},
 
-    onUpClick : function(view ,rowIndex, colIndex, item, e, record, row){
-
-    },
-
-    onDownClick : function(view ,rowIndex, colIndex, item, e, record, row){
-
+    onDictClick: function (view, rowIndex, colIndex, item, e, record, row) {
+        var me = this;
+        Module.Hyscan.AlgoCommon.Opt.showDictWin(me.appId, record.data.key);
     },
 
 	afterRender: function() {

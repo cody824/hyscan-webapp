@@ -138,9 +138,6 @@ Ext.define('Module.Hyscan.User.Renderer', {
 				icon = '<img src="/img/icon/user.png"/>';
 			else if (r.data.type == "app")
 				icon = '<img src="/img/icon/view.png"/>';
-
-			console.log(r.data);
-
 			return icon + '<a style="cursor:pointer;text-decoration:underline;font-style:italic;" onclick="Module.Hyscan.User.Tools.showUserInEast(\''+ r.data.id  +'\',event);">' + val + '</a>';
 		} else
 			return val;

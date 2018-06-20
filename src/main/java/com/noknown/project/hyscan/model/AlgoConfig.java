@@ -60,6 +60,6 @@ public class AlgoConfig implements Serializable, BaseObj {
 
 	@Override
 	public String getKey() {
-		return model + "-" + appId;
+		return appId + "-" + model;
 	}
 }

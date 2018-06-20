@@ -17,4 +17,17 @@ public class AlgoUtil {
 		}
 		return newData;
 	}
+
+	public static Integer[] getDn(double[] datas, Integer[] dc, Integer[] wd) {
+		Integer[] newData = new Integer[datas.length];
+		for (int i = 0; i < datas.length; i++) {
+			int data = 0;
+			if (wd[i] - dc[i] != 0) {
+				data = (int) Math.rint((wd[i] - dc[i]) * datas[i] + dc[i]);
+			}
+			newData[i] = data;
+		}
+		return newData;
+	}
+
 }

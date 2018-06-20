@@ -113,13 +113,11 @@ public class AppServiceImpl implements AppService {
 						.setLon(dataSet.getPosition().getLon());
 			}
 
-
-			if (dataSet.getReflectivity() == null || dataSet.getReflectivity().length != mc.getWavelengths().length) {
-				if (dataSet.getDn() == null || dataSet.getDn().length != mc.getWavelengths().length) {
-					logger.error("数据错误，采集数据长度与型号要求不符:" + id);
-					continue;
+			if (dataSet.getDn() == null || dataSet.getDn().length != mc.getWavelengths().length) {
+				if (dataSet.getReflectivity() != null && dataSet.getReflectivity().length == mc.getWavelengths().length) {
+					dataSet.setDn(AlgoUtil.getDn(dataSet.getReflectivity(), apiData.getDarkCurrent(), apiData.getWhiteboardData()));
 				} else {
-					dataSet.setReflectivity(AlgoUtil.getReflectivity(dataSet.getDn(), apiData.getDarkCurrent(), apiData.getWhiteboardData()));
+					logger.error("数据没有上传或者数据长度不正确:" + id);
 				}
 			}
 

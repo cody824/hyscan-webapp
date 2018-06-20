@@ -10,13 +10,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+/**
+ * @author guodong
+ * @deprecated 合并到参数字典中统一处理
+ */
 @RestController
 @RequestMapping(value = Constants.APP_BASE_URL)
 public class MaterialAlgoConfigAdminController extends BaseController {
 
+	private final MaterialAlgoConfigRepo mcRepo;
+
 	@Autowired
-	private MaterialAlgoConfigRepo mcRepo;
+	public MaterialAlgoConfigAdminController(MaterialAlgoConfigRepo mcRepo) {
+		this.mcRepo = mcRepo;
+	}
 
 	@RequestMapping(value = "/materialAlgoConfig/", method = {RequestMethod.POST, RequestMethod.PUT})
 	public ResponseEntity<?> save(@RequestBody MaterialAlgoConfig mac)
@@ -44,8 +51,7 @@ public class MaterialAlgoConfigAdminController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/materialAlgoConfig/", method = RequestMethod.DELETE)
-	public ResponseEntity<?> removeModelConfigs(@RequestParam String models)
-			throws Exception {
+	public ResponseEntity<?> removeModelConfigs(@RequestParam String models) {
 		String[] modelArray = models.split(",");
 		for (String model : modelArray) {
 			try {

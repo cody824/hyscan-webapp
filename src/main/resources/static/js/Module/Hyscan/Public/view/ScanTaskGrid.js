@@ -255,7 +255,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
     
 	onDataClick : function(view ,rowIndex, colIndex, item, e, record, row){
     	var me = this;
-    	var portlet = me.up("wqstportlet")
+        var portlet = me.up("hyscantaskportlet")
         portlet.gotoView("Module.Hyscan.Public.view.ScanTaskDataGrid", {
         	task: record.data,
 			title : record.data.id + "任务数据"

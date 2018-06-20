@@ -24,15 +24,6 @@
                     </config>
                 </subModules>
                 <subModules>
-                    <name>MaterialConfig</name>
-                    <disable>false</disable>
-                    <permissions>1</permissions>
-                    <config>
-                        <packageN>Hyscan</packageN>
-                        <index>1</index>
-                    </config>
-                </subModules>
-                <subModules>
                     <name>AlgoConfig</name>
                     <disable>false</disable>
                     <permissions>1</permissions>

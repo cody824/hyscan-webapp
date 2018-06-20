@@ -7,8 +7,6 @@ Ext.define('Module.Hyscan.User.Tools', {
 	
 	showUserInEast : function(id){
 		var me = this;
-		console.log(name);
-
 		Soul.Ajax.request({
 			url : '/security/ud/' + id,
 			method : 'get',

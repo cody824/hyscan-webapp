@@ -57,15 +57,16 @@ Ext.define('Module.Hyscan.MaterialConfig.Operation', {
 					if (!formpanel.getForm().isValid()) return;
 
 					var params = formpanel.getForm().getValues();
-					console.log(params);
-					
-					// restAction : function(url, method, params, jsonData, callbackFn,successMsg, failCallbackFn)
-					Soul.Ajax.restAction('/globalconfig/materialConfig/hyscan',
-						'put', params, params, function(ret){
-							callback();
-							
-							win.close();
-						}, null, null);
+                    Soul.Ajax.request({
+                        url: '/globalconfig/materialConfig/hyscan/',
+                        method: 'post',
+                        params: params,
+                        success: function () {
+                            callback();
+
+                            win.close();
+                        }
+                    });
 				}
 			},{
 				text: LABEL.cancel,

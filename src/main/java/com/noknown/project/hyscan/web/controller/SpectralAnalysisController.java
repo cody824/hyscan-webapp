@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * @author guodong
+ * @deprecated
  */
 @RestController
 @RequestMapping(value = Constants.APP_BASE_URL)
@@ -45,7 +46,7 @@ public class SpectralAnalysisController extends BaseController {
 		return ResponseEntity.ok(result);
 	}
 
-	@RequestMapping(value = "/spAnalysis/task/{taskId}", method = RequestMethod.POST)
+	@RequestMapping(value = {"/spAnalysis/task/{taskId}"}, method = RequestMethod.POST)
 	public ResponseEntity<?> analysis(@PathVariable String taskId, @RequestParam(required = false) String algo)
 			throws Exception {
 		AbstractResult result = analysisService.analysis(taskId, algo);

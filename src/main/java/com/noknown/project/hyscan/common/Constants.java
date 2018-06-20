@@ -18,4 +18,6 @@ public class Constants {
 
 	public static final String APP_ALGO_CONFIG = "appAlgoConfig";
 
+	public final static String RESULT_DICT_CONFIG = "resultDict";
+
 }

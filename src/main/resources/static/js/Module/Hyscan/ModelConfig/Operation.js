@@ -139,7 +139,6 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 		}
 		var title = "新建型号";
 		if (record) {
-			console.log(record);
 			formpanel.getForm().setValues(record.data);
 			formpanel.down('[name=radianceParams]').next('[name=radianceParams]').setValue(record.data.radianceParams[1]);
 			formpanel.down('[name=spectralRange]').next('[name=spectralRange]').setValue(record.data.spectralRange[1]);
@@ -163,9 +162,8 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 					if (!formpanel.getForm().isValid()) return;
 
 					var params = formpanel.getForm().getValues();
-					console.log(params);
-					
-					var wavelengths = [];
+
+                    var wavelengths = [];
 					var wArray = params.wavelengths.split(',');
 					for (var i = 0; i < wArray.length; i++) {
 						wavelengths.push(wArray[i]);

@@ -13,8 +13,8 @@ import com.noknown.framework.security.service.ApiKeyService;
 import com.noknown.project.hyscan.common.Constants;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.pojo.ApiUploadData;
+import com.noknown.project.hyscan.service.AnalysisService;
 import com.noknown.project.hyscan.service.AppService;
-import com.noknown.project.hyscan.service.SpectralAnalysisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
@@ -45,14 +45,14 @@ public class TaskApiController extends BaseController {
 
 	private final AppService appService;
 
-	private final SpectralAnalysisService analysisService;
+	private final AnalysisService analysisService;
 
 	private final BlockingQueue<List<ScanTask>> blockingDeque = new LinkedBlockingQueue<>();
 
 	private ExecutorService analysisExecutor;
 
 	@Autowired
-	public TaskApiController(ApiKeyService apiKeyService, GlobalConfigService globalConfigService, MessageSource messageSource, AppService appService, SpectralAnalysisService analysisService) {
+	public TaskApiController(ApiKeyService apiKeyService, GlobalConfigService globalConfigService, MessageSource messageSource, AppService appService, AnalysisService analysisService) {
 		this.apiKeyService = apiKeyService;
 		this.globalConfigService = globalConfigService;
 		this.messageSource = messageSource;
@@ -94,6 +94,12 @@ public class TaskApiController extends BaseController {
 		token.setAccessKey(accessKey).setSign(sign).setParams(params).setTimestamp(timestamp).setSignMethod(signMethod);
 		User user = apiKeyService.check(token);
 
+		String oldAppId = "wq";
+
+		//处理遗留问题
+		if (oldAppId.equals(appId)) {
+			appId = "shuise";
+		}
 		apiData.setAppId(appId);
 
 		List<ScanTask> scanTaskList = appService.buildScanTask(apiData, user.getId(), locale);

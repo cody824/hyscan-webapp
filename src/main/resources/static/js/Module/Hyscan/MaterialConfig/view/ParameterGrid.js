@@ -90,7 +90,6 @@ Ext.define('Module.Hyscan.MaterialConfig.view.ParameterGrid', {
 		var configUrl = '/globalconfig/materialConfig/hyscan?fetch=true';
 	
 		Soul.Ajax.restAction(configUrl, 'get', null, null, function(ret){
-			console.log(ret);
 			var paramData = [];
 			Ext.Object.each(ret, function(k, v, self) {
 				var param = {};

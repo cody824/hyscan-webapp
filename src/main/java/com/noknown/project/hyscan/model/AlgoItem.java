@@ -17,6 +17,8 @@ public class AlgoItem {
 
 	private int seq;
 
+	private Boolean useDict;
+
 	public String getKey() {
 		return key;
 	}
@@ -68,6 +70,15 @@ public class AlgoItem {
 
 	public AlgoItem setDecimal(int decimal) {
 		this.decimal = decimal;
+		return this;
+	}
+
+	public Boolean getUseDict() {
+		return useDict;
+	}
+
+	public AlgoItem setUseDict(Boolean useDict) {
+		this.useDict = useDict;
 		return this;
 	}
 }

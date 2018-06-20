@@ -65,7 +65,6 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
 			var model = grid.title;
 			var appId = "material";
 			var filter = grid.store.proxy.extraParams;
-			console.log(model, filter);
 
             Soul.Ajax.request({
                 url : '/app/scanTask/export/',

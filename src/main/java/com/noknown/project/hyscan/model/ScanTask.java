@@ -97,6 +97,10 @@ public class ScanTask implements Serializable {
 	@Column(length = 64)
 	private String appId;
 
+
+	@Column(length = 64)
+	private String targetType;
+
 	/**
 	 * 结果 ：老化等级
 	 */
@@ -109,57 +113,57 @@ public class ScanTask implements Serializable {
 	private String material;
 
 	/**
-	 * 预留结果字段0
+	 * 预留结果字段
 	 */
 	private Double result0;
 
 	/**
-	 * 预留结果字段1
+	 * 预留结果字段
 	 */
 	private Double result1;
 
 	/**
-	 * 预留结果字段2
+	 * 预留结果字段
 	 */
 	private Double result2;
 
 	/**
-	 * 预留结果字段2
+	 * 预留结果字段
 	 */
 	private Double result3;
 
 	/**
-	 * 预留结果字段2
+	 * 预留结果字段
 	 */
 	private Double result4;
 
 	/**
-	 * 预留结果字段2
+	 * 预留结果字段
 	 */
 	private Double result5;
 
 	/**
-	 * 预留结果字段2
+	 * 预留结果字段
 	 */
 	private Double result6;
 
 	/**
-	 * 预留结果字段2
+	 * 预留结果字段
 	 */
 	private Double result7;
 
 	/**
-	 * 预留结果字段2
+	 * 预留结果字段
 	 */
 	private Double result8;
 
 	/**
-	 * 预留结果字段2
+	 * 预留结果字段
 	 */
 	private Double result9;
 
 	/**
-	 * 预留结果字段2
+	 * 预留结果字段
 	 */
 	private Double result10;
 
@@ -403,6 +407,16 @@ public class ScanTask implements Serializable {
 
 	public ScanTask setResult10(Double result10) {
 		this.result10 = result10;
+		return this;
+	}
+
+
+	public String getTargetType() {
+		return targetType;
+	}
+
+	public ScanTask setTargetType(String targetType) {
+		this.targetType = targetType;
 		return this;
 	}
 }

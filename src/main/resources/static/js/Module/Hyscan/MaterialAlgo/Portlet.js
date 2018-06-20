@@ -1,18 +1,13 @@
 Ext.define('Module.Hyscan.MaterialAlgo.Portlet', {
 	extend : 'Soul.view.ModulePortlet',
-	
-	requires  : [
-		'Module.Hyscan.MaterialAlgo.Operation',
-		'Module.Hyscan.MaterialAlgo.Data',
- 	],
- 		
+
  	VIEW : {
-        'Module.Hyscan.MaterialAlgo.view.Panel' : "表单模式"
+        'Module.Hyscan.MaterialAlgo.view.Panel': '表格模式'
 	},
     
 	title: "材质检测算法",
-	
-	moduleName : 'Module.Hyscan.MaterialAlgo',
+
+    moduleName: 'Module.Hyscan.MaterialAlgo',
     
     moduleSessionView : 'Module.Hyscan.MaterialAlgoCurrentView',
     
@@ -28,23 +23,5 @@ Ext.define('Module.Hyscan.MaterialAlgo.Portlet', {
     
 	initComponent : function() {
     	this.callParent(arguments);
-	},
-
-    buildParamType : function() {
-    	var menu = Ext.create('Ext.menu.Menu', {
-    		id : 'paramtype',
-    		name : 'paramtype',
-	        style: {
-	            overflow: 'visible'     // For the Combo popup
-	        },
-	        items: []
-	    });
-		return menu;
-    },
-
-
-    initToolbar : function(){
-		var toolbar = this.callParent(arguments);
-		return toolbar;
     }
 });
