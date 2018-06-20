@@ -27,14 +27,14 @@ public class WdAlgoConfigAdminController extends BaseController {
 		wdacRepo.save(modelConfig);
 		return ResponseEntity.ok(modelConfig);
 	}
-	
+
 	@RequestMapping(value = "/wdAlgoConfig/", method = RequestMethod.GET)
 	public ResponseEntity<?> find()
 			throws Exception {
 		List<WDAlgoConfig> modelConfigs = wdacRepo.findAll();
 		return ResponseEntity.ok(modelConfigs);
 	}
-	
+
 	@RequestMapping(value = "/wdAlgoConfig/{model}", method = RequestMethod.GET)
 	public ResponseEntity<?> getModelConfig(@PathVariable String model)
 			throws Exception {
@@ -45,7 +45,7 @@ public class WdAlgoConfigAdminController extends BaseController {
 			return ResponseEntity.ok(wdac);
 		}
 	}
-	
+
 	@RequestMapping(value = "/wdAlgoConfig/", method = RequestMethod.DELETE)
 	public ResponseEntity<?> removeModelConfigs(@RequestParam String models) {
 		String[] modelArray = models.split(",");
@@ -59,12 +59,12 @@ public class WdAlgoConfigAdminController extends BaseController {
 		}
 		return ResponseEntity.ok(null);
 	}
-	
+
 	@RequestMapping(value = "/wdAlgoConfig/{model}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> removeModelConfig(@PathVariable String model)
 			throws Exception {
 		wdacRepo.delete(model);
 		return ResponseEntity.ok(null);
 	}
-	
+
 }
