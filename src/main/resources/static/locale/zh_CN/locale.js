@@ -6,7 +6,7 @@ MODULE_GROUP = {
 
 MODULE_NAME = {
 	"Module.Hyscan.AlgoConfig" : '算法包',
-    "Module.Hyscan.WqAlgo" : '水质监测算法',
+    "Module.Hyscan.WqAlgo": '水色检测算法',
     "Module.Hyscan.MeiseAlgo": '煤色算法配置',
     "Module.Hyscan.MaterialAlgo" : '材质检测算法',
      "Module.Hyscan.User" : '用户信息',
@@ -20,7 +20,7 @@ MODULE_NAME = {
 
 MODULE_HELP = {
 	"Module.Hyscan.AlgoConfig" : '配置管理算法包',
-    "Module.Hyscan.WqAlgo" : '配置水质监测算法参数',
+    "Module.Hyscan.WqAlgo": '配置水色算法参数',
     "Module.Hyscan.MeiseAlgo": '配置煤色算法参数',
     "Module.Hyscan.MaterialAlgo" : '配置材质检测算法参数',
     "Module.Hyscan.User" : '显示系统已经注册用户',
