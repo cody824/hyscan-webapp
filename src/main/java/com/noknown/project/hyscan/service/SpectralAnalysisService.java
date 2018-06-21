@@ -8,6 +8,7 @@ import com.noknown.project.hyscan.pojo.Result;
 import com.noknown.project.hyscan.pojo.WqResult;
 
 /**
+ * @deprecated
  * @author guodong
  */
 @SuppressWarnings("deprecation")
@@ -47,27 +48,6 @@ public interface SpectralAnalysisService {
 	 */
 	WqResult wqAnalysis(double[] reflectivity, String model, String algoVersion) throws ServiceException, DaoException;
 
-	/**
-	 * 分析老化等级
-	 * @param reflectivity  反射率
-	 * @param model         型号
-	 * @param algoVersion   算法版本
-	 * @return 结果
-	 * @throws ServiceException 服务异常
-	 * @throws DaoException     dao异常
-	 */
-	int analysisOldLevel(double[] reflectivity, String model, String algoVersion) throws ServiceException, DaoException;
-
-	/**
-	 * 分析材质
-	 * @param reflectivity  反射率
-	 * @param model         型号
-	 * @param algoVersion   算法版本
-	 * @return 结果
-	 * @throws ServiceException 服务异常
-	 * @throws DaoException     dao异常
-	 */
-	int analysisMaterial(double[] reflectivity, String model, String algoVersion) throws ServiceException, DaoException;
 
 
 	/**

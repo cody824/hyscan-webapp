@@ -20,7 +20,7 @@ import java.util.Properties;
 @Component
 public class Loader {
 
-	private static Map<String, SpectralAnalysisAlgo> map = new HashMap<>();
+	private static Map<String, AbstractAnalysisAlgo> map = new HashMap<>();
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final GlobalConfigDao gcDao;
 
@@ -40,18 +40,24 @@ public class Loader {
 		map = new HashMap<>(10);
 		logger.info("开始初始化算法库");
 		for(String key : properties.stringPropertyNames()){
-			if (key.startsWith("algo_") && !key.endsWith("_invalid")) {
+			if (key.startsWith("algo_")) {
 				String pn = properties.getProperty(key);
 				String[] pnArray = pn.split(",");
+				String[] keys = key.split("_");
+
 				if (pnArray.length == 2) {
 					logger.debug(pnArray[0]);
 					Object algo =  ClassUtil.loadInstance(pnArray[0], pnArray[1]);
-					if (algo != null && algo instanceof SpectralAnalysisAlgo){
-						map.put(key.substring(5), (SpectralAnalysisAlgo) algo);
-						logger.info(MessageFormat.format("加载算法【{0}】:{1}", key.substring(5), pnArray[1]));
+					if (algo != null && algo instanceof AbstractAnalysisAlgo) {
+						AbstractAnalysisAlgo analysisAlgo = (AbstractAnalysisAlgo) algo;
+						analysisAlgo.setClassName(pnArray[1]).setJar(pnArray[0]).setVersion(keys[1]);
+						map.put(keys[1], analysisAlgo);
+						properties.remove(key);
+						properties.setProperty(keys[0] + "_" + keys[1], pn);
+						logger.info(MessageFormat.format("加载算法【{0}】:{1}", keys[1], pnArray[1]));
 					} else {
 						properties.remove(key);
-						properties.setProperty(key + "_invalid", pn);
+						properties.setProperty(keys[0] + "_" + keys[1] + "_invalid", pn);
 					}
 				}
 			}
@@ -61,8 +67,8 @@ public class Loader {
 		currentAlgoVersion = properties.getProperty("currentAlgoVersion");
 	}
 
-	public SpectralAnalysisAlgo getCurrentAlgo(){
-		SpectralAnalysisAlgo algo = null;
+	public AbstractAnalysisAlgo getCurrentAlgo() {
+		AbstractAnalysisAlgo algo = null;
 		if (currentAlgoVersion != null) {
 			algo = map.get(currentAlgoVersion);
 		}
@@ -72,15 +78,9 @@ public class Loader {
 		return algo;
 	}
 
-	public SpectralAnalysisAlgo getAlgo(String key){
-		return map.get(key);
-	}
 
-	/**
-	 * @return the currentAlgoVersion
-	 */
-	public String getCurrentAlgoVersion() {
-		return currentAlgoVersion;
+	public AbstractAnalysisAlgo getAlgo(String key) {
+		return map.get(key);
 	}
 
 	/**
