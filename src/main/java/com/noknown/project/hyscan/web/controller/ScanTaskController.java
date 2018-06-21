@@ -15,10 +15,7 @@ import com.noknown.framework.fss.service.FileStoreServiceRepo;
 import com.noknown.project.hyscan.common.Constants;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
-import com.noknown.project.hyscan.pojo.AppScanTask;
-import com.noknown.project.hyscan.pojo.DownloadInfo;
-import com.noknown.project.hyscan.pojo.MaterialResult;
-import com.noknown.project.hyscan.pojo.WqResult;
+import com.noknown.project.hyscan.pojo.*;
 import com.noknown.project.hyscan.service.ScanTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,7 +56,7 @@ public class ScanTaskController extends BaseController {
 
 	@Deprecated
 	@RequestMapping(value = "/scanTask/", method = RequestMethod.POST)
-	public ResponseEntity<?> saveTask(@RequestBody AppScanTask<MaterialResult> appTask)
+	public ResponseEntity<?> saveTask(@RequestBody AppScanTask<CommonResult> appTask)
 			throws Exception {
 		Authentication user = loginAuth();
 		if (user == null) {

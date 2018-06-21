@@ -41,7 +41,7 @@ Ext.define('Module.Hyscan.Public.model.ScanTaskModel', {
 	/**
 	 * 结果 ：老化等级
 	 */
-	"level",
+        "level", "targetType",
 
 
 	/**

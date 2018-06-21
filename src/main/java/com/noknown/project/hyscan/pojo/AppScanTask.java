@@ -1,5 +1,6 @@
 package com.noknown.project.hyscan.pojo;
 
+import com.noknown.framework.common.util.StringUtil;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
 
@@ -36,7 +37,9 @@ public class AppScanTask<T extends AbstractResult> implements Serializable {
 	private long timestamp;
 	
 	private String appId;
-	
+
+	private String targetType;
+
 	public ScanTask toTaskInfo() {
 		ScanTask task = new ScanTask();
 		task.setId(getId());
@@ -63,6 +66,9 @@ public class AppScanTask<T extends AbstractResult> implements Serializable {
 			task.setDeviceFirmware(getDevice().getFirmware());
 			task.setDeviceModel(getDevice().getModel());
 			task.setDeviceSerial(getDevice().getSerial());
+		}
+		if (StringUtil.isNotBlank(getTargetType())) {
+			task.setTargetType(getTargetType());
 		}
 		return task;
 	}
@@ -176,6 +182,15 @@ public class AppScanTask<T extends AbstractResult> implements Serializable {
 
 	public AppScanTask<T> setAppId(String appId) {
 		this.appId = appId;
+		return this;
+	}
+
+	public String getTargetType() {
+		return targetType;
+	}
+
+	public AppScanTask<T> setTargetType(String targetType) {
+		this.targetType = targetType;
 		return this;
 	}
 }
