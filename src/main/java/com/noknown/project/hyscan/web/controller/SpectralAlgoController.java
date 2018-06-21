@@ -60,7 +60,7 @@ public class SpectralAlgoController extends BaseController {
 
 	@RequestMapping(value = "/algorithm/{version}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteAlgo(@PathVariable String version) {
-		Properties props = gcService.getProperties(Constants.ALGO_CONFIG, Constants.APP_ID, false);
+		Properties props = gcService.getProperties(Constants.ALGO_CONFIG, Constants.APP_ID, true);
 		if (props != null) {
 			String key = "algo_" + version;
 			String pnString = props.getProperty(key);

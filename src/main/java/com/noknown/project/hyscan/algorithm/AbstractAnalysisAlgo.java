@@ -73,19 +73,19 @@ public abstract class AbstractAnalysisAlgo {
 
 	/**
 	 * 加载类
-	 * <p>
-	 * public Class loadClass(String name) {
-	 * if (getClassLoader() != null) {
-	 * try {
-	 * return classLoader.loadClass(name);
-	 * } catch (ClassNotFoundException e) {
-	 * e.printStackTrace();
-	 * }
-	 * }
-	 * return null;
-	 * }
-	 * <p>
-	 * /**
+	 */
+	public Class loadClass(String name) {
+		if (getClassLoader() != null) {
+			try {
+				return classLoader.loadClass(name);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * 获取文件的输入流
 	 */
 	public InputStream loadFile(String path) {
