@@ -8,6 +8,8 @@ import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
 import com.noknown.project.hyscan.pojo.DownloadInfo;
 
+import java.util.List;
+
 
 /**
  * @author guodong
@@ -57,5 +59,14 @@ public interface ScanTaskService extends BaseService<ScanTask, String> {
 	 * @throws DaoException
 	 */
 	DownloadInfo exportScanTask(String taskId) throws ServiceException, DaoException;
+
+	/**
+	 * 获取用户的任务记录
+	 *
+	 * @param userId 用户ID
+	 * @param appId  应用ID
+	 * @return 任务记录
+	 */
+	List<ScanTask> findByUserId(Integer userId, String appId);
 
 }

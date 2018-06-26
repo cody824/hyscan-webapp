@@ -1,9 +1,11 @@
 package com.noknown.project.hyscan.pojo;
 
+import com.noknown.project.hyscan.model.AlgoItem;
 import com.noknown.project.hyscan.model.ScanTask;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -42,6 +44,38 @@ public class CommonResult extends AbstractResult {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public void loadFormTask(ScanTask task, Map<String, AlgoItem> algos, Properties dict) {
+		double[] data = new double[algos.size()];
+		String[] unit = new String[algos.size()];
+		String[] name = new String[algos.size()];
+		int[] decimal = new int[algos.size()];
+		String[] chineseName = new String[algos.size()];
+
+		for (AlgoItem ac : algos.values()) {
+			Method getMethod;
+			double value = 0;
+			try {
+				getMethod = ScanTask.class.getMethod("getResult" + ac.getSeq());
+				value = (double) getMethod.invoke(task);
+			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
+			data[ac.getSeq()] = value;
+			unit[ac.getSeq()] = ac.getUnit();
+			name[ac.getSeq()] = ac.getKey();
+			chineseName[ac.getSeq()] = ac.getChineseName();
+			decimal[ac.getSeq()] = ac.getDecimal();
+		}
+		this.setChineseName(chineseName)
+				.setData(data)
+				.setName(name)
+				.setUnit(unit)
+				.setDecimal(decimal)
+				.setAppId(task.getAppId())
+				.setDict(dict);
 	}
 
 	public String getAppId() {

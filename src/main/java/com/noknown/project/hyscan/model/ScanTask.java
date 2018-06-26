@@ -2,6 +2,7 @@ package com.noknown.project.hyscan.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.noknown.project.hyscan.pojo.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author guodong
@@ -166,6 +169,39 @@ public class ScanTask implements Serializable {
 	 * 预留结果字段
 	 */
 	private Double result10;
+
+	public AppScanTask<CommonResult> toAppScanTask(Map<String, AlgoItem> algos, Properties dict, DataSet dataSet) {
+		AppScanTask<CommonResult> appScanTask = new AppScanTask<>();
+		appScanTask.setImagePath(getImagePath())
+				.setAppId(appId)
+				.setUserId(userId)
+				.setId(id)
+				.setTargetType(targetType)
+				.setName(getScanTarget())
+				.setTimestamp(this.getScanTime().getTime());
+
+		Device device = new Device();
+		device.setAddress(deviceAddress);
+		device.setFirmware(deviceFirmware);
+		device.setModel(deviceModel);
+		device.setSerial(deviceSerial);
+
+		appScanTask.setDevice(device);
+
+		CommonResult commonResult = new CommonResult();
+		commonResult.loadFormTask(this, algos, dict);
+
+		appScanTask.setResult(commonResult);
+		Position position = new Position().setAddress(address)
+				.setCity(city)
+				.setLat(lat)
+				.setLon(lon);
+
+		appScanTask.setPosition(position);
+		appScanTask.setData(dataSet);
+		return appScanTask;
+
+	}
 
 	public String getId() {
 		return id;

@@ -4,6 +4,8 @@ import com.noknown.framework.common.base.BaseController;
 import com.noknown.framework.common.exception.DaoException;
 import com.noknown.framework.common.exception.ServiceException;
 import com.noknown.framework.common.exception.WebException;
+import com.noknown.framework.common.model.ConfigRepo;
+import com.noknown.framework.common.service.GlobalConfigService;
 import com.noknown.framework.common.util.DateUtil;
 import com.noknown.framework.common.util.JsonUtil;
 import com.noknown.framework.common.util.StringUtil;
@@ -13,6 +15,8 @@ import com.noknown.framework.common.web.model.SQLOrder;
 import com.noknown.framework.fss.service.FileStoreService;
 import com.noknown.framework.fss.service.FileStoreServiceRepo;
 import com.noknown.project.hyscan.common.Constants;
+import com.noknown.project.hyscan.dao.AlgoConfigRepo;
+import com.noknown.project.hyscan.model.AlgoConfig;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
 import com.noknown.project.hyscan.pojo.*;
@@ -29,10 +33,7 @@ import org.springframework.web.util.HtmlUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author guodong
@@ -45,13 +46,20 @@ public class ScanTaskController extends BaseController {
 
 	private final FileStoreServiceRepo repo;
 
+	private final AlgoConfigRepo acDao;
+
+	private final GlobalConfigService globalConfigService;
+
+
 	@Value("${hyscan.exportPath:/export/}")
 	private String exportPath;
 
 	@Autowired
-	public ScanTaskController(ScanTaskService taskService, FileStoreServiceRepo repo) {
+	public ScanTaskController(ScanTaskService taskService, FileStoreServiceRepo repo, AlgoConfigRepo acDao, GlobalConfigService globalConfigService) {
 		this.taskService = taskService;
 		this.repo = repo;
+		this.acDao = acDao;
+		this.globalConfigService = globalConfigService;
 	}
 
 	@Deprecated
@@ -209,6 +217,51 @@ public class ScanTaskController extends BaseController {
 		} else {
 			return ResponseEntity.ok(data);
 		}
+	}
+
+	@RequestMapping(value = "/scanTask/appData/{taskId}", method = RequestMethod.GET)
+	public ResponseEntity<?> getAppScanTask(@PathVariable String taskId, @RequestParam(required = false, defaultValue = "true") boolean containData)
+			throws Exception {
+		ScanTask task = taskService.get(taskId);
+		AppScanTask<CommonResult> appScanTask;
+		if (task == null) {
+			return ResponseEntity.notFound().build();
+		}
+		Properties dict = null;
+		ConfigRepo repo = globalConfigService.getConfigRepo(Constants.RESULT_DICT_CONFIG, true);
+		if (repo != null) {
+			dict = repo.getConfigs().get(task.getAppId());
+		}
+		if (dict == null) {
+			dict = new Properties();
+		}
+		Map<String, AlgoConfig> algoConfigMap = new HashMap<>(10);
+
+		AlgoConfig algoConfig = algoConfigMap.get(task.getDeviceModel());
+		if (algoConfig == null) {
+			try {
+				algoConfig = acDao.get(task.getAppId() + "-" + task.getDeviceModel());
+			} catch (DaoException e) {
+				e.printStackTrace();
+			}
+		}
+		if (algoConfig != null) {
+			DataSet dataSet = null;
+			appScanTask = task.toAppScanTask(algoConfig.getAlgos(), dict, null);
+			if (containData) {
+				ScanTaskData data = taskService.getData(taskId);
+				dataSet = new DataSet();
+				dataSet.setDn(data.getDn());
+				dataSet.setDnList(data.getDnList());
+				dataSet.setWhiteboardData(data.getWhiteboardData());
+				dataSet.setDarkCurrent(data.getDarkCurrent());
+				appScanTask.getDevice().setSpectralRange(data.getRange());
+			}
+			appScanTask.setData(dataSet);
+		} else {
+			throw new WebException("配置不存在");
+		}
+		return ResponseEntity.ok(appScanTask);
 	}
 
 	@RequestMapping(value = "/scanTask/export/", method = RequestMethod.POST)

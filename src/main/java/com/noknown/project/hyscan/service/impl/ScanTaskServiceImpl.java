@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author guodong
@@ -140,6 +141,11 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 				.setSize(zipFile.length())
 				.setTaskNum(1);
 		return downloadInfo;
+	}
+
+	@Override
+	public List<ScanTask> findByUserId(Integer userId, String appId) {
+		return taskDao.findByUserIdAndAppId(userId, appId);
 	}
 
 	private File exportOne(ScanTask scanTask, File dir) throws ServiceException, DaoException {

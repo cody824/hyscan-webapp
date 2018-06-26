@@ -1,6 +1,10 @@
 package com.noknown.project.hyscan.pojo;
 
+import com.noknown.project.hyscan.model.AlgoItem;
 import com.noknown.project.hyscan.model.ScanTask;
+
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author cody
@@ -19,6 +23,12 @@ public class MaterialResult extends AbstractResult {
 		scanTask.setMaterial(material);
 		scanTask.setLevel(level);
 
+	}
+
+	@Override
+	public void loadFormTask(ScanTask task, Map<String, AlgoItem> algos, Properties dict) {
+		this.level = task.getLevel();
+		this.materialIndex = this.getMaterialIndex();
 	}
 
 	/**
