@@ -22,6 +22,8 @@ Ext.define('Module.Hyscan.WQScanTask.Portlet', {
 	
     defaultView : 'Module.Hyscan.WQScanTask.view.Panel',
 
-    supportView: ['Module.Hyscan.WQScanTask.view.Panel', 'Module.Hyscan.Public.view.ScanTaskDataGrid']
+    supportView: ['Module.Hyscan.WQScanTask.view.Panel', 'Module.Hyscan.Public.view.ScanTaskDataGrid'],
+
+    appId: 'shuise'
 
 });

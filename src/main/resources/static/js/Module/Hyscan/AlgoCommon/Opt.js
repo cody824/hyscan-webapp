@@ -34,7 +34,6 @@ Ext.define('Module.Hyscan.AlgoCommon.Opt', {
 
     showEditWin: function (record, appId, dataType, callback) {
         var configType = "resultDict";
-        console.log(record, appId, dataType);
         var formpanel = new Ext.FormPanel({
             labelWidth: 60,
             frame: true,

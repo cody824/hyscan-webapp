@@ -18,6 +18,8 @@ Ext.define('Module.Hyscan.MeiseScanTask.Portlet', {
 
     defaultView: 'Module.Hyscan.MeiseScanTask.view.Panel',
 
-    supportView: ['Module.Hyscan.MeiseScanTask.view.Panel', 'Module.Hyscan.Public.view.ScanTaskDataGrid']
+    supportView: ['Module.Hyscan.MeiseScanTask.view.Panel', 'Module.Hyscan.Public.view.ScanTaskDataGrid'],
+
+    appId: 'meise'
 
 });

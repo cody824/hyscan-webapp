@@ -90,7 +90,6 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
                     metaData.tdAttr = 'data-qtip="双击查看大图"';
                     Ext.defer(function(){
                         Ext.EventManager.addListener(id, 'dblclick', function (e, a) {
-                            console.log(a.naturalWidth, a.naturalHeight);
                             var win_Watch = Ext.create('Ext.Window', {
                                 width: a.naturalWidth,
                                 height: a.naturalHeight,

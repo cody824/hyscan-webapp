@@ -2,7 +2,11 @@ Ext.define('Module.Hyscan.Public.TaskPortlet', {
     extend: 'Soul.view.ModulePortlet',
     alias: 'widget.hyscantaskportlet',
 
+    requires: ["Module.Hyscan.Public.Opt"],
+
     havUpdateButton: false,
+
+    appId: null,
 
     initComponent: function () {
         this.callParent(arguments);
@@ -31,16 +35,15 @@ Ext.define('Module.Hyscan.Public.TaskPortlet', {
         var me = this;
         var view = me.currentView;
         var item = me.getComponent(me.id + '-' + me.currentView);
-        if (view == "Module.Hyscan.MeiseScanTask.view.Panel") {
+        if (Ext.String.endsWith(view, ".view.Panel")) {
             var grid = item.tabs.getActiveTab() || item.tabs.getComponent(0);
             if (grid == null) {
                 Ext.Msg.alert("错误", "没有选择数据集");
                 return;
             }
             var model = grid.title;
-            var appId = "wq";
+            var appId = me.appId;
             var filter = grid.store.proxy.extraParams;
-            console.log(model, filter);
 
             Soul.Ajax.request({
                 url: '/app/scanTask/export/',
