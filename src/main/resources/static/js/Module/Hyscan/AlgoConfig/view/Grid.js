@@ -71,7 +71,23 @@ Ext.define('Module.Hyscan.AlgoConfig.view.Grid', {
 	                isDisabled: function (v, r, c, item, r) {
 	                }
 	            }]
-	        }
+            }, {
+                text: "测试",
+                xtype: 'actioncolumn',
+                width: 50,
+                sortable: false,
+                editor: false,
+                align: 'center',
+                items: [{
+                    icon: '/img/icon/update.png',
+                    tooltip: '删除',
+                    name: 'view',
+                    scope: this,
+                    handler: this.onTestClick,
+                    isDisabled: function (v, r, c, item, r) {
+                    }
+                }]
+            }
 		);
 		
 		var me = this;
@@ -161,6 +177,12 @@ Ext.define('Module.Hyscan.AlgoConfig.view.Grid', {
 		});
 		
 	},
+
+    onTestClick: function (view, rowIndex, colIndex, item, e, record, row) {
+        var me = this;
+        var opt = Module.Hyscan.AlgoConfig.Operation;
+        opt.showTestWin(record.data)
+    },
 
 	afterRender: function() {
         var me = this;

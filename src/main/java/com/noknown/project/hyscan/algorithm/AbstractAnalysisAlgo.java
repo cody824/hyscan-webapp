@@ -29,7 +29,7 @@ public abstract class AbstractAnalysisAlgo {
 	 *                   水色指数: watercolor,总氮含量:nitrogen;总磷含量：phosphorus; CDOM（有色可溶性有机物）;化学需氧量含量COD
 	 * @return 数值
 	 */
-	public abstract double analysis(double[][] data, String appId, String targetType, String flag);
+	public abstract double analysis(double[][] data, String appId, String targetType, String flag) throws Exception;
 
 	public String getVersion() {
 		return version;

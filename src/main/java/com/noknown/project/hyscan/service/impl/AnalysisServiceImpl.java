@@ -17,6 +17,9 @@ import com.noknown.project.hyscan.pojo.AbstractResult;
 import com.noknown.project.hyscan.pojo.CommonResult;
 import com.noknown.project.hyscan.service.AnalysisService;
 import com.noknown.project.hyscan.util.AlgoUtil;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +35,8 @@ import java.util.Properties;
 @Service
 @Transactional(rollbackOn = Exception.class)
 public class AnalysisServiceImpl implements AnalysisService {
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private final ModelConfigRepo mcDao;
 	private final AlgoConfigRepo acDao;
@@ -119,17 +124,23 @@ public class AnalysisServiceImpl implements AnalysisService {
 		int[] decimal = new int[algos.size()];
 		String[] chineseName = new String[algos.size()];
 
-		for (AlgoItem ac : algos.values()) {
-			double value = algo.analysis(sampleData, appId, target, ac.getKey());
-			if (Double.isInfinite(value)) {
-				value = 0;
+		try {
+			for (AlgoItem ac : algos.values()) {
+				double value = algo.analysis(sampleData, appId, target, ac.getKey());
+				if (Double.isInfinite(value)) {
+					value = 0;
+				}
+				data[ac.getSeq()] = value;
+				unit[ac.getSeq()] = ac.getUnit();
+				name[ac.getSeq()] = ac.getKey();
+				chineseName[ac.getSeq()] = ac.getChineseName();
+				decimal[ac.getSeq()] = ac.getDecimal();
 			}
-			data[ac.getSeq()] = value;
-			unit[ac.getSeq()] = ac.getUnit();
-			name[ac.getSeq()] = ac.getKey();
-			chineseName[ac.getSeq()] = ac.getChineseName();
-			decimal[ac.getSeq()] = ac.getDecimal();
+		} catch (Throwable e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+			throw new ServiceException("算法执行出错:" + e.getCause().getMessage(), e);
 		}
+
 		ConfigRepo repo = gcDao.getConfigRepo(Constants.RESULT_DICT_CONFIG);
 		if (repo != null) {
 			dictMap = repo.getConfigs();

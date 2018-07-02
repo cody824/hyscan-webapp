@@ -114,7 +114,12 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		double [][]normData = new double[1 + olderLevelNormData.length][wavelengths.length];
 		normData[0] = wavelengths;
 		System.arraycopy(olderLevelNormData, 0, normData, 1, normData.length - 1);
-		int oldLevel = (int) algo.analysis(sampleData, "caizhi", null, "oldLevel");
+		int oldLevel = 0;
+		try {
+			oldLevel = (int) algo.analysis(sampleData, "caizhi", null, "oldLevel");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		double[][] materialNormData = mac.getMaterialNormData();
 
@@ -122,7 +127,12 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		normData = new double[1 + materialNormData.length][wavelengths.length];
 		normData[0] = wavelengths;
 		System.arraycopy(materialNormData, 0, normData, 1, normData.length - 1);
-		int materialIndex = (int) algo.analysis(sampleData, "caizhi", null, "material");
+		int materialIndex = 0;
+		try {
+			materialIndex = (int) algo.analysis(sampleData, "caizhi", null, "material");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		String material = materialProps.getProperty("" + materialIndex, "未知材料");
 
@@ -199,7 +209,12 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		for (int i = 0; i < normData.length; i++){
 			normData[i] = new double[]{wavelengths[i], olderLevelNormData[0][i]};
 		}
-		int oldLevel = (int) algo.analysis(sampleData, "caizhi", null, "oldLevel");
+		int oldLevel = 0;
+		try {
+			oldLevel = (int) algo.analysis(sampleData, "caizhi", null, "oldLevel");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		double[][] materialNormData = mac.getMaterialNormData();
 		normData = new double[wavelengths.length][materialNormData.length + 1];
@@ -209,7 +224,12 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 				normData[i][j] = materialNormData[j - 1][i];
 			}
 		}
-		int materialIndex = (int) algo.analysis(sampleData, "caizhi", null, "material");
+		int materialIndex = 0;
+		try {
+			materialIndex = (int) algo.analysis(sampleData, "caizhi", null, "material");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		String material = materialProps.getProperty("" + materialIndex, "未知材料");
 		MaterialResult result = new MaterialResult();
@@ -263,7 +283,12 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 		String[] chineseName =  new String[algos.size()];
 
 		for (WDAlgoItem ac : algos.values()) {
-			double value = algo.analysis(sampleData, "shuise", null, ac.getKey());
+			double value = 0;
+			try {
+				value = algo.analysis(sampleData, "shuise", null, ac.getKey());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			if (Double.isInfinite(value)) {
 				value = 0;
 			}
