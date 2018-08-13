@@ -2,6 +2,9 @@ package com.noknown.project.hyscan.pojo;
 
 import com.noknown.project.hyscan.model.AlgoItem;
 import com.noknown.project.hyscan.model.ScanTask;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,6 +17,9 @@ import java.util.Properties;
  * @author cody
  */
 public class CommonResult extends AbstractResult {
+
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private String appId;
 
@@ -54,14 +60,21 @@ public class CommonResult extends AbstractResult {
 		int[] decimal = new int[algos.size()];
 		String[] chineseName = new String[algos.size()];
 
+
 		for (AlgoItem ac : algos.values()) {
 			Method getMethod;
 			double value = 0;
 			try {
 				getMethod = ScanTask.class.getMethod("getResult" + ac.getSeq());
-				value = (double) getMethod.invoke(task);
+				if (getMethod != null && task != null) {
+					Double ret = (Double) getMethod.invoke(task);
+					if (ret != null) {
+						value = ret;
+					}
+				}
 			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				e.printStackTrace();
+				logger.error(ExceptionUtils.getFullStackTrace(e));
 			}
 			data[ac.getSeq()] = value;
 			unit[ac.getSeq()] = ac.getUnit();

@@ -3,11 +3,11 @@ package com.noknown.project.hyscan.model;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.noknown.project.hyscan.pojo.*;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
@@ -20,6 +20,9 @@ import java.util.Properties;
 @Table(name = "hyscan_scan_task")
 @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
 public class ScanTask implements Serializable {
+
+	@Transient
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 *
@@ -118,57 +121,57 @@ public class ScanTask implements Serializable {
 	/**
 	 * 预留结果字段
 	 */
-	private Double result0;
+	private Double result0 = Double.valueOf(0);
 
 	/**
 	 * 预留结果字段
 	 */
-	private Double result1;
+	private Double result1 = Double.valueOf(0);
 
 	/**
 	 * 预留结果字段
 	 */
-	private Double result2;
+	private Double result2 = Double.valueOf(0);
 
 	/**
 	 * 预留结果字段
 	 */
-	private Double result3;
+	private Double result3 = Double.valueOf(0);
 
 	/**
 	 * 预留结果字段
 	 */
-	private Double result4;
+	private Double result4 = Double.valueOf(0);
 
 	/**
 	 * 预留结果字段
 	 */
-	private Double result5;
+	private Double result5 = Double.valueOf(0);
 
 	/**
 	 * 预留结果字段
 	 */
-	private Double result6;
+	private Double result6 = Double.valueOf(0);
 
 	/**
 	 * 预留结果字段
 	 */
-	private Double result7;
+	private Double result7 = Double.valueOf(0);
 
 	/**
 	 * 预留结果字段
 	 */
-	private Double result8;
+	private Double result8 = Double.valueOf(0);
 
 	/**
 	 * 预留结果字段
 	 */
-	private Double result9;
+	private Double result9 = Double.valueOf(0);
 
 	/**
 	 * 预留结果字段
 	 */
-	private Double result10;
+	private Double result10 = Double.valueOf(0);
 
 	public AppScanTask<CommonResult> toAppScanTask(Map<String, AlgoItem> algos, Properties dict, DataSet dataSet) {
 		AppScanTask<CommonResult> appScanTask = new AppScanTask<>();
@@ -189,7 +192,12 @@ public class ScanTask implements Serializable {
 		appScanTask.setDevice(device);
 
 		CommonResult commonResult = new CommonResult();
-		commonResult.loadFormTask(this, algos, dict);
+		try {
+			commonResult.loadFormTask(this, algos, dict);
+		} catch (Throwable e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		}
+
 
 		appScanTask.setResult(commonResult);
 		Position position = new Position().setAddress(address)

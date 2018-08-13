@@ -101,7 +101,8 @@ Ext.define('Module.Hyscan.AlgoConfig.Operation', {
             data: [
                 {"key": "caizhi", "name": "Hyscan"},
                 {"key": "shuise", "name": "水色"},
-                {"key": "meise", "name": "煤色"}
+                {"key": "meise", "name": "煤色"},
+                {"key": "nongse", "name": "农色"}
             ]
         });
 

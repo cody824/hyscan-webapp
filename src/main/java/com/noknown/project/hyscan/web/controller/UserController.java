@@ -127,9 +127,12 @@ public class UserController extends BaseController {
 					ScanTaskData data = null;
 					try {
 						data = taskService.getData(task.getId());
-						dataSet = new DataSet();
-						dataSet.setDn(data.getDn());
-						dataSet.setDnList(data.getDnList());
+						if (data != null) {
+							dataSet = new DataSet();
+							dataSet.setDn(data.getDn());
+							dataSet.setDnList(data.getDnList());
+						}
+
 					} catch (DaoException e) {
 						e.printStackTrace();
 					}
