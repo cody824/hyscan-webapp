@@ -45,13 +45,13 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 	@Override
 	public void removeTask(String taskId) throws DaoException {
-		taskDao.delete(taskId);
+		taskDao.deleteById(taskId);
 		taskDataDao.delete(taskId);
 	}
 
 	@Override
 	public ScanTask get(String taskId) {
-		return taskDao.findOne(taskId);
+		return taskDao.findById(taskId).orElse(null);
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 	@Override
 	public DownloadInfo exportScanTask(String taskId) throws ServiceException, DaoException {
-		ScanTask task = taskDao.findOne(taskId);
+		ScanTask task = taskDao.findById(taskId).orElse(null);
 		if (task == null) {
 			throw new ServiceException("任务不存在", 404);
 		}

@@ -132,7 +132,7 @@ public class AppServiceImpl implements AppService {
 			taskDataDao.save(data);
 			list.add(scanTask);
 		}
-		taskDao.save(list);
+		taskDao.saveAll(list);
 		return list;
 	}
 }

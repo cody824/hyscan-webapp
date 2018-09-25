@@ -67,7 +67,7 @@ public class AnalysisServiceImpl implements AnalysisService {
 
 	@Override
 	public AbstractResult analysis(String taskId, String algoVersion) throws ServiceException, DaoException {
-		ScanTask task = scanTaskDao.findOne(taskId);
+		ScanTask task = scanTaskDao.findById(taskId).orElse(null);
 		if (task == null) {
 			throw new ServiceException("任务不存在");
 		}

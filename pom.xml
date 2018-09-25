@@ -11,19 +11,15 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.7.RELEASE</version>
+        <version>2.0.5.RELEASE</version>
 	</parent>
 
 	<properties>
 		<start-class>com.noknown.HyscanApplication</start-class>
 		<jta.version>1.1</jta.version>
-		<spring.boot.version>1.5.7.RELEASE</spring.boot.version>
-		<spring.boot.web.version>1.5.7.RELEASE</spring.boot.web.version>
-		<framework.version>2.1.1-SNAPSHOT</framework.version>
-		<sure-common-util.version>0.0.7-SNAPSHOT</sure-common-util.version>
-		<sureoss.version>0.0.2-SNAPSHOT</sureoss.version>
-		<suresecurity.version>3.1.0-SNAPSHOT</suresecurity.version>
-		<surebaseweb.version>0.4.1-SNAPSHOT</surebaseweb.version>
+        <spring.boot.version>2.0.5.RELEASE</spring.boot.version>
+        <spring.boot.web.version>2.0.5.RELEASE</spring.boot.web.version>
+        <framework.version>0.0.2-snapshot</framework.version>
 	</properties>
 
 	<dependencyManagement>
@@ -97,12 +93,12 @@
 		<dependency>
 			<groupId>com.noknown</groupId>
 			<artifactId>framework</artifactId>
-			<version>0.0.1-snapshot</version>
+            <version>${framework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.noknown</groupId>
 			<artifactId>bd-admin</artifactId>
-			<version>0.0.1-snapshot</version>
+            <version>${framework.version}</version>
 		</dependency>
 
 		<!-- for 算法 -->

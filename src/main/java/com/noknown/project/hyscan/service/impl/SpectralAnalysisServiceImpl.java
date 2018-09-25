@@ -145,7 +145,7 @@ public class SpectralAnalysisServiceImpl implements SpectralAnalysisService {
 
 	@Override
 	public AbstractResult analysis(String taskId, String algo) throws ServiceException, DaoException {
-		ScanTask task = scanTaskDao.findOne(taskId);
+		ScanTask task = scanTaskDao.findById(taskId).orElse(null);
 		if (task == null) {
 			throw new ServiceException("任务不存在");
 		}
