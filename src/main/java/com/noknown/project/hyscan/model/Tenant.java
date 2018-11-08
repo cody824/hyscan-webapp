@@ -1,17 +1,32 @@
 package com.noknown.project.hyscan.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 import java.util.Date;
 
 /**
  * @author guodong
  * @date 2018/4/2
  */
+@Entity
+@Table(name = "hyscan_tenant")
+@JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
 public class Tenant {
 
-	private String id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-	private String key;
+	@Column(length = 32)
+	private String name;
 
+	private String description;
+//
+//	@Column(length = 64)
+//	private String key;
+
+	@Column(length = 64)
 	private String apiKey;
 
 	private Integer createUserId;
@@ -20,23 +35,42 @@ public class Tenant {
 
 	private Date createTime;
 
-	public String getId() {
+
+	public Integer getId() {
 		return id;
 	}
 
-	public Tenant setId(String id) {
+	public Tenant setId(Integer id) {
 		this.id = id;
 		return this;
 	}
 
-	public String getKey() {
-		return key;
+	public String getName() {
+		return name;
 	}
 
-	public Tenant setKey(String key) {
-		this.key = key;
+	public Tenant setName(String name) {
+		this.name = name;
 		return this;
 	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public Tenant setDescription(String description) {
+		this.description = description;
+		return this;
+	}
+//
+//	public String getKey() {
+//		return key;
+//	}
+//
+//	public Tenant setKey(String key) {
+//		this.key = key;
+//		return this;
+//	}
 
 	public String getApiKey() {
 		return apiKey;
