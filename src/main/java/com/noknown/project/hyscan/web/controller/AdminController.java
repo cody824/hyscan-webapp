@@ -9,14 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminController extends BaseController {
 
 	@RequestMapping(value = "/admin")
-	public String gotoAdmin()
-			throws Exception {
+	public String gotoAdmin() {
 		return "admin";
 	}
 	
 	@RequestMapping(value = "/")
-	public String gotoMain()
-			throws Exception {
+	public String gotoMain(){
 		return "redirect:/admin";
 	}
 	
