@@ -21,7 +21,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
 	customColumns : [],
 	
     initComponent: function () {
-        var columns = new Array();
+        var columns = [];
         var renders = Module.Hyscan.MaterialScanTask.Renderer;
         columns.push(
         		new Ext.grid.RowNumberer(),
@@ -114,7 +114,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
                             });
                             win_Watch.show();
                         })
-                    }, 500)
+                    }, 500);
 
                     var img = Ext.create('Ext.Img', {
                         height: 30,
@@ -130,7 +130,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
                             }
                         }
 
-                    })
+                    });
                     return "<img src='" + value + "' width='30px', height='30px' id='" + id + "'>";
                 }
             }, {
@@ -223,7 +223,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
 		    	logicalOp : 'between',
 		    	value : [monthBegin, monthEnd]
 	    	}]
-	    }
+        };
 	    var lastMonthOderFilter = {
 	    	searchText : '上月', 
 	    	icon : '/img/icon/quota.png',
@@ -260,10 +260,9 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
     
 	onDataClick : function(view ,rowIndex, colIndex, item, e, record, row){
     	var me = this;
-        var portlet = me.up("hyscantaskportlet")
+        var portlet = me.up("hyscantaskportlet");
         portlet.gotoView("Module.Hyscan.Public.view.ScanTaskDataGrid", {
         	task: record.data,
-			title : record.data.id + "任务数据"
 		}, portlet);
 	},
 

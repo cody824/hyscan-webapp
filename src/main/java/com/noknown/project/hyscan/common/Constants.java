@@ -20,4 +20,14 @@ public class Constants {
 
 	public final static String RESULT_DICT_CONFIG = "resultDict";
 
+	public static final String ROLE_TENANT_ADMIN = "ROLE_TENANT_ADMIN";
+
+	public static final String ROLE_WQ_TENANT = "ROLE_WQ_TENANT";
+
+	public static final String ROLE_MEISE_TENANT = "ROLE_MEISE_TENANT";
+
+	public static final String ROLE_NONGSE_TENANT = "ROLE_NONGSE_TENANT";
+
+	public static final String ROLE_HYSCAN_TENANT = "ROLE_HYSCAN_TENANT";
+
 }

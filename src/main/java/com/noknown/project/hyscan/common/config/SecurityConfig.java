@@ -141,7 +141,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/app/spAnalysis", "/api/task/**").permitAll()
 				.antMatchers(HttpMethod.GET, "/app/modelConfig/").permitAll()
 				//管理员页面
-				.antMatchers("/admin").hasAnyRole("ADMIN")
+				.antMatchers("/admin").hasAnyRole("ADMIN", "TENANT_ADMIN")
 				// 除上面外的所有请求全部需要鉴权认证
 				.anyRequest().authenticated();
 

@@ -41,6 +41,15 @@
                         <index>0</index>
                     </config>
                 </subModules>
+                <subModules>
+                    <name>Tenant</name>
+                    <disable>false</disable>
+                    <permissions>1</permissions>
+                    <config>
+                        <packageN>Hyscan</packageN>
+                        <index>1</index>
+                    </config>
+                </subModules>
             </subModules>
         </moduleList>
 	</moduleList>

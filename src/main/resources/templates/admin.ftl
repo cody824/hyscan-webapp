@@ -21,6 +21,10 @@
     <link rel="stylesheet" type="text/css" href="/css/s2.css"/>
     <link rel="stylesheet" type="text/css" href="/css/soul.css"/>
 
+    <script>
+        var isTenantAdmin = ${tenantAdmin?c};
+    </script>
+
     <script type="text/javascript" src="/js/lib/extlib4/js/ext-all-debug.js"></script>
 	<script type="text/javascript" src="/js/lib/surejs/v2/sqlFilter.js"></script>
     <script type="text/javascript" src="/js/lib/extOverride.js"></script>
@@ -28,6 +32,7 @@
     <script type="text/javascript" src="/js/lib/soulapp.js"></script>
 
     <script type="text/javascript" src="/js/sureadmin.js"></script>
+
 
 </head>
 <body>

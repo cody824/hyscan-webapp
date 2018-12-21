@@ -6,6 +6,7 @@ import com.noknown.framework.common.exception.ServiceException;
 import com.noknown.framework.common.exception.WebException;
 import com.noknown.framework.common.model.ConfigRepo;
 import com.noknown.framework.common.service.GlobalConfigService;
+import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.framework.fss.service.FileStoreService;
 import com.noknown.framework.fss.service.FileStoreServiceRepo;
 import com.noknown.framework.security.model.BaseUserDetails;
@@ -22,10 +23,7 @@ import com.noknown.project.hyscan.service.ScanTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -141,6 +139,19 @@ public class UserController extends BaseController {
 			}
 		}
 		return ResponseEntity.ok(appScanTasks);
+	}
+
+	@RequestMapping(value = "/user-detail/", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	Object getAllUds(
+			@RequestParam(value = "filter", required = false) String filter,
+			@RequestParam(value = "sort", required = false) String sort,
+			@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+			@RequestParam(value = "limit", required = false, defaultValue = "-1") int limit)
+			throws Exception {
+		SQLFilter sqlFilter = this.buildFilter(filter, sort);
+		return udService.find(sqlFilter, start, limit);
 	}
 
 }

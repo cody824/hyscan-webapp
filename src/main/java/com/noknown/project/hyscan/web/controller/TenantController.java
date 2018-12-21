@@ -8,6 +8,7 @@ import com.noknown.framework.common.web.model.PageData;
 import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.framework.security.model.Role;
 import com.noknown.framework.security.service.RoleService;
+import com.noknown.project.hyscan.common.APP_TYPE;
 import com.noknown.project.hyscan.common.Constants;
 import com.noknown.project.hyscan.model.Tenant;
 import com.noknown.project.hyscan.service.TenantService;
@@ -33,14 +34,22 @@ public class TenantController extends BaseController {
 	@PostConstruct
 	private void init(){
 		try {
-			Role role = roleService.getRoleByName("ROLE_TENANT_ADMIN");
-			if (role == null){
-				roleService.createRole("ROLE_TENANT_ADMIN", "租户管理员");
-			}
+			checkAndBuildRole(Constants.ROLE_TENANT_ADMIN, "租户管理员");
+			checkAndBuildRole(Constants.ROLE_HYSCAN_TENANT, "材质检测租户管理员");
+			checkAndBuildRole(Constants.ROLE_MEISE_TENANT, "煤色租户管理员");
+			checkAndBuildRole(Constants.ROLE_NONGSE_TENANT, "农色租户管理员");
+			checkAndBuildRole(Constants.ROLE_WQ_TENANT, "水色租户管理员");
 		} catch (DaoException e) {
 			e.printStackTrace();
 		} catch (ServiceException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void checkAndBuildRole(String name, String comment) throws ServiceException, DaoException {
+		Role role = roleService.getRoleByName(name);
+		if (role == null) {
+			roleService.createRole(name, comment);
 		}
 	}
 
@@ -50,7 +59,6 @@ public class TenantController extends BaseController {
 		this.roleService = roleService;
 	}
 
-	@Deprecated
 	@RequestMapping(value = "/tenant/", method = RequestMethod.POST)
 	public ResponseEntity<?> createTenant(@RequestBody Tenant tenant)
 			throws Exception {
@@ -61,10 +69,10 @@ public class TenantController extends BaseController {
 		tenant.setCreateTime(new Date())
 				.setCreateUserId(this.loginUser().getUser().getId());
 		tenantService.create(tenant);
+		attachTenantRole(tenant);
 		return ResponseEntity.ok(tenant);
 	}
 
-	@Deprecated
 	@RequestMapping(value = "/tenant/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateTenant(@PathVariable Integer id, @RequestBody Tenant tenant)
 			throws Exception {
@@ -72,8 +80,16 @@ public class TenantController extends BaseController {
 		if (user == null) {
 			throw new WebException("请登录");
 		}
-		tenantService.update(id, tenant, null);
+		tenant = tenantService.update(id, tenant, null);
+		attachTenantRole(tenant);
 		return ResponseEntity.ok(tenant);
+	}
+
+	@RequestMapping(value = "/tenant/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> delete(@PathVariable Integer id)
+			throws Exception {
+		tenantService.delete(new Integer[]{id});
+		return ResponseEntity.ok(null);
 	}
 
 	@RequestMapping(value = "/tenant/", method = RequestMethod.GET)
@@ -85,6 +101,28 @@ public class TenantController extends BaseController {
 		SQLFilter sqlFilter = this.buildFilter(filter, sort);
 		PageData<Tenant> pd = tenantService.find(sqlFilter, start, limit);
 		return ResponseEntity.ok(pd);
+	}
+
+	private void attachTenantRole(Tenant tenant) throws ServiceException, DaoException {
+		if (tenant.getAdminId() != null) {
+			roleService.attachRoleForUser(tenant.getAdminId(), Constants.ROLE_TENANT_ADMIN);
+			roleService.detachRoleFromUser(tenant.getAdminId(), Constants.ROLE_HYSCAN_TENANT);
+			roleService.detachRoleFromUser(tenant.getAdminId(), Constants.ROLE_NONGSE_TENANT);
+			roleService.detachRoleFromUser(tenant.getAdminId(), Constants.ROLE_MEISE_TENANT);
+			roleService.detachRoleFromUser(tenant.getAdminId(), Constants.ROLE_WQ_TENANT);
+			String[] appIds = tenant.getAppIds().split(",");
+			for (String appId : appIds) {
+				if (APP_TYPE.caizhi.name().equals(appId)) {
+					roleService.attachRoleForUser(tenant.getAdminId(), Constants.ROLE_HYSCAN_TENANT);
+				} else if (APP_TYPE.nongse.name().equals(appId)) {
+					roleService.attachRoleForUser(tenant.getAdminId(), Constants.ROLE_NONGSE_TENANT);
+				} else if (APP_TYPE.meise.name().equals(appId)) {
+					roleService.attachRoleForUser(tenant.getAdminId(), Constants.ROLE_MEISE_TENANT);
+				} else if (APP_TYPE.shuise.name().equals(appId)) {
+					roleService.attachRoleForUser(tenant.getAdminId(), Constants.ROLE_WQ_TENANT);
+				}
+			}
+		}
 	}
 
 }

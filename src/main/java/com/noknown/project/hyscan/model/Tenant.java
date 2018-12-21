@@ -33,8 +33,15 @@ public class Tenant {
 
 	private Integer adminId;
 
+	private String adminName;
+
 	private Date createTime;
 
+	@Column(columnDefinition = "TEXT")
+	private String serials;
+
+	@Column(length = 128)
+	private String appIds;
 
 	public Integer getId() {
 		return id;
@@ -62,15 +69,6 @@ public class Tenant {
 		this.description = description;
 		return this;
 	}
-//
-//	public String getKey() {
-//		return key;
-//	}
-//
-//	public Tenant setKey(String key) {
-//		this.key = key;
-//		return this;
-//	}
 
 	public String getApiKey() {
 		return apiKey;
@@ -105,6 +103,33 @@ public class Tenant {
 
 	public Tenant setCreateTime(Date createTime) {
 		this.createTime = createTime;
+		return this;
+	}
+
+	public String getAdminName() {
+		return adminName;
+	}
+
+	public Tenant setAdminName(String adminName) {
+		this.adminName = adminName;
+		return this;
+	}
+
+	public String getSerials() {
+		return serials;
+	}
+
+	public Tenant setSerials(String serials) {
+		this.serials = serials;
+		return this;
+	}
+
+	public String getAppIds() {
+		return appIds;
+	}
+
+	public Tenant setAppIds(String appIds) {
+		this.appIds = appIds;
 		return this;
 	}
 }

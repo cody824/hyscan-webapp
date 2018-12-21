@@ -45,20 +45,22 @@ public interface ScanTaskService extends BaseService<ScanTask, String> {
 	/**
 	 * 导出选择的任务数据包
 	 * @param filter
+	 * @param type
 	 * @return
 	 * @throws ServiceException
 	 * @throws DaoException
 	 */
-	DownloadInfo exportScanTaskPackage(SQLFilter filter) throws ServiceException, DaoException;
+	DownloadInfo exportScanTaskPackage(SQLFilter filter, String type) throws ServiceException, DaoException;
 
 	/**
 	 * 导出单个任务
 	 * @param taskId
+	 * @param type
 	 * @return
 	 * @throws ServiceException
 	 * @throws DaoException
 	 */
-	DownloadInfo exportScanTask(String taskId) throws ServiceException, DaoException;
+	DownloadInfo exportScanTask(String taskId, String type) throws ServiceException, DaoException;
 
 	/**
 	 * 获取用户的任务记录

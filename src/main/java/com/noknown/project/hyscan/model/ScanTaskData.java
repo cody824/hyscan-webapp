@@ -44,6 +44,20 @@ public class ScanTaskData implements Serializable, BaseObj{
 	 */
 	private Float[] radianceConfig;
 
+	public boolean check() {
+		if (range == null || dn == null ||
+				darkCurrent == null || whiteboardData == null) {
+			return false;
+		}
+		if (dn.length != darkCurrent.length || dn.length != whiteboardData.length) {
+			return false;
+		}
+		if (range.length != 2) {
+			return false;
+		}
+		return (range[1] - range[0]) == (dn.length - 1);
+	}
+
 	/**
 	 * @return the id
 	 */

@@ -127,7 +127,6 @@ Ext.define('Module.Hyscan.AlgoConfig.Operation', {
                 name: 'appId',
                 xtype: 'combo',
                 allowBlank: false,
-                fieldLabel: "型号",
                 store: appStore,
                 queryMode: 'local',
                 displayField: 'name',

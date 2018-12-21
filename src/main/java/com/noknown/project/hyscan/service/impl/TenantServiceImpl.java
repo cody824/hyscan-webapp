@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * @author guodong
@@ -34,5 +35,15 @@ public class TenantServiceImpl extends BaseServiceImpl<Tenant, Integer>  impleme
 	@Override
 	public JpaSpecificationExecutor<Tenant> getSpecificationExecutor() {
 		return tenantDao;
+	}
+
+	@Override
+	public List<Tenant> findByAdminId(Integer adminId) {
+		return tenantDao.findByAdminId(adminId);
+	}
+
+	@Override
+	public Long countByAdminId(Integer adminId) {
+		return tenantDao.countByAdminId(adminId);
 	}
 }

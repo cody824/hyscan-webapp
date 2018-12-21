@@ -12,7 +12,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
 	listView : null,
 	
 	initComponent : function() {
-		var columns = new Array();
+        var columns = [];
 		columns.push(
             new Ext.grid.RowNumberer({
                 width: 40
@@ -96,9 +96,11 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
 		var me =  scope || this;
 		var tools = Module.Hyscan.Public.Tools;
 		if (me.task != null) {
+            me.setTitle(me.task.id + "任务数据");
 			Soul.Ajax.request({
 				url : '/app/scanTask/data/' + me.task.id,
 				loadMask : '数据载入中',
+                successMsg: '载入成功',
 				success : function(ret){
 					var range = ret.range;
 					var wavelength = [];
@@ -139,6 +141,12 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
         me.callParent(arguments);
         if (me.task == null) {
         	Soul.uiModule.Message.msg('提示', '请返回选择任务');
+            me.portlet.gotoView(me.portlet.defaultView, null, me.portlet);
         }
+    },
+
+    updateView: function (scope) {
+        var me = scope || this;
+        me.loadData();
     }
 });

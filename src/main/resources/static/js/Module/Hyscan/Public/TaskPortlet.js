@@ -13,6 +13,7 @@ Ext.define('Module.Hyscan.Public.TaskPortlet', {
     },
 
     buildDataOptMenu: function () {
+        var me = this;
         return Ext.create('Ext.menu.Menu', {
             name: 'datapt',
             style: {
@@ -20,18 +21,40 @@ Ext.define('Module.Hyscan.Public.TaskPortlet', {
             },
             items: [
                 {
-                    text: "导出数据",
+                    text: "导出JSON数据文件",
                     disabled: false,
                     name: 'exportData',
-                    iconCls: 'export',
-                    handler: this.doExport,
+                    icon: "/img/icon/json.png",
+                    handler: function () {
+                        me.doExport("json");
+                    },
+                    scope: this
+                },
+                {
+                    text: "导出Txt数据文件",
+                    disabled: false,
+                    name: 'exportData',
+                    icon: "/img/icon/txt.png",
+                    handler: function () {
+                        me.doExport("txt");
+                    },
+                    scope: this
+                },
+                {
+                    text: "导出Excel数据文件",
+                    disabled: false,
+                    name: 'exportData',
+                    icon: "/img/icon/excel.png",
+                    handler: function () {
+                        me.doExport("excel");
+                    },
                     scope: this
                 }
             ]
         });
     },
 
-    doExport: function () {
+    doExport: function (type) {
         var me = this;
         var view = me.currentView;
         var item = me.getComponent(me.id + '-' + me.currentView);
@@ -50,6 +73,7 @@ Ext.define('Module.Hyscan.Public.TaskPortlet', {
                 successMsg: '压缩包生成完成',
                 loadMask: "生成压缩包",
                 params: {
+                    exportType: type,
                     filter: filter,
                     model: model,
                     appId: appId
@@ -67,6 +91,9 @@ Ext.define('Module.Hyscan.Public.TaskPortlet', {
                 successMsg: '压缩包生成完成',
                 loadMask: "生成压缩包",
                 timeout: 1000 * 60 * 10,
+                params: {
+                    exportType: type,
+                },
                 method: 'post',
                 success: function (ret) {
                     Module.Hyscan.Public.Opt.showDownloadWin(ret);

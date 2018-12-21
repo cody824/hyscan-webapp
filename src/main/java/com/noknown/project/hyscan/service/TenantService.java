@@ -1,13 +1,7 @@
 package com.noknown.project.hyscan.service;
 
 import com.noknown.framework.common.base.BaseService;
-import com.noknown.framework.common.exception.DaoException;
-import com.noknown.framework.common.exception.ServiceException;
-import com.noknown.framework.common.web.model.SQLFilter;
-import com.noknown.project.hyscan.model.ScanTask;
-import com.noknown.project.hyscan.model.ScanTaskData;
 import com.noknown.project.hyscan.model.Tenant;
-import com.noknown.project.hyscan.pojo.DownloadInfo;
 
 import java.util.List;
 
@@ -17,4 +11,20 @@ import java.util.List;
  */
 public interface TenantService extends BaseService<Tenant, Integer> {
 
+
+	/**
+	 * 通过adminId获取租户
+	 *
+	 * @param adminId
+	 * @return
+	 */
+	List<Tenant> findByAdminId(Integer adminId);
+
+	/**
+	 * 管理员管理的租户数量
+	 *
+	 * @param adminId
+	 * @return
+	 */
+	Long countByAdminId(Integer adminId);
 }

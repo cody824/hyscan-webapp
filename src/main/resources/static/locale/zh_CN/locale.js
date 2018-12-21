@@ -17,7 +17,8 @@ MODULE_NAME = {
     "Module.Hyscan.MeiseScanTask": '煤色扫描任务',
     "Module.Hyscan.NongseScanTask": '农色扫描任务',
 	"Module.Hyscan.MaterialConfig" : '材料索引',
-	"Module.Hyscan.ModelConfig" : '型号配置'
+    "Module.Hyscan.ModelConfig": '型号配置',
+    "Module.Hyscan.Tenant": '租户管理'
 };
 
 MODULE_HELP = {
@@ -33,7 +34,8 @@ MODULE_HELP = {
     "Module.Hyscan.MeiseScanTask": '记录煤色客户端监测的扫描结果',
     "Module.Hyscan.NongseScanTask": '记录农色客户端监测的扫描结果',
 	"Module.Hyscan.MaterialConfig" : '配置材料索引解释！',
-	"Module.Hyscan.ModelConfig" : '配置型号，辐亮度参数，参考数据等！'
+    "Module.Hyscan.ModelConfig": '配置型号，辐亮度参数，参考数据等！',
+    "Module.Hyscan.Tenant": '配置管理租户'
 };
 
 LABEL = {

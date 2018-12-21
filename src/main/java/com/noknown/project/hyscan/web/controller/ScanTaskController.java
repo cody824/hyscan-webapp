@@ -10,6 +10,7 @@ import com.noknown.framework.common.util.DateUtil;
 import com.noknown.framework.common.util.JsonUtil;
 import com.noknown.framework.common.util.StringUtil;
 import com.noknown.framework.common.web.model.PageData;
+import com.noknown.framework.common.web.model.SQLExpression;
 import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.framework.common.web.model.SQLOrder;
 import com.noknown.framework.fss.service.FileStoreService;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.HtmlUtils;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -153,12 +155,14 @@ public class ScanTaskController extends BaseController {
 	}
 
 	@RequestMapping(value = "/scanTask/", method = RequestMethod.GET)
-	public ResponseEntity<?> findScanTask(@RequestParam(required = false) String appId,
-	                                      @RequestParam(required = false) String model,
-	                                      @RequestParam(required = false) String filter,
-	                                      @RequestParam(required = false) String sort,
-	                                      @RequestParam(required = false, defaultValue = "0") int start,
-	                                      @RequestParam(required = false, defaultValue = "-1") int limit)
+	public ResponseEntity<?> findScanTask(
+			HttpSession httpSession,
+			@RequestParam(required = false) String appId,
+			@RequestParam(required = false) String model,
+			@RequestParam(required = false, defaultValue = "{}") String filter,
+			@RequestParam(required = false, defaultValue = "{}") String sort,
+			@RequestParam(required = false, defaultValue = "0") int start,
+			@RequestParam(required = false, defaultValue = "-1") int limit)
 			throws Exception {
 		filter = HtmlUtils.htmlUnescape(filter);
 		sort = HtmlUtils.htmlUnescape(sort);
@@ -185,6 +189,11 @@ public class ScanTaskController extends BaseController {
 		}
 		if (StringUtil.isNotBlank(model)) {
 			sqlFilter.addSQLExpression("deviceModel", "=", model);
+		}
+
+		Set<String> serials = (Set<String>) httpSession.getAttribute("tenantSerials");
+		if (serials != null) {
+			sqlFilter.addSQLExpression("deviceSerial", SQLExpression.in, serials.toArray(new String[]{}));
 		}
 		tasks = taskService.find(sqlFilter, start, limit);
 		return ResponseEntity.ok(tasks);
@@ -267,7 +276,8 @@ public class ScanTaskController extends BaseController {
 	@RequestMapping(value = "/scanTask/export/", method = RequestMethod.POST)
 	public ResponseEntity<?> exportByFilter(@RequestParam(required = false) String appId,
 	                                        @RequestParam(required = false) String model,
-	                                        @RequestParam(required = false) String filter)
+	                                        @RequestParam(required = false) String filter,
+	                                        @RequestParam(required = false, defaultValue = "json") String exportType)
 			throws Exception {
 		filter = HtmlUtils.htmlUnescape(filter);
 		SQLFilter sqlFilter = null;
@@ -286,7 +296,7 @@ public class ScanTaskController extends BaseController {
 			}
 			sqlFilter.addSQLExpression("deviceModel", "=", model);
 		}
-		DownloadInfo downloadInfo = taskService.exportScanTaskPackage(sqlFilter);
+		DownloadInfo downloadInfo = taskService.exportScanTaskPackage(sqlFilter, exportType);
 		File file = new File(downloadInfo.getFilePath());
 		String url = exportPath + file.getName();
 		downloadInfo.setUrl(url);
@@ -295,9 +305,10 @@ public class ScanTaskController extends BaseController {
 	}
 
 	@RequestMapping(value = "/scanTask/export/{taskId}", method = RequestMethod.POST)
-	public ResponseEntity<?> exportOne(@PathVariable String taskId)
+	public ResponseEntity<?> exportOne(@PathVariable String taskId,
+	                                   @RequestParam(required = false, defaultValue = "json") String exportType)
 			throws Exception {
-		DownloadInfo downloadInfo = taskService.exportScanTask(taskId);
+		DownloadInfo downloadInfo = taskService.exportScanTask(taskId, exportType);
 		File file = new File(downloadInfo.getFilePath());
 		String url = exportPath + file.getName();
 		downloadInfo.setUrl(url);
