@@ -67,11 +67,6 @@
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.session</groupId>
-			<artifactId>spring-session</artifactId>
-		</dependency>
-
 		<!-- 为了监控数据库 -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
