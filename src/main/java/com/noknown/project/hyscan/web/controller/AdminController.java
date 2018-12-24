@@ -5,6 +5,7 @@ import com.noknown.framework.common.exception.DaoException;
 import com.noknown.framework.common.exception.ServiceException;
 import com.noknown.framework.common.util.StringUtil;
 import com.noknown.framework.security.service.RoleService;
+import com.noknown.project.hyscan.common.APP_TYPE;
 import com.noknown.project.hyscan.common.Constants;
 import com.noknown.project.hyscan.model.Tenant;
 import com.noknown.project.hyscan.service.TenantService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,6 +61,10 @@ public class AdminController extends BaseController {
 			}
 			session.setAttribute("tenantSerials", serials);
 		}
+
+		List<APP_TYPE> supportApps = supportApp();
+		session.setAttribute("supportApps", supportApps);
+
 		return "admin";
 	}
 	
@@ -66,5 +72,37 @@ public class AdminController extends BaseController {
 	public String gotoMain(){
 		return "redirect:/admin";
 	}
-	
+
+
+	private List<APP_TYPE> supportApp() {
+		List<APP_TYPE> appIds = new ArrayList<>();
+		if (this.hasRole("ROLE_ADMIN")) {
+			if (this.hasRole(Constants.ROLE_HYSCAN_ADMIN)) {
+				appIds.add(APP_TYPE.caizhi);
+			}
+			if (this.hasRole(Constants.ROLE_WQ_ADMIN)) {
+				appIds.add(APP_TYPE.shuise);
+			}
+			if (this.hasRole(Constants.ROLE_NONGSE_ADMIN)) {
+				appIds.add(APP_TYPE.nongse);
+			}
+			if (this.hasRole(Constants.ROLE_MEISE_ADMIN)) {
+				appIds.add(APP_TYPE.meise);
+			}
+		} else if (hasRole(Constants.ROLE_TENANT_ADMIN)) {
+			if (this.hasRole(Constants.ROLE_HYSCAN_TENANT)) {
+				appIds.add(APP_TYPE.caizhi);
+			}
+			if (this.hasRole(Constants.ROLE_WQ_TENANT)) {
+				appIds.add(APP_TYPE.shuise);
+			}
+			if (this.hasRole(Constants.ROLE_NONGSE_TENANT)) {
+				appIds.add(APP_TYPE.nongse);
+			}
+			if (this.hasRole(Constants.ROLE_MEISE_TENANT)) {
+				appIds.add(APP_TYPE.meise);
+			}
+		}
+		return appIds;
+	}
 }

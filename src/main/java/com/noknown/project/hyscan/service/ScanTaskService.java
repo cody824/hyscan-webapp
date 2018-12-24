@@ -71,4 +71,12 @@ public interface ScanTaskService extends BaseService<ScanTask, String> {
 	 */
 	List<ScanTask> findByUserId(Integer userId, String appId);
 
+	/**
+	 * 获取最新的任务
+	 *
+	 * @param appId
+	 * @return
+	 */
+	ScanTask findLatestTask(String appId);
+
 }

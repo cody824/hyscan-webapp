@@ -185,6 +185,14 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 		return taskDao.findByUserIdAndAppId(userId, appId);
 	}
 
+	@Override
+	public ScanTask findLatestTask(String appId) {
+		if (StringUtil.isBlank(appId)) {
+			return taskDao.findFirstByOrderByScanTimeDesc();
+		}
+		return taskDao.findFirstByAppIdOrderByScanTimeDesc(appId);
+	}
+
 	private File exportJson(ScanTask scanTask, File dir) throws ServiceException, DaoException {
 		File taskDir = new File(dir, scanTask.getId());
 		taskDir.mkdirs();

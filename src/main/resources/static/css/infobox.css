@@ -1,0 +1,48 @@
+.detail-pop-add {
+    display: block;
+    width: 95%;
+    height: 95%;
+    overflow: hidden;
+    position: fixed;
+    /*left: 10%;*/
+    /*top: 35%;*/
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #2f9de9;
+    border: 1px solid #bababa;
+}
+
+.details_contents_add {
+    width: 95%;
+    margin: 10px auto;
+}
+
+.details_contents_add .contents {
+    height: 110px;
+}
+
+.details_contents_add .contents .my-img {
+    max-width: 60px;
+    height: 110px;
+}
+
+.details_contents_add .contents .my-con-add {
+    left: 115px;
+    top: 10px;
+    height: 110px;
+    position: absolute;
+}
+
+.details_contents_add .my-con-title-add {
+    height: 25px;
+    line-height: 25px;
+}
+
+.details_contents_add .con-para {
+    color: #04b5e1;
+    line-height: 20px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+}

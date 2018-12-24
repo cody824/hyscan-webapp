@@ -20,9 +20,15 @@
     <link rel="stylesheet" type="text/css" href="/css/ext-example-part.css"/>
     <link rel="stylesheet" type="text/css" href="/css/s2.css"/>
     <link rel="stylesheet" type="text/css" href="/css/soul.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/infobox.css"/>
 
     <script>
         var isTenantAdmin = ${tenantAdmin?c};
+        var supportApps = {};
+        <#list supportApps as app>
+            supportApps["${app.name()}"] = "${app.getView()}";
+        </#list>
+        console.log(supportApps);
     </script>
 
     <script type="text/javascript" src="/js/lib/extlib4/js/ext-all-debug.js"></script>
@@ -32,9 +38,18 @@
     <script type="text/javascript" src="/js/lib/soulapp.js"></script>
 
     <script type="text/javascript" src="/js/sureadmin.js"></script>
+    <script type="text/javascript"
+            src="http://api.map.baidu.com/api?v=3.0&ak=Chm205tTGwiarn6d3CilTD0jGqdoRDki"></script>
+    <script type="text/javascript"
+            src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+    <script type="text/javascript"
+            src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/InfoBox/1.2/src/InfoBox_min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
 
 
 </head>
 <body>
+
 </body>
 </html>

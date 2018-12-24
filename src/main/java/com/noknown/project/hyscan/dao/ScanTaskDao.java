@@ -40,4 +40,19 @@ public interface ScanTaskDao extends JpaRepository<ScanTask, String>,JpaSpecific
 	 */
 	List<ScanTask> findByUserIdAndAppIdAndScanTarget(Integer userId, String appId, String scanTarget);
 
+	/**
+	 * 获取最新的任务
+	 *
+	 * @return
+	 */
+	ScanTask findFirstByOrderByScanTimeDesc();
+
+	/**
+	 * 获取appId的最新任务
+	 *
+	 * @param appId
+	 * @return
+	 */
+	ScanTask findFirstByAppIdOrderByScanTimeDesc(String appId);
+
 }

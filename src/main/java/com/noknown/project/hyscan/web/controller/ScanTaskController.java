@@ -15,6 +15,7 @@ import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.framework.common.web.model.SQLOrder;
 import com.noknown.framework.fss.service.FileStoreService;
 import com.noknown.framework.fss.service.FileStoreServiceRepo;
+import com.noknown.project.hyscan.common.APP_TYPE;
 import com.noknown.project.hyscan.common.Constants;
 import com.noknown.project.hyscan.dao.AlgoConfigRepo;
 import com.noknown.project.hyscan.model.AlgoConfig;
@@ -186,6 +187,10 @@ public class ScanTaskController extends BaseController {
 		}
 		if (StringUtil.isNotBlank(appId)) {
 			sqlFilter.addSQLExpression("appId", "=", appId);
+		} else {
+			String[] appIds = supportApp();
+			sqlFilter.addSQLExpression("appId", "in", appIds);
+
 		}
 		if (StringUtil.isNotBlank(model)) {
 			sqlFilter.addSQLExpression("deviceModel", "=", model);
@@ -197,6 +202,16 @@ public class ScanTaskController extends BaseController {
 		}
 		tasks = taskService.find(sqlFilter, start, limit);
 		return ResponseEntity.ok(tasks);
+	}
+
+	@RequestMapping(value = "/scanTask/info/latest", method = RequestMethod.GET)
+	public ResponseEntity<?> getLatestScanTask(@RequestParam(required = false) String appId) {
+		ScanTask task = taskService.findLatestTask(appId);
+		if (task == null) {
+			return ResponseEntity.notFound().build();
+		} else {
+			return ResponseEntity.ok(task);
+		}
 	}
 
 	@RequestMapping(value = "/scanTask/info/{taskId}", method = RequestMethod.GET)
@@ -314,6 +329,38 @@ public class ScanTaskController extends BaseController {
 		downloadInfo.setUrl(url);
 		return ResponseEntity.ok(downloadInfo);
 
+	}
+
+	private String[] supportApp() {
+		List<String> appIds = new ArrayList<>();
+		if (this.hasRole("ROLE_ADMIN")) {
+			if (this.hasRole(Constants.ROLE_HYSCAN_ADMIN)) {
+				appIds.add(APP_TYPE.caizhi.name());
+			}
+			if (this.hasRole(Constants.ROLE_WQ_ADMIN)) {
+				appIds.add(APP_TYPE.shuise.name());
+			}
+			if (this.hasRole(Constants.ROLE_NONGSE_ADMIN)) {
+				appIds.add(APP_TYPE.nongse.name());
+			}
+			if (this.hasRole(Constants.ROLE_MEISE_ADMIN)) {
+				appIds.add(APP_TYPE.meise.name());
+			}
+		} else if (hasRole(Constants.ROLE_TENANT_ADMIN)) {
+			if (this.hasRole(Constants.ROLE_HYSCAN_TENANT)) {
+				appIds.add(APP_TYPE.caizhi.name());
+			}
+			if (this.hasRole(Constants.ROLE_WQ_TENANT)) {
+				appIds.add(APP_TYPE.shuise.name());
+			}
+			if (this.hasRole(Constants.ROLE_NONGSE_TENANT)) {
+				appIds.add(APP_TYPE.nongse.name());
+			}
+			if (this.hasRole(Constants.ROLE_MEISE_TENANT)) {
+				appIds.add(APP_TYPE.meise.name());
+			}
+		}
+		return appIds.toArray(new String[]{});
 	}
 
 

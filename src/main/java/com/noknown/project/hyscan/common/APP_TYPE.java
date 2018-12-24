@@ -12,4 +12,9 @@ public enum APP_TYPE {
 	APP_TYPE(String view) {
 		this.view = view;
 	}
+
+	public String getView() {
+		return view;
+	}
+
 }

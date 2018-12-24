@@ -7,6 +7,24 @@
 		<avatar_root>/mnt/sure/</avatar_root>
 	</uiConfig>
 	<moduleList>
+        <moduleList>
+            <name>dataManagement</name>
+            <config>
+                <cls>dataManagement</cls>
+                <index>0</index>
+            </config>
+            <subModules>
+                <subModules>
+                    <name>Statistics</name>
+                    <disable>false</disable>
+                    <permissions>1</permissions>
+                    <config>
+                        <packageN>Hyscan</packageN>
+                        <index>10</index>
+                    </config>
+                </subModules>
+            </subModules>
+        </moduleList>
 		<moduleList>
             <name>settings</name>
             <config>

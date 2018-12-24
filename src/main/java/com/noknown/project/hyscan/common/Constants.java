@@ -30,4 +30,12 @@ public class Constants {
 
 	public static final String ROLE_HYSCAN_TENANT = "ROLE_HYSCAN_TENANT";
 
+	public static final String ROLE_WQ_ADMIN = "ROLE_WQ_ADMIN";
+
+	public static final String ROLE_MEISE_ADMIN = "ROLE_MEISE_ADMIN";
+
+	public static final String ROLE_NONGSE_ADMIN = "ROLE_NONGSE_ADMIN";
+
+	public static final String ROLE_HYSCAN_ADMIN = "ROLE_HYSCAN_ADMIN";
+
 }
