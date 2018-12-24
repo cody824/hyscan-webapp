@@ -115,21 +115,6 @@ Ext.define('Module.Hyscan.Statistics.view.Map', {
                             }
                         }
                     }, {
-                        xtype: 'numberfield',
-                        name: 'limit',
-                        fieldLabel: "显示数量",
-                        labelAlign: 'right',
-                        labelWidth: 60,
-                        width: 130,
-                        allowBlank: true,
-                        hidden: true,
-                        value: 1000,
-                        listeners: {
-                            change: function (cb, newValue) {
-
-                            }
-                        }
-                    }, {
                         xtype: 'combo',
                         name: 'hotspot-index',
                         fieldLabel: "指标",
@@ -174,6 +159,20 @@ Ext.define('Module.Hyscan.Statistics.view.Map', {
                             },
                             change: function (cb, newValue) {
                                 me.showHotspot();
+                            }
+                        }
+                    }, {
+                        xtype: 'numberfield',
+                        name: 'limit',
+                        fieldLabel: "显示数量",
+                        labelAlign: 'right',
+                        labelWidth: 60,
+                        width: 130,
+                        allowBlank: true,
+                        value: 1000,
+                        listeners: {
+                            change: function (cb, newValue) {
+
                             }
                         }
                     }, "-", {
@@ -248,9 +247,14 @@ Ext.define('Module.Hyscan.Statistics.view.Map', {
             quiet: true,
             parseFailure: false,
             success: function (ret) {
+                console.log(ret);
                 if (ret) {
-                    var point = new BMap.Point(ret.lon, ret.lat);
-                    me.map.centerAndZoom(point, 15);
+                    if (ret.lon <= -350 || ret.lon > 360 || ret.lat > 84.602 || ret.lat < -80.786393) {
+                        Soul.uiModule.Message.msg("注意", "无效的LBS信息");
+                    } else {
+                        var point = new BMap.Point(ret.lon, ret.lat);
+                        me.map.centerAndZoom(point, 15);
+                    }
                 }
             },
             failure: function (resp, e) {
@@ -302,13 +306,15 @@ Ext.define('Module.Hyscan.Statistics.view.Map', {
             filter.buildBySe(sel);
         var f = filter.getFilter();
 
+        var limit = me.down("[name=limit]").getValue() || 1000;
+
         Soul.Ajax.request({
             url: '/app/scanTask/',
             method: 'get',
             params: {
                 filter: Ext.encode(f),
                 start: 0,
-                limit: 1000
+                limit: limit
             },
             loadMask: "载入任务数据",
             quiet: true,
@@ -358,7 +364,7 @@ Ext.define('Module.Hyscan.Statistics.view.Map', {
 
 
         if (!me.heatmapOverlay) {
-            me.heatmapOverlay = new BMapLib.HeatmapOverlay({"radius": 10, "visible": true, "opacity": 70});
+            me.heatmapOverlay = new BMapLib.HeatmapOverlay({"radius": 30, "visible": true, "opacity": 70});
             me.map.addOverlay(me.heatmapOverlay);
         }
         me.heatmapOverlay.setDataSet({
