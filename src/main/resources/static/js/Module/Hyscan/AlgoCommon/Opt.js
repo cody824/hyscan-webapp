@@ -6,9 +6,7 @@ Ext.define('Module.Hyscan.AlgoCommon.Opt', {
         'Soul.util.ObjectView',
         'Soul.view.WizardWindow',
         'Soul.util.ObjectConfig',
-        'Soul.ux.EmailDomainBox',
-        'Module.Hyscan.MaterialConfig.Tools',
-
+        'Soul.ux.EmailDomainBox'
     ],
 
     views: [],
