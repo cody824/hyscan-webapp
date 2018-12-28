@@ -6,11 +6,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
         'Soul.util.GridRendererUtil',
         'Soul.util.ObjectView',
         'Soul.ux.grid.feature.Searching',
-        'Soul.ux.grid.column.ComboColumn',
-        'Module.Hyscan.MaterialScanTask.Data',
-        'Module.Hyscan.MaterialScanTask.Renderer',
-        'Module.Hyscan.MaterialScanTask.Tools',
-        'Module.Hyscan.MaterialScanTask.Config'
+        'Soul.ux.grid.column.ComboColumn'
     ],
 
     checkIndexes: ['status','busType', 'money'],
@@ -22,7 +18,6 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
 	
     initComponent: function () {
         var columns = [];
-        var renders = Module.Hyscan.MaterialScanTask.Renderer;
         columns.push(
         		new Ext.grid.RowNumberer(),
 			{
