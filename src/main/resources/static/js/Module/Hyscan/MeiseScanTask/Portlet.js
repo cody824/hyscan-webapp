@@ -2,11 +2,11 @@ Ext.define('Module.Hyscan.MeiseScanTask.Portlet', {
     extend: 'Module.Hyscan.Public.TaskPortlet',
 
     VIEW: {
-        'Module.Hyscan.MeiseScanTask.view.Panel': '表格模式',
-        'Module.Hyscan.Public.view.ScanTaskDataGrid': '数据信息'
+        'Module.Hyscan.MeiseScanTask.view.Panel': LABEL.grid,
+        'Module.Hyscan.Public.view.ScanTaskDataGrid': HYSCAN_LABLE.dataInfo
     },
 
-    title: "煤色监测扫描任务",
+    title: MODULE_NAME['Module.Hyscan.MeiseScanTask'],
 
     moduleName: 'Module.Hyscan.MeiseScanTask',
 

@@ -26,7 +26,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
         columns.push(
         		new Ext.grid.RowNumberer(),
 			{
-			    text: "任务数据",
+                text: HYSCAN_LABLE.taskData,
 			    xtype: 'actioncolumn',
 			    width: 80,
 			    sortable : false,
@@ -43,19 +43,19 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
 			    }]
 			}, {
 
-                text: "扫描用户ID",
+                text: TASK_PROPERTY.userId,
 	            dataIndex: 'userId',
 	            searchType: 'number',
 	            align: 'center',
 	            width: 80
 	        }, {
-                text: "扫描时间",
+                text: TASK_PROPERTY.scanTime,
 	            dataIndex: 'scanTime',
 	            searchType: 'date',
 	            align: 'center',
 	            width: 150
 	        },{
-                text: "所在地区",
+                text: TASK_PROPERTY.city,
 	            dataIndex: 'city',
 	            searchType: 'string',
 	            align: 'center',
@@ -66,28 +66,28 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
 		            return '<span data-qtip="'+ address +'">'+value+'</span>';
 		        }
 	        }, {
-                text: "任务标记",
+                text: TASK_PROPERTY.scanTarget,
 	            dataIndex: 'scanTarget',
 	            searchType: 'string',
 	            align: 'center',
 	            width: 100
 	        }, {
-                text: "目标类型",
+                text: TASK_PROPERTY.targetType,
                 dataIndex: 'targetType',
                 searchType: 'string',
                 align: 'center',
                 width: 100
             }, {
-                text: "图片",
+                text: TASK_PROPERTY.imagePath,
                 dataIndex: 'imagePath',
                 searchType: 'string',
                 align: 'center',
                 width: 80,
                 renderer: function (value, metaData, record) {
                     if (!value)
-                        return "没有图片";
+                        return HYSCAN_LABLE.noImg;
                     var id = metaData.record.id;//Ext.id();
-                    metaData.tdAttr = 'data-qtip="双击查看大图"';
+                    metaData.tdAttr = 'data-qtip="' + HYSCAN_LABLE.doubleClickShowBigImg + '"';
                     Ext.defer(function(){
                         Ext.EventManager.addListener(id, 'dblclick', function (e, a) {
                             var win_Watch = Ext.create('Ext.Window', {
@@ -98,7 +98,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
                                 maxHeight: 600,
                                 maxWidth: 600 * a.naturalWidth / a.naturalHeight,
                                 maximizable: true,
-                                title: '图片大图',
+                                title: HYSCAN_LABLE.bigImg,
                                 layout: "fit",                        //窗口布局类型  
                                 modal: true, //是否模态窗口，默认为false  
                                 resizable: false,
@@ -120,7 +120,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
                         height: 30,
                         //width: 80,
                         src: value,
-                        alt: '没有图片',
+                        alt: HYSCAN_LABLE.noImg,
                         listeners: {
                             scope: this,
                             el: {
@@ -134,19 +134,19 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
                     return "<img src='" + value + "' width='30px', height='30px' id='" + id + "'>";
                 }
             }, {
-	            text: "光谱仪型号",
+                text: TASK_PROPERTY.deviceModel,
 	            dataIndex: 'deviceModel',
 	            searchType: 'string',
 	            align: 'center',
 	            width: 80
 	        }, {
-                text: "光谱仪序列号",
+                text: TASK_PROPERTY.deviceSerial,
 	            dataIndex: 'deviceSerial',
 	            searchType: 'string',
 	            align: 'center',
 	            width: 100
 	        },{
-                text: "固件版本",
+                text: TASK_PROPERTY.deviceFirmware,
 	            dataIndex: 'deviceFirmware',
 	            searchType: 'string',
 	            align: 'center',
@@ -179,7 +179,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
         
 
         var todayFilter = {
-	    	searchText : '今天', 
+            searchText: HYSCAN_LABLE.today,
 	    	icon : '/img/icon/quota.png',
 	    	name : 'todayOrder',
 	    	filter : [{
@@ -190,7 +190,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
 	    	}]
 	    };
 	    var yesterdayFilter = {
-	    	searchText : '昨天', 
+            searchText: HYSCAN_LABLE.yesterday,
 	    	icon : '/img/icon/quota.png',
 	    	name : 'yesterdayOrder',
 	    	filter : [{
@@ -203,7 +203,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
         
 
         var weekOderFilter = {
-	    	searchText : '最近7天', 
+            searchText: HYSCAN_LABLE.weekDay,
 	    	icon : '/img/icon/quota.png',
 	    	name : 'weekOrder',
 	    	filter : [{
@@ -214,7 +214,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
 	    	}]
 	    };
 	    var monthOderFilter = {
-	    	searchText : '本月', 
+            searchText: HYSCAN_LABLE.thisMonths,
 	    	icon : '/img/icon/quota.png',
 	    	name : 'monthOrder',
 	    	filter : [{
@@ -225,7 +225,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
 	    	}]
         };
 	    var lastMonthOderFilter = {
-	    	searchText : '上月', 
+            searchText: HYSCAN_LABLE.lastMonth,
 	    	icon : '/img/icon/quota.png',
 	    	name : 'lastmonthOrder',
 	    	filter : [{
@@ -249,7 +249,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
         Ext.apply(this, {
             columns: columns,
             viewConfig: {
-                emptyText: "没有扫描任务",
+                emptyText: HYSCAN_LABLE.noTaskFound,
                 enableTextSelection:true  
             },
             store: store

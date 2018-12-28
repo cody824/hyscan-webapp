@@ -18,7 +18,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
                 width: 40
             }),
 			{
-				text: "波长",flex:1, sortable: false, 
+                text: TASK_DATA_PROPERTY.wavelength, flex: 1, sortable: false,
 				menuDisabled:true, dataIndex: 'wavelength', align : 'center',
 				renderer : function(v){
 					//return v;
@@ -27,11 +27,11 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
 				}
 			},
 			{
-				text: "DN", flex:1, dataIndex:'dn', 
+                text: TASK_DATA_PROPERTY.dn, flex: 1, dataIndex: 'dn',
 				menuDisabled:true, align : 'center'
 			},
 			{
-				text: "反射率", flex:1, dataIndex:'reflectivity', 
+                text: TASK_DATA_PROPERTY.reflectivity, flex: 1, dataIndex: 'reflectivity',
 				menuDisabled:true, align : 'center',
 				renderer : function(v){
 					var show = Ext.Number.toFixed(parseFloat(v), 2);
@@ -39,11 +39,11 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
 				}
 			},
 			{
-				text: "辐亮度", flex:1, dataIndex:'radiance', 
+                text: TASK_DATA_PROPERTY.radiance, flex: 1, dataIndex: 'radiance',
 				menuDisabled:true, align : 'center'
 			},
 			{
-				text: "去除包格线", flex:1, dataIndex:'rmPacketLine', 
+                text: TASK_DATA_PROPERTY.rmPacketLine, flex: 1, dataIndex: 'rmPacketLine',
 				menuDisabled:true, align : 'center',
 				renderer : function(v){
 					var show = Ext.Number.toFixed(parseFloat(v), 2);
@@ -51,11 +51,11 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
 				}
 			},
 			{
-				text: "暗电流", flex:1, dataIndex:'darkCurrent', 
+                text: TASK_DATA_PROPERTY.darkCurrent, flex: 1, dataIndex: 'darkCurrent',
 				menuDisabled:true, align : 'center'
 			},
 			{
-				text: "白板数据", flex:1, dataIndex:'whiteboardData', 
+                text: TASK_DATA_PROPERTY.whiteboardData, flex: 1, dataIndex: 'whiteboardData',
 				menuDisabled:true, align : 'center'
 			}
 		);
@@ -73,13 +73,13 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
 		Ext.apply(this, {
 			viewConfig : {
 			enableTextSelection:true,
-				emptyText : "请选择任务"
+                emptyText: HYSCAN_LABLE.pleaseSelectTask
 			},
 			dockedItems: [{
 		        xtype: 'toolbar',
 		        dock: 'top',
 		        items: [{
-		            text: '返回任务列表',
+                    text: HYSCAN_LABLE.backToTaskList,
 		            handler : function(){
 			        	me.portlet.gotoView(me.portlet.defaultView, null, me.portlet);
 		        	}
@@ -96,11 +96,11 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
 		var me =  scope || this;
 		var tools = Module.Hyscan.Public.Tools;
 		if (me.task != null) {
-            me.setTitle(me.task.id + "任务数据");
+            me.setTitle(HYSCAN_LABLE.taskData + "[" + me.task.id + "]");
 			Soul.Ajax.request({
 				url : '/app/scanTask/data/' + me.task.id,
-				loadMask : '数据载入中',
-                successMsg: '载入成功',
+                loadMask: HYSCAN_LABLE.loading,
+                successMsg: HYSCAN_LABLE.loadComplete,
 				success : function(ret){
 					var range = ret.range;
 					var wavelength = [];
@@ -140,7 +140,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
         var me = this;
         me.callParent(arguments);
         if (me.task == null) {
-        	Soul.uiModule.Message.msg('提示', '请返回选择任务');
+            Soul.uiModule.Message.msg(HYSCAN_LABLE.notice, HYSCAN_LABLE.pleaseSelectTask);
             me.portlet.gotoView(me.portlet.defaultView, null, me.portlet);
         }
     },

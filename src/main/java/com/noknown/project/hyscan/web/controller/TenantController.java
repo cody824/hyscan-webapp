@@ -3,13 +3,13 @@ package com.noknown.project.hyscan.web.controller;
 import com.noknown.framework.common.base.BaseController;
 import com.noknown.framework.common.exception.DaoException;
 import com.noknown.framework.common.exception.ServiceException;
-import com.noknown.framework.common.exception.WebException;
 import com.noknown.framework.common.web.model.PageData;
 import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.framework.security.model.Role;
 import com.noknown.framework.security.service.RoleService;
 import com.noknown.project.hyscan.common.APP_TYPE;
 import com.noknown.project.hyscan.common.Constants;
+import com.noknown.project.hyscan.common.config.RunConfig;
 import com.noknown.project.hyscan.model.Tenant;
 import com.noknown.project.hyscan.service.TenantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,27 @@ public class TenantController extends BaseController {
 
 	private final RoleService roleService;
 
+	private final RunConfig runConfig;
+
+	@Autowired
+	public TenantController(TenantService tenantService, RoleService roleService, RunConfig runConfig) {
+		this.tenantService = tenantService;
+		this.roleService = roleService;
+		this.runConfig = runConfig;
+	}
+
+	private void checkAndBuildRole(String name, String comment) throws ServiceException, DaoException {
+		Role role = roleService.getRoleByName(name);
+		if (role == null) {
+			roleService.createRole(name, comment);
+		}
+	}
+
 	@PostConstruct
 	private void init(){
+		if (!runConfig.supportTenant) {
+			return;
+		}
 		try {
 			checkAndBuildRole(Constants.ROLE_TENANT_ADMIN, "租户管理员");
 			checkAndBuildRole(Constants.ROLE_HYSCAN_TENANT, "材质检测租户管理员");
@@ -46,26 +65,10 @@ public class TenantController extends BaseController {
 		}
 	}
 
-	private void checkAndBuildRole(String name, String comment) throws ServiceException, DaoException {
-		Role role = roleService.getRoleByName(name);
-		if (role == null) {
-			roleService.createRole(name, comment);
-		}
-	}
-
-	@Autowired
-	public TenantController(TenantService tenantService, RoleService roleService) {
-		this.tenantService = tenantService;
-		this.roleService = roleService;
-	}
-
 	@RequestMapping(value = "/tenant/", method = RequestMethod.POST)
 	public ResponseEntity<?> createTenant(@RequestBody Tenant tenant)
 			throws Exception {
 		Authentication user = loginAuth();
-		if (user == null) {
-			throw new WebException("请登录");
-		}
 		tenant.setCreateTime(new Date())
 				.setCreateUserId(this.loginUser().getUser().getId());
 		tenantService.create(tenant);
@@ -77,9 +80,6 @@ public class TenantController extends BaseController {
 	public ResponseEntity<?> updateTenant(@PathVariable Integer id, @RequestBody Tenant tenant)
 			throws Exception {
 		Authentication user = loginAuth();
-		if (user == null) {
-			throw new WebException("请登录");
-		}
 		tenant = tenantService.update(id, tenant, null);
 		attachTenantRole(tenant);
 		return ResponseEntity.ok(tenant);

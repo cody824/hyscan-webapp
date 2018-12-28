@@ -25,8 +25,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Service;
@@ -35,10 +36,7 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author guodong
@@ -48,11 +46,11 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
-	private ScanTaskDao taskDao;
+	private final ScanTaskDao taskDao;
 
-	@Autowired
-	private ScanTaskDataRepo taskDataDao;
+	private final ScanTaskDataRepo taskDataDao;
+
+	private final MessageSource messageSource;
 
 	@Value("${hyscan.tmpDir:/var/hyscan/tmp/}")
 	private String tmpDir;
@@ -61,6 +59,12 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 	@Value("${hyscan.export.excelTpl:/var/hyscan/excelTpl/taskData.xlsx}")
 	private String excelTpl;
+
+	public ScanTaskServiceImpl(ScanTaskDao taskDao, ScanTaskDataRepo taskDataDao, MessageSource messageSource) {
+		this.taskDao = taskDao;
+		this.taskDataDao = taskDataDao;
+		this.messageSource = messageSource;
+	}
 
 
 	@Override
@@ -98,6 +102,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 	@Override
 	public DownloadInfo exportScanTaskPackage(SQLFilter filter, String type) throws ServiceException, DaoException {
+		Locale locale = LocaleContextHolder.getLocale();
 		Collection<ScanTask> taskList = this.find(filter);
 		String taskKey = BaseUtil.getTimeCode(new Date());
 		File dir = new File(tmpDir, taskKey);
@@ -121,7 +126,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 			FileUtil.zip(zipFile.getAbsolutePath(), dir);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw  new ServiceException("压缩包生成失败：" + e.getLocalizedMessage());
+			throw new ServiceException(messageSource.getMessage("zip_build_error", new Object[]{e.getLocalizedMessage()}, "压缩包生成失败：{0}", locale));
 		}
 		try {
 			FileUtils.deleteDirectory(dir);
@@ -139,9 +144,10 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 	@Override
 	public DownloadInfo exportScanTask(String taskId, String type) throws ServiceException, DaoException {
+		Locale locale = LocaleContextHolder.getLocale();
 		ScanTask task = taskDao.findById(taskId).orElse(null);
 		if (task == null) {
-			throw new ServiceException("任务不存在", 404);
+			throw new ServiceException(messageSource.getMessage("task_not_found", null, "任务不存在", locale), 404);
 		}
 		String taskKey = BaseUtil.getTimeCode(new Date());
 		File dir = new File(tmpDir, taskKey);
@@ -164,7 +170,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 			FileUtil.zip(zipFile.getAbsolutePath(), taskDir);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw  new ServiceException("压缩包生成失败：" + e.getLocalizedMessage());
+			throw new ServiceException(messageSource.getMessage("zip_build_error", new Object[]{e.getLocalizedMessage()}, "压缩包生成失败：{0}", locale));
 		}
 		freeSpaceIfNeeded();
 		try {
@@ -194,6 +200,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 	}
 
 	private File exportJson(ScanTask scanTask, File dir) throws ServiceException, DaoException {
+		Locale locale = LocaleContextHolder.getLocale();
 		File taskDir = new File(dir, scanTask.getId());
 		taskDir.mkdirs();
 		String infoStr = JsonUtil.toJson(scanTask);
@@ -202,7 +209,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 			FileUtils.write(infoFile, infoStr);
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new ServiceException("写文件错误：" + e.getLocalizedMessage());
+			throw new ServiceException(messageSource.getMessage("write_file_error", new Object[]{e.getLocalizedMessage()}, "写文件错误：{0}", locale));
 		}
 		if (StringUtil.isNotBlank(scanTask.getImagePath())){
 			File imgFile = new File(taskDir, "image.png");
@@ -216,13 +223,15 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 				FileUtils.write(dataFile, dataStr);
 			} catch (IOException e) {
 				e.printStackTrace();
-				throw new ServiceException("写文件错误：" + e.getLocalizedMessage());
+				throw new ServiceException(messageSource.getMessage("write_file_error", new Object[]{e.getLocalizedMessage()}, "写文件错误：{0}", locale));
+
 			}
 		}
 		return taskDir;
 	}
 
 	private File exportTxt(ScanTask scanTask, File dir) throws ServiceException, DaoException {
+		Locale locale = LocaleContextHolder.getLocale();
 		File taskDir = new File(dir, scanTask.getId());
 		taskDir.mkdirs();
 		String infoStr = JsonUtil.toJson(scanTask);
@@ -231,7 +240,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 			FileUtils.write(infoFile, infoStr);
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new ServiceException("写文件错误：" + e.getLocalizedMessage());
+			throw new ServiceException(messageSource.getMessage("write_file_error", new Object[]{e.getLocalizedMessage()}, "写文件错误：{0}", locale));
 		}
 		if (StringUtil.isNotBlank(scanTask.getImagePath())) {
 			File imgFile = new File(taskDir, "image.png");
@@ -261,7 +270,8 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 					FileUtils.write(dataFile, dataStr);
 				} catch (IOException e) {
 					e.printStackTrace();
-					throw new ServiceException("写文件错误：" + e.getLocalizedMessage());
+					throw new ServiceException(messageSource.getMessage("write_file_error", new Object[]{e.getLocalizedMessage()}, "写文件错误：{0}", locale));
+
 				}
 			} else {
 				logger.warn("采集任务{}数据格式不正确", scanTask.getId());
@@ -271,6 +281,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 	}
 
 	private File exportExcel(ScanTask scanTask, File dir) throws ServiceException, DaoException {
+		Locale locale = LocaleContextHolder.getLocale();
 		File taskDir = new File(dir, scanTask.getId());
 		taskDir.mkdirs();
 		if (StringUtil.isNotBlank(scanTask.getImagePath())) {
@@ -301,7 +312,8 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 				String dataStr = JsonUtil.toJson(exportRows);
 				if (dataStr == null) {
-					throw new ServiceException("生成信息失败");
+					throw new ServiceException(messageSource.getMessage("create_info_failed", null, "生成信息失败", locale));
+
 				}
 				String infoStr = JsonUtil.toJson(scanTask);
 
@@ -322,7 +334,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 					os.flush();
 				} catch (IOException | ParseException e) {
 					e.printStackTrace();
-					throw new ServiceException("写文件错误：" + e.getLocalizedMessage());
+					throw new ServiceException(messageSource.getMessage("write_file_error", new Object[]{e.getLocalizedMessage()}, "写文件错误：{0}", locale));
 				}
 			} else {
 				logger.warn("采集任务{}数据格式不正确", scanTask.getId());

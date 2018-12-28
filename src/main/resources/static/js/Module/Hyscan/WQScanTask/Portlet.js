@@ -6,11 +6,11 @@ Ext.define('Module.Hyscan.WQScanTask.Portlet', {
  	],
  		
  	VIEW : {
-        'Module.Hyscan.WQScanTask.view.Panel' : '表格模式',
-		'Module.Hyscan.Public.view.ScanTaskDataGrid' : '数据信息'
+        'Module.Hyscan.WQScanTask.view.Panel': LABEL.grid,
+        'Module.Hyscan.Public.view.ScanTaskDataGrid': HYSCAN_LABLE.dataInfo
 	},
-    
-	title: "水质监测扫描任务",
+
+    title: MODULE_NAME['Module.Hyscan.WQScanTask'],
 
 	moduleName : 'Module.Hyscan.WQScanTask',
     

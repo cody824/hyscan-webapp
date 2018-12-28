@@ -4,8 +4,6 @@ Ext.define('Module.Hyscan.AlgoCommon.view.DictGrid', {
     requires: [
         'Soul.util.RendererUtil',
         'Soul.util.GridRendererUtil',
-        'Module.Hyscan.MaterialConfig.Data',
-        'Module.Hyscan.MaterialConfig.Renderer',
         'Soul.util.ObjectView',
         'Soul.ux.grid.feature.Searching'
     ],
@@ -18,20 +16,19 @@ Ext.define('Module.Hyscan.AlgoCommon.view.DictGrid', {
     },
 
     initComponent: function () {
-        var columns = new Array();
-        var renders = Module.Hyscan.MaterialConfig.Renderer;
+        var columns = [];
         columns.push(
             new Ext.grid.RowNumberer(),
             {
-                text: "数据类型", flex: 1, sortable: false,
+                text: HYSCAN_LABLE.dataType, flex: 1, sortable: false,
                 menuDisabled: true, dataIndex: 'dataType', align: 'center'
             },
             {
-                text: "数值", flex: 1, sortable: false,
+                text: HYSCAN_LABLE.value, flex: 1, sortable: false,
                 menuDisabled: true, dataIndex: 'key', align: 'center'
             },
             {
-                text: "显示值", flex: 1, dataIndex: 'value',
+                text: HYSCAN_LABLE.showValue, flex: 1, dataIndex: 'value',
                 menuDisabled: true, align: 'center'
             }
         );
@@ -78,7 +75,7 @@ Ext.define('Module.Hyscan.AlgoCommon.view.DictGrid', {
         Ext.apply(this, {
             selModel: sm,
             viewConfig: {
-                emptyText: "没有字典配置"
+                emptyText: HYSCAN_LABLE.noDictConfig
             },
             store: paramStore,
             columns: columns,
@@ -101,7 +98,7 @@ Ext.define('Module.Hyscan.AlgoCommon.view.DictGrid', {
 
         Soul.Ajax.request({
             url: configUrl,
-            successMsg: '载入成功',
+            successMsg: HYSCAN_LABLE.loadComplete,
             success: function (ret) {
                 if (ret != null) {
                     var paramData = [];
@@ -125,9 +122,9 @@ Ext.define('Module.Hyscan.AlgoCommon.view.DictGrid', {
 
     initToolbar: function () {
         var me = this,
-            toolbar = new Array();
+            toolbar = [];
         var paramCombox = {
-            text: "操作",
+            text: LABEL.operation,
             icon: '/img/icon/show.png',
             menu: this.buildOptMenu()
         };
@@ -142,17 +139,17 @@ Ext.define('Module.Hyscan.AlgoCommon.view.DictGrid', {
                 overflow: 'visible'
             },
             items: [{
-                text: "新建索引",
+                text: HYSCAN_LABLE.createIndex,
                 disabled: false,
                 name: 'createIndex',
                 iconCls: 'x-add-icon'
             }, {
-                text: "编辑索引",
+                text: HYSCAN_LABLE.editIndex,
                 disabled: true,
                 name: 'editIndex',
                 iconCls: 'extensive-edit'
             }, {
-                text: "删除索引",
+                text: HYSCAN_LABLE.delIndex,
                 disabled: true,
                 name: 'delIndex',
                 iconCls: 'x-del-icon'

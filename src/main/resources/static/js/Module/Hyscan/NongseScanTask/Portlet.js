@@ -2,11 +2,11 @@ Ext.define('Module.Hyscan.NongseScanTask.Portlet', {
     extend: 'Module.Hyscan.Public.TaskPortlet',
 
     VIEW: {
-        'Module.Hyscan.NongseScanTask.view.Panel': '表格模式',
-        'Module.Hyscan.Public.view.ScanTaskDataGrid': '数据信息'
+        'Module.Hyscan.NongseScanTask.view.Panel': LABEL.grid,
+        'Module.Hyscan.Public.view.ScanTaskDataGrid': HYSCAN_LABLE.dataInfo
     },
 
-    title: "农色监测扫描任务",
+    title: MODULE_NAME['Module.Hyscan.NongseScanTask'],
 
     moduleName: 'Module.Hyscan.NongseScanTask',
 

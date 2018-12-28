@@ -2,10 +2,10 @@ Ext.define('Module.Hyscan.NongseAlgo.Portlet', {
     extend: 'Soul.view.ModulePortlet',
 
     VIEW: {
-        'Module.Hyscan.NongseAlgo.view.Panel': '表格模式'
+        'Module.Hyscan.NongseAlgo.view.Panel': LABEL.grid
     },
 
-    title: "农色检测算法",
+    title: MODULE_NAME['Module.Hyscan.NongseAlgo'],
 
     moduleName: 'Module.Hyscan.NongseAlgo',
 

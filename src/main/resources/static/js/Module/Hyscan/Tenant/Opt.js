@@ -45,7 +45,7 @@ Ext.define('Module.Hyscan.Tenant.Opt', {
             queryMode: 'remote',
             typeAhead: true,
             labelAlign: 'right',
-            fieldLabel: "管理员",
+            fieldLabel: HYSCAN_LABLE.admin,
             store: store,
             displayField: 'fullName',
             valueField: "id",
@@ -54,8 +54,8 @@ Ext.define('Module.Hyscan.Tenant.Opt', {
             gridConfig: {
                 hideHeaders: false,
                 columns: [
-                    {header: '登录名', dataIndex: 'nick', menuDisabled: true},
-                    {header: '昵称', dataIndex: 'fullName', menuDisabled: true}
+                    {header: HYSCAN_LABLE.loginName, dataIndex: 'nick', menuDisabled: true},
+                    {header: HYSCAN_LABLE.fullName, dataIndex: 'fullName', menuDisabled: true}
                 ],
 
                 dockedItems: [{
@@ -74,16 +74,17 @@ Ext.define('Module.Hyscan.Tenant.Opt', {
             }
         });
 
-        var appStore = Ext.create('Ext.data.Store', {
-            fields: ['key', 'name'],
-            data: [
-                {"key": "caizhi", "name": "Hyscan"},
-                {"key": "shuise", "name": "水色"},
-                {"key": "meise", "name": "煤色"},
-                {"key": "nongse", "name": "农色"}
-            ]
+        var appData = [];
+        Ext.Object.each(APPID_VIEW, function (key, value) {
+            appData.push({
+                key: key, name: value
+            })
         });
 
+        var appStore = Ext.create('Ext.data.Store', {
+            fields: ['key', 'name'],
+            data: appData
+        });
 
         var form = Ext.create("Ext.form.Panel", {
             labelWidth: 60,
@@ -98,20 +99,20 @@ Ext.define('Module.Hyscan.Tenant.Opt', {
             },
             items: [{
                 name: 'name',
-                fieldLabel: "名称"
+                fieldLabel: TENANT_PROPERTY.name
             }, adminCombox, {
                 name: 'description',
                 xtype: 'textareafield',
                 grow: true,
-                fieldLabel: "备注"
+                fieldLabel: TENANT_PROPERTY.description
             }, {
                 name: 'serials',
                 xtype: 'textareafield',
-                blankText: '中间用","隔开',
+                blankText: HYSCAN_LABLE.serialsBlankText,
                 grow: true,
                 regex: /^\d+(,\d+)*$/,
-                regexText: '序列号都是数字，多个序列号中间用","隔开',
-                fieldLabel: "设备序列号"
+                regexText: HYSCAN_LABLE.serialsReg,
+                fieldLabel: TENANT_PROPERTY.serials
             }, {
                 name: 'appIds',
                 xtype: 'combo',
@@ -125,11 +126,11 @@ Ext.define('Module.Hyscan.Tenant.Opt', {
             }]
         });
 
-        var title = "新建租户";
+        var title = HYSCAN_LABLE.addTenant;
         var method = "post";
         var url = "/admin/tenant/";
         if (tenant) {
-            title = "编辑租户";
+            title = HYSCAN_LABLE.editTenant;
             method = "put";
             url += tenant.id;
             form.getForm().setValues(tenant);
@@ -145,7 +146,7 @@ Ext.define('Module.Hyscan.Tenant.Opt', {
             modal: true,
             buttonAlign: 'center',
             buttons: [{
-                text: "保存",
+                text: LABEL.save,
                 handler: function () {
                     if (!form.getForm().isValid()) return;
                     var params = form.getForm().getValues();
@@ -165,8 +166,8 @@ Ext.define('Module.Hyscan.Tenant.Opt', {
                         url: url,
                         method: method,
                         jsonData: params,
-                        loadMask: "处理中",
-                        successMsg: "保存成功",
+                        loadMask: HYSCAN_LABLE.processing,
+                        successMsg: HYSCAN_LABLE.saveComplete,
                         success: function () {
                             win.close();
                             cb();

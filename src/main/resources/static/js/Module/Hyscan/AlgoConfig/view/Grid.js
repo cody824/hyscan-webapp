@@ -18,27 +18,27 @@ Ext.define('Module.Hyscan.AlgoConfig.view.Grid', {
 	},
 
 	initComponent : function() {
-		var columns = new Array();
+        var columns = [];
 		var renders = Module.Hyscan.AlgoConfig.Renderer;
 		columns.push(
 			new Ext.grid.RowNumberer(),
 			{
-				text: "版本",width: 150, sortable: false, 
+                text: AC_PROPERTY.version, width: 150, sortable: false,
 				menuDisabled:true, dataIndex: 'version', align : 'center'
 			},
 			{
-				text: "文件", flex:1, dataIndex:'path', 
+                text: AC_PROPERTY.path, flex: 1, dataIndex: 'path',
 				menuDisabled:true, align : 'center'
 			},
 			{
-				text: "类名", flex:1, dataIndex:'name', 
+                text: AC_PROPERTY.name, flex: 1, dataIndex: 'name',
 				menuDisabled:true, align : 'center'
 			},
 			{
-				text: "是否当前算法", width: 100, dataIndex:'current', 
+                text: AC_PROPERTY.current, width: 100, dataIndex: 'current',
 				menuDisabled:true, align : 'center',
 				renderer : function(v){
-					var show = "当前算法";
+                    var show = HYSCAN_LABLE.currentAlgo;
 					if (!v){
 						show = "";
 					}
@@ -46,17 +46,17 @@ Ext.define('Module.Hyscan.AlgoConfig.view.Grid', {
 				}
 			},
 			{
-				text: "是否有效", width: 80, dataIndex:'valid', 
+                text: AC_PROPERTY.valid, width: 80, dataIndex: 'valid',
 				menuDisabled:true, align : 'center',
 				renderer : function(v){
-					var show = "有效";
+                    var show = HYSCAN_LABLE.valid;
 					if (!v){
-						show = "<span style='color:red;'>无效</span>";
+                        show = "<span style='color:red;'>" + HYSCAN_LABLE.invalid + "</span>";
 					}
 					return show;
 				}
 			}, {
-                text: "删除",
+                text: LABEL.del,
 	            xtype: 'actioncolumn',
 	            width: 50,
 	            sortable : false,
@@ -64,7 +64,7 @@ Ext.define('Module.Hyscan.AlgoConfig.view.Grid', {
 	            align: 'center',
 	            items: [{
 	                icon: '/img/icon/del.png',
-	                tooltip: '删除',
+                    tooltip: LABEL.del,
 	                name: 'view',
 	                scope: this,
 	                handler: this.onDelClick,
@@ -72,7 +72,7 @@ Ext.define('Module.Hyscan.AlgoConfig.view.Grid', {
 	                }
 	            }]
             }, {
-                text: "测试",
+                text: HYSCAN_LABLE.test,
                 xtype: 'actioncolumn',
                 width: 50,
                 sortable: false,
@@ -80,7 +80,7 @@ Ext.define('Module.Hyscan.AlgoConfig.view.Grid', {
                 align: 'center',
                 items: [{
                     icon: '/img/icon/update.png',
-                    tooltip: '删除',
+                    tooltip: HYSCAN_LABLE.test,
                     name: 'view',
                     scope: this,
                     handler: this.onTestClick,
@@ -127,7 +127,7 @@ Ext.define('Module.Hyscan.AlgoConfig.view.Grid', {
 		Ext.apply(this, {
 			selModel: sm,
 			viewConfig : {
-				emptyText : "没有算法配置"
+                emptyText: HYSCAN_LABLE.noAc
 			},
 			store : paramStore,
 			columns : columns,
@@ -166,7 +166,7 @@ Ext.define('Module.Hyscan.AlgoConfig.view.Grid', {
 				}
 			});
 			me.store.loadData(algoList);
-		}, "载入算法", null);
+        }, HYSCAN_LABLE.loadingAlgo, null);
 	},
 	
 	onDelClick : function(view ,rowIndex, colIndex, item, e, record, row){

@@ -4,8 +4,6 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Panel', {
     requires: [
         'Soul.util.RendererUtil',
         'Soul.util.GridRendererUtil',
-        // 'Module.Archive.system.Data',
-        // 'Module.Archive.system.Renderer',
         'Soul.util.ObjectView',
         'Ext.tab.*',
         'Ext.ux.TabCloseMenu'
@@ -18,8 +16,8 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Panel', {
                 // bodyPadding: 10
             },
             items: [{
-                title: "没有配置",
-                html: "没有型号配置存在"
+                title: HYSCAN_LABLE["noConfig"],
+                html: HYSCAN_LABLE["noConfigMsg"]
             }]
         });
 
@@ -37,10 +35,9 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Panel', {
         var me = this;
         Soul.Ajax.request({
             url: '/app/algo-config/',
-            successMsg: '载入完成',
+            successMsg: HYSCAN_LABLE["loadComplete"],
             method: 'get',
             success: function (ret) {
-                // me.store.loadData(ret);
                 if (ret.length > 0) {
                     me.tabs.removeAll(true);
                     Ext.each(ret, function (algoConfig) {
@@ -56,7 +53,7 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Panel', {
                 }
                 Soul.Ajax.request({
                     url: '/app/modelConfig/',
-                    successMsg: '载入完成',
+                    successMsg: HYSCAN_LABLE["loadComplete"],
                     method: 'get',
                     success: function (models) {
                         if (models.length > 0) {

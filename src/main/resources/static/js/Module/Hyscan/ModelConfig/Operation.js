@@ -24,7 +24,7 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 		Soul.Ajax.request({
 			url : '/app/modelConfig/?models=' + models,
 			method : 'delete',
-			confirm : '确认要删除该型号配置吗',
+            confirm: HYSCAN_LABLE.confirmDeleteAlgo,
 			headers : {
 				Accept : 'application/json'
 			},
@@ -48,18 +48,18 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 			},
 			items: [{
 				name: 'model',
-				fieldLabel: "型号"
+                fieldLabel: MODEL_CONFIG_PROPERTY.model
 			},{
 				name: 'desc',
 				allowBlank : true,
-				fieldLabel: "描述"
+                fieldLabel: MODEL_CONFIG_PROPERTY.desc
 			},{
                 name: 'dnMaxValue',
                 xtype: 'numberfield',
-                fieldLabel: "DN最大值"
+                fieldLabel: MODEL_CONFIG_PROPERTY.dnMaxValue
             }, {
                 xtype: 'fieldcontainer',
-                fieldLabel: '辐亮度参数',
+                fieldLabel: MODEL_CONFIG_PROPERTY.radianceParams,
                 labelWidth: 100,
                 layout: 'hbox',
                 items: [{
@@ -77,7 +77,7 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
                 }]
             },{
 		        xtype: 'fieldcontainer',
-		        fieldLabel: '光谱坐标范围',
+                fieldLabel: MODEL_CONFIG_PROPERTY.spectralRange,
 		        labelWidth: 100,
 		        layout: 'hbox',
 		        items: [{
@@ -126,7 +126,7 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 				xtype : 'textarea',
 				allowBlank : false,
 				readOnly : true,
-				fieldLabel: "波长范围"
+                fieldLabel: MODEL_CONFIG_PROPERTY.wavelengths
 			}]
 		});
 		
@@ -137,13 +137,14 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 			}
 			formpanel.down('textarea[name=wavelengths]').setValue(wavelengths);
 		}
-		var title = "新建型号";
+
+        var title = HYSCAN_LABLE.createModel;
 		if (record) {
 			formpanel.getForm().setValues(record.data);
 			formpanel.down('[name=radianceParams]').next('[name=radianceParams]').setValue(record.data.radianceParams[1]);
 			formpanel.down('[name=spectralRange]').next('[name=spectralRange]').setValue(record.data.spectralRange[1]);
 			formpanel.down('[name=model]').setReadOnly(true);
-			title = "编辑型号";
+            title = HYSCAN_LABLE.editModel;
 		}
 
 		var win = new Ext.Window({

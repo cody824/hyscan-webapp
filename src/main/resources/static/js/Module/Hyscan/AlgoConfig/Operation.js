@@ -25,24 +25,24 @@ Ext.define('Module.Hyscan.AlgoConfig.Operation', {
 			items: [{
 				name: 'version',
 				allowBlank : false,
-				fieldLabel: "版本"
+                fieldLabel: LABEL.version
 			},{
 				name: 'file',
 				allowBlank : false,
 				xtype: 'filefield',
-				fieldLabel: "jar包",
+                fieldLabel: HYSCAN_LABLE.jar,
 				buttonConfig : {
-					text : '选择JAR包'
+                    text: HYSCAN_LABLE.selectJar
 				}
 			},{
 				name: 'name',
 				allowBlank : false,
-				fieldLabel: "类名"
+                fieldLabel: HYSCAN_LABLE.className
 			}]
 		});
 		
 		var win = new Ext.Window({
-			title: "上传算法",
+            title: HYSCAN_LABLE.uploadWin,
 			items: formpanel,
 			stateful : false,
 			autoDestroy:true,
@@ -50,22 +50,22 @@ Ext.define('Module.Hyscan.AlgoConfig.Operation', {
 			modal:true,
 			buttonAlign: 'center',
 			buttons: [{
-				text: "上传",
+                text: HYSCAN_LABLE.upload,
 				handler: function(){
 					var form = formpanel.getForm();
 					if(form.isValid()){
 					    form.submit({
 					        url: '/admin/algorithm/',
-					        waitMsg: '算法包上传中',
+                            waitMsg: HYSCAN_LABLE.uploadWaitMsg,
 					        header : {
 					    		Accept : 'application/json'
 					    	},
 					        success: function(fp, o) {
 					    		callback();
 					    		win.close();
-					    		Soul.uiModule.Message.msg("成功", "算法上传成功");
+                                Soul.uiModule.Message.msg(LABEL.success, HYSCAN_LABLE.uploadSuccess);
 					        }, failure : function(a, b,c, d){
-					        	Soul.util.MessageUtil.showErrorInfo("上传失败", "文件最大10MB");
+                                Soul.util.MessageUtil.showErrorInfo(LABEL.failure, HYSCAN_LABLE.max10Mb);
 					        }
 					    });
 					}
@@ -96,14 +96,18 @@ Ext.define('Module.Hyscan.AlgoConfig.Operation', {
             }
         });
 
+
+        var appData = [];
+
+        Ext.Object.each(APPID_VIEW, function (key, value) {
+            appData.push({
+                key: key, name: value
+            })
+        });
+
         var appStore = Ext.create('Ext.data.Store', {
             fields: ['key', 'name'],
-            data: [
-                {"key": "caizhi", "name": "Hyscan"},
-                {"key": "shuise", "name": "水色"},
-                {"key": "meise", "name": "煤色"},
-                {"key": "nongse", "name": "农色"}
-            ]
+            data: appData
         });
 
 
@@ -122,7 +126,7 @@ Ext.define('Module.Hyscan.AlgoConfig.Operation', {
                 value: algo.version,
                 // disabled : true,
                 readOnly: true,
-                fieldLabel: "算法版本"
+                fieldLabel: HYSCAN_LABLE.algoVersion
             }, {
                 name: 'appId',
                 xtype: 'combo',
@@ -136,7 +140,7 @@ Ext.define('Module.Hyscan.AlgoConfig.Operation', {
                 name: 'model',
                 xtype: 'combo',
                 allowBlank: false,
-                fieldLabel: "型号",
+                fieldLabel: LABEL.model,
                 store: modelStore,
                 queryMode: 'remote',
                 displayField: 'model',
@@ -144,24 +148,24 @@ Ext.define('Module.Hyscan.AlgoConfig.Operation', {
             }, {
                 name: 'target',
                 allowBlank: true,
-                blankText: '可以为空',
-                fieldLabel: "目标类型"
+                blankText: HYSCAN_LABLE.canEmpty,
+                fieldLabel: HYSCAN_LABLE.targetType
             }, {
                 name: 'data',
                 xtype: 'textarea',
                 allowBlank: false,
-                fieldLabel: "反射率"
+                fieldLabel: HYSCAN_LABLE.reflectivity
             }, {
                 name: 'result',
                 xtype: 'textarea',
                 allowBlank: true,
                 readOnly: true,
-                fieldLabel: "结果"
+                fieldLabel: HYSCAN_LABLE.result
             }]
         });
 
         var win = new Ext.Window({
-            title: "上传算法",
+            title: HYSCAN_LABLE.testWin,
             items: formpanel,
             stateful: false,
             autoDestroy: true,
@@ -169,7 +173,7 @@ Ext.define('Module.Hyscan.AlgoConfig.Operation', {
             modal: true,
             buttonAlign: 'center',
             buttons: [{
-                text: "计算",
+                text: HYSCAN_LABLE.cal,
                 handler: function () {
                     var form = formpanel.getForm();
                     if (form.isValid()) {
@@ -185,8 +189,8 @@ Ext.define('Module.Hyscan.AlgoConfig.Operation', {
                         Soul.Ajax.request({
                             url: url,
                             method: 'post',
-                            loadMask: '计算中',
-                            successMsg: '计算完成',
+                            loadMask: HYSCAN_LABLE.caling,
+                            successMsg: HYSCAN_LABLE.calComplete,
                             jsonData: datas,
                             headers: {
                                 Accept: 'application/json'
@@ -206,7 +210,7 @@ Ext.define('Module.Hyscan.AlgoConfig.Operation', {
                                         data = data.substring(0, 6);
                                     data = parseFloat(data).toFixed(decimal);
                                     if (data < 0)
-                                        data = "无效";
+                                        data = HYSCAN_LABLE.invalid;
                                     taskResult += title + ":" + data + " " + unit + "\n";
                                 }
                                 formpanel.down('[name=result]').setValue(taskResult);
@@ -231,7 +235,7 @@ Ext.define('Module.Hyscan.AlgoConfig.Operation', {
 		Soul.Ajax.request({
 			url : '/admin/algorithm/' + record.data.version,
 			method : 'delete',
-			confirm : '确认要删除该算法吗？',
+            confirm: HYSCAN_LABLE.confirmDeleteAlgo,
 			headers : {
 				Accept : 'application/json'
 			},
@@ -246,7 +250,7 @@ Ext.define('Module.Hyscan.AlgoConfig.Operation', {
 		Soul.Ajax.request({
 			url : '/admin/algorithm/' + record.data.version + "/current",
 			method : 'PUT',
-			confirm : '确认要把该算法设置为当前算法吗？',
+            confirm: HYSCAN_LABLE.confirmCurrentAlgo,
 			headers : {
 				Accept : 'application/json'
 			},

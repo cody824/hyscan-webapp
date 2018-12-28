@@ -8,8 +8,7 @@ Ext.define('Module.Hyscan.User.Config', {
 	getRendererConfig : function() {
 		var ret = {
 				registdate : Module.Hyscan.User.Renderer.translateCtime,
-				updatedate : Module.Hyscan.User.Renderer.translateCtime,
-				status : Module.Hyscan.User.Renderer.translateIsStatus
+            updatedate: Module.Hyscan.User.Renderer.translateCtime
 		};
 		return ret;
 	},

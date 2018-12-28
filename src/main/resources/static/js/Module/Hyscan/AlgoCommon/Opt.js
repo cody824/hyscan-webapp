@@ -21,7 +21,7 @@ Ext.define('Module.Hyscan.AlgoCommon.Opt', {
             dataType: dataType
         });
         var win = new Ext.Window({
-            title: "字典编辑",
+            title: HYSCAN_LABLE["dictEdit"],
             items: dictGrid,
             stateful: false,
             autoDestroy: true,
@@ -46,17 +46,17 @@ Ext.define('Module.Hyscan.AlgoCommon.Opt', {
             },
             items: [{
                 name: 'dataType',
-                fieldLabel: "数据类型",
+                fieldLabel: HYSCAN_LABLE["dataType"],
                 value: dataType,
                 readOnly: true
             }, {
                 name: 'key',
                 xtype: 'numberfield',
-                fieldLabel: "数值",
+                fieldLabel: HYSCAN_LABLE["value"],
 
             }, {
                 name: 'value',
-                fieldLabel: "显示值"
+                fieldLabel: HYSCAN_LABLE["showValue"]
             }]
         });
         if (record != null) {
@@ -68,7 +68,7 @@ Ext.define('Module.Hyscan.AlgoCommon.Opt', {
         formpanel.getForm().setValues(record.data);
 
         var win = new Ext.Window({
-            title: "字典编辑",
+            title: HYSCAN_LABLE["dictEdit"],
             items: formpanel,
             stateful: false,
             autoDestroy: true,
@@ -112,7 +112,7 @@ Ext.define('Module.Hyscan.AlgoCommon.Opt', {
         Soul.Ajax.request({
             url: '/globalconfig/resultDict/' + appId + '?key=' + record.data.dataType + "." + record.data.key,
             method: 'delete',
-            confirm: '确认要删除该配置吗？',
+            confirm: HYSCAN_LABLE["deleteConfig"],
             headers: {
                 Accept: 'application/json'
             },

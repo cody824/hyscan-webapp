@@ -39,28 +39,19 @@ Ext.define('Module.Hyscan.User.Portlet', {
 	            overflow: 'visible'     // For the Combo popup
 	        },
 	        items: [
-                /*{
-                text: "设置/取消系统管理员",
-                disabled:true,
-                name : 'setAdmin',
-                iconCls : 'lock'
-            }, {
-                text: "设置/取消HYSCAN管理员",
-                disabled:true,
-                name : 'setHyscanAdmin',
-                iconCls : 'lock'
-            },  {
-                text: "设置/取消水色管理员",
-                disabled:true,
-                name : 'setWQAdmin',
-                iconCls : 'lock'
-            },  */{
-                    text: "设置/取消应用管理员",
+                {
+                    text: HYSCAN_LABLE.createUser,
+                    name: 'add',
+                    hidden: !supportAddUser,
+                    icon: '/img/icon/add.png'
+                },
+                {
+                    text: HYSCAN_LABLE.setupAppAdmin,
                     disabled: true,
                     name: 'setAppAdmin',
                     iconCls: 'lock'
                 }, {
-                    text: "生成APIKey",
+                    text: HYSCAN_LABLE.buildApiKey,
                     disabled: true,
                     name: 'buildApiKey',
                     iconCls: 'lock'
@@ -74,7 +65,7 @@ Ext.define('Module.Hyscan.User.Portlet', {
     initToolbar : function(){
 		var toolbar = this.callParent(arguments),
 			userMenu = {
-	            text: "操作",
+                text: LABEL.operation,
 	            iconCls: 'pool_setting',  
 	            menu: this.buildUserOptMenu()
 	        };

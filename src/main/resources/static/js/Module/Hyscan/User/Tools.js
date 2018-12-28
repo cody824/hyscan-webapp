@@ -6,6 +6,7 @@ Ext.define('Module.Hyscan.User.Tools', {
 	],
 	
 	showUserInEast : function(id){
+        console.log(id);
 		var me = this;
 		Soul.Ajax.request({
 			url : '/security/ud/' + id,
@@ -28,7 +29,7 @@ Ext.define('Module.Hyscan.User.Tools', {
 	},
 
 	getUserPropertyGrid : function(user){
-		var property = Soul.util.ObjectView.getObjectPropertyGrid(user, Module.Hyscan.User.Config.getRendererConfig(), 
+        var property = Soul.util.ObjectView.getObjectPropertyGrid(user, Module.Hyscan.User.Config.getRendererConfig(),
 				USER_PROPERTY, Module.Hyscan.User.Config.showProperties, {
 				iconCls : 'md-user'
 		});

@@ -2,10 +2,10 @@ Ext.define('Module.Hyscan.MeiseAlgo.Portlet', {
     extend: 'Soul.view.ModulePortlet',
 
     VIEW: {
-        'Module.Hyscan.MeiseAlgo.view.Panel': '表格模式'
+        'Module.Hyscan.MeiseAlgo.view.Panel': LABEL.grid
     },
 
-    title: "煤色检测算法",
+    title: MODULE_NAME['Module.Hyscan.MeiseAlgo'],
 
     moduleName: 'Module.Hyscan.MeiseAlgo',
 

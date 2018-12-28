@@ -37,7 +37,7 @@ Ext.define('Module.Hyscan.Tenant.Portlet', {
                 overflow: 'visible'     // For the Combo popup
             },
             items: [{
-                text: "增加租户",
+                text: HYSCAN_LABLE.addTenant,
                 name: 'add',
                 icon: '/img/icon/add.png'
             }]
@@ -48,7 +48,7 @@ Ext.define('Module.Hyscan.Tenant.Portlet', {
     initToolbar: function () {
         var toolbar = this.callParent(arguments),
             userMenu = {
-                text: "操作",
+                text: LABEL.operation,
                 iconCls: 'pool_setting',
                 menu: this.buildUserOptMenu()
             };

@@ -21,6 +21,8 @@ import com.noknown.project.hyscan.pojo.CommonResult;
 import com.noknown.project.hyscan.pojo.DataSet;
 import com.noknown.project.hyscan.service.ScanTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -48,31 +50,31 @@ public class UserController extends BaseController {
 
 	private final GlobalConfigService globalConfigService;
 
+	private final MessageSource messageSource;
+
 	@Autowired
-	public UserController(FileStoreServiceRepo repo, UserDetailsService udService, ScanTaskService taskService, AlgoConfigRepo acDao, GlobalConfigService globalConfigService) {
+	public UserController(FileStoreServiceRepo repo, UserDetailsService udService, ScanTaskService taskService, AlgoConfigRepo acDao, GlobalConfigService globalConfigService, MessageSource messageSource) {
 		this.repo = repo;
 		this.udService = udService;
 		this.taskService = taskService;
 		this.acDao = acDao;
 		this.globalConfigService = globalConfigService;
+		this.messageSource = messageSource;
 	}
 
 	@RequestMapping(value = "/user/avatar", method = RequestMethod.POST)
 	public ResponseEntity<?> saveUserAvatar(@RequestParam("file") MultipartFile uploadFile) throws WebException, ServiceException {
 		Authentication user = loginAuth();
-		if (user == null) {
-			throw new WebException("请登录");
-		}
-
 		InputStream is;
+		Locale locale = LocaleContextHolder.getLocale();
 		try {
 			is = uploadFile.getInputStream();
 		} catch (IOException e) {
-			throw new WebException("文件上传失败！");
+			throw new WebException(messageSource.getMessage("file_upload_failed", new Object[]{e.getLocalizedMessage()}, locale));
 		}
 		FileStoreService fss = repo.getOS(null);
 		if (fss == null) {
-			throw new WebException("没有配置图片服务器");
+			throw new WebException(messageSource.getMessage("file_server_not_config", null, locale));
 		}
 
 		String key = "user/avatar" + user.getPrincipal() + ".png";
@@ -81,7 +83,7 @@ public class UserController extends BaseController {
 			url = fss.put(is, key);
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new WebException("图片服务错误：" + e.getLocalizedMessage());
+			throw new WebException(messageSource.getMessage("img_server_error", new Object[]{e.getMessage()}, locale));
 		}
 
 		BaseUserDetails uDetails = udService.getUserDetail((Integer) user.getPrincipal());
@@ -93,11 +95,8 @@ public class UserController extends BaseController {
 	}
 
 	@RequestMapping(value = "/user/task/", method = RequestMethod.GET)
-	public ResponseEntity<?> userTask(HttpServletRequest request, @RequestParam String appId, @RequestParam(required = false, defaultValue = "false") boolean containData) throws WebException, ServiceException {
+	public ResponseEntity<?> userTask(HttpServletRequest request, @RequestParam String appId, @RequestParam(required = false, defaultValue = "false") boolean containData) throws ServiceException {
 		Authentication user = loginAuth();
-		if (user == null) {
-			throw new WebException("请登录");
-		}
 		Properties dict = null;
 		ConfigRepo repo = globalConfigService.getConfigRepo(Constants.RESULT_DICT_CONFIG, true);
 		if (repo != null) {

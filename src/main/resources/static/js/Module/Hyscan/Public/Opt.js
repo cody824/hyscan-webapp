@@ -8,8 +8,8 @@ Ext.define('Module.Hyscan.Public.Opt', {
         var infoGrid = Ext.create('Soul.view.PropertyGrid', {
             width: 300,
             propertyNames: {
-                "size" : "文件大小",
-                "taskNum" : "任务数目"
+                "size": HYSCAN_LABLE.fileSize,
+                "taskNum": HYSCAN_LABLE.taskNum
             },
             customRenderers: {
                 "size" : Soul.util.RendererUtil.getCapacityStrFormBytes
@@ -19,7 +19,7 @@ Ext.define('Module.Hyscan.Public.Opt', {
         });
 
         var win = new Ext.Window({
-            title: "下载数据文件",
+            title: HYSCAN_LABLE.downloadDataNum,
             items: infoGrid,
             stateful : false,
             autoDestroy:true,
@@ -27,7 +27,7 @@ Ext.define('Module.Hyscan.Public.Opt', {
             modal:true,
             buttonAlign: 'center',
             buttons: [{
-                text: "下载",
+                text: HYSCAN_LABLE.download,
                 href : downloadInfo.url,
                 hrefTarget : '_blank'
             }, {

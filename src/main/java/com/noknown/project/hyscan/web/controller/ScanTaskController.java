@@ -25,6 +25,8 @@ import com.noknown.project.hyscan.pojo.*;
 import com.noknown.project.hyscan.service.ScanTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -53,16 +55,18 @@ public class ScanTaskController extends BaseController {
 
 	private final GlobalConfigService globalConfigService;
 
+	private final MessageSource messageSource;
 
 	@Value("${hyscan.exportPath:/export/}")
 	private String exportPath;
 
 	@Autowired
-	public ScanTaskController(ScanTaskService taskService, FileStoreServiceRepo repo, AlgoConfigRepo acDao, GlobalConfigService globalConfigService) {
+	public ScanTaskController(ScanTaskService taskService, FileStoreServiceRepo repo, AlgoConfigRepo acDao, GlobalConfigService globalConfigService, MessageSource messageSource) {
 		this.taskService = taskService;
 		this.repo = repo;
 		this.acDao = acDao;
 		this.globalConfigService = globalConfigService;
+		this.messageSource = messageSource;
 	}
 
 	@Deprecated
@@ -70,9 +74,6 @@ public class ScanTaskController extends BaseController {
 	public ResponseEntity<?> saveTask(@RequestBody AppScanTask<CommonResult> appTask)
 			throws Exception {
 		Authentication user = loginAuth();
-		if (user == null) {
-			throw new WebException("请登录");
-		}
 		appTask.setUserId((Integer) user.getPrincipal());
 		ScanTaskData data = appTask.toTaskData();
 		taskService.saveScanTaskData(data);
@@ -88,9 +89,6 @@ public class ScanTaskController extends BaseController {
 	public ResponseEntity<?> saveMaterialTask(@RequestBody AppScanTask<MaterialResult> appTask)
 			throws Exception {
 		Authentication user = loginAuth();
-		if (user == null) {
-			throw new WebException("请登录");
-		}
 		appTask.setUserId((Integer) user.getPrincipal());
 		ScanTaskData data = appTask.toTaskData();
 		taskService.saveScanTaskData(data);
@@ -106,9 +104,6 @@ public class ScanTaskController extends BaseController {
 	public ResponseEntity<?> saveWQTask(@RequestBody AppScanTask<WqResult> appTask)
 			throws Exception {
 		Authentication user = loginAuth();
-		if (user == null) {
-			throw new WebException("请登录");
-		}
 		appTask.setUserId((Integer) user.getPrincipal());
 		ScanTaskData data = appTask.toTaskData();
 		taskService.saveScanTaskData(data);
@@ -119,23 +114,25 @@ public class ScanTaskController extends BaseController {
 
 	@RequestMapping(value = "/scanTask/img", method = RequestMethod.POST)
 	public ResponseEntity<?> saveTaskImg(@RequestParam("file") MultipartFile uploadFile, @RequestParam String taskId) throws WebException, ServiceException, DaoException {
+		Locale locale = LocaleContextHolder.getLocale();
+
 		ScanTask task = taskService.get(taskId);
 		if (task == null) {
-			throw new WebException("任务不存在");
+			throw new WebException(messageSource.getMessage("task_not_found", null, locale));
 		}
 
 		InputStream is;
 		try {
 			is = uploadFile.getInputStream();
 		} catch (IOException e) {
-			throw new WebException("文件上传失败！");
+			throw new WebException(messageSource.getMessage("file_upload_failed", new Object[]{e.getLocalizedMessage()}, locale));
 		}
 		Date taskTime = task.getScanTime();
 		DateUtil.getCurrentYear(taskTime);
 
 		FileStoreService fss = repo.getOS(null);
 		if (fss == null) {
-			throw new WebException("没有配置图片服务器");
+			throw new WebException(messageSource.getMessage("file_server_not_config", null, locale));
 		}
 
 		String key = "taskImg/" + DateUtil.getCurrentYear(taskTime) + "/" +
@@ -145,7 +142,7 @@ public class ScanTaskController extends BaseController {
 			url = fss.put(is, key);
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new WebException("图片服务错误：" + e.getLocalizedMessage());
+			throw new WebException(messageSource.getMessage("img_server_error", new Object[]{e.getMessage()}, locale));
 		}
 		Map<String, String> ret = new HashMap<>(2);
 		ret.put("taskId", taskId);
@@ -235,9 +232,10 @@ public class ScanTaskController extends BaseController {
 	@RequestMapping(value = "/scanTask/data/{taskId}", method = RequestMethod.GET)
 	public ResponseEntity<?> getScanTaskData(@PathVariable String taskId)
 			throws Exception {
+		Locale locale = LocaleContextHolder.getLocale();
 		ScanTaskData data = taskService.getData(taskId);
 		if (data == null) {
-			throw new WebException("数据不存在", HttpStatus.NOT_FOUND);
+			throw new WebException(messageSource.getMessage("data_not_exist", null, locale), HttpStatus.NOT_FOUND);
 		} else {
 			return ResponseEntity.ok(data);
 		}
@@ -283,7 +281,8 @@ public class ScanTaskController extends BaseController {
 			}
 			appScanTask.setData(dataSet);
 		} else {
-			throw new WebException("配置不存在");
+			Locale locale = LocaleContextHolder.getLocale();
+			throw new WebException(messageSource.getMessage("config_not_exist", null, locale), 403);
 		}
 		return ResponseEntity.ok(appScanTask);
 	}

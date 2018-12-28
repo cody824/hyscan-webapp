@@ -30,21 +30,21 @@ Ext.define('Module.Hyscan.MaterialScanTask.view.Panel', {
         var me = this;
         Soul.Ajax.request({
             url : '/app/materialAlgoConfig/',
-            successMsg : '载入完成',
+            successMsg: HYSCAN_LABLE.loadComplete,
             method : 'get',
             success : function(ret){
                 if (ret.length > 0) {
                     me.tabs.removeAll(true);
                     var customColumns = [];
                     customColumns.push({
-                        text : "老化等级",
+                        text: HYSCAN_LABLE.agingLevel,
                         dataIndex : 'level',
                         align : 'center',
                         searchType : 'number',
                         width : 80
                     });
                     customColumns.push({
-                        text: "材质",
+                        text: HYSCAN_LABLE.material,
                         dataIndex: 'material',
                         searchType: 'string',
                         align: 'center',
@@ -62,8 +62,8 @@ Ext.define('Module.Hyscan.MaterialScanTask.view.Panel', {
                 	me.tabs.setActiveTab(0);
                 } else {
                     me.tabs.add({
-                        title  : "没有配置",
-                        html : "没有型号配置存在"
+                        title: HYSCAN_LABLE.noConfig,
+                        html: HYSCAN_LABLE.noConfigMsg
                     });
                     me.tabs.setActiveTab(0);
                 }

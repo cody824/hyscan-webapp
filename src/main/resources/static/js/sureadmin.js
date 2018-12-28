@@ -12,6 +12,11 @@ var ybApp = Ext.application({
 	
 	appConfig : null,
 
+    supportLang: {
+        zh_CN: '中文',
+        en: "English"
+    },
+
 	launch : function() {
 		var me = this;
 		Ext.QuickTips.init();
@@ -27,16 +32,22 @@ var ybApp = Ext.application({
 		var cp = Ext.create('Ext.state.LocalStorageProvider', {
 		});
 		Ext.state.Manager.setProvider(cp);
-		
-		
-		//获取登录信息
-		//SureAuthInfo.init();
-		//var saki = SureAuthInfo.getAccessKeyId() || 'none';
-		var loginName = "管理员";//SureAuthInfo.getLoginName();
+
+
+        var loginName = adminUser;
 		
 		var BaseConfig = this.getModel('BaseConfig');
-		BaseConfig.load("", {
+
+
+        BaseConfig.load("", {
 		    success: function(bc) {
+
+                var lang = Ext.util.Cookies.get("clientLanguage");
+                if (lang) {
+                    if (me.supportLang[lang]) {
+                        bc.data.language = lang;
+                    }
+                }
 		    	//获取语言文件
 		    	me.getController("BaseConfig").getLanguageFile(bc.data.language);
 		    	
@@ -57,5 +68,27 @@ var ybApp = Ext.application({
 	initApp :function(bc, loginName){
 		var appC = this.getController("AppConfig");
 		appC.initSingleWin(bc, loginName, true, false, appC);
-	}
+    },
+
+    getUrlParam: function (paraName) {
+        var url = document.location.toString();
+        var arrObj = url.split("?");
+
+        if (arrObj.length > 1) {
+            var arrPara = arrObj[1].split("&");
+            var arr;
+
+            for (var i = 0; i < arrPara.length; i++) {
+                arr = arrPara[i].split("=");
+
+                if (arr != null && arr[0] == paraName) {
+                    return arr[1];
+                }
+            }
+            return "";
+        }
+        else {
+            return "";
+        }
+    }
 });

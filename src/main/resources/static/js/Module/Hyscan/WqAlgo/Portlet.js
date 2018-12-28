@@ -3,10 +3,10 @@ Ext.define('Module.Hyscan.WqAlgo.Portlet', {
 	alias : 'widget.sanoticeportlet',
 
  	VIEW : {
-		'Module.Hyscan.WqAlgo.view.Panel' : '表格模式'
+        'Module.Hyscan.WqAlgo.view.Panel': LABEL.grid
 	},
 
-    title: "水质检测算法",
+    title: MODULE_NAME['Module.Hyscan.WqAlgo'],
 
 	moduleName : 'Module.Hyscan.WqAlgo',
     

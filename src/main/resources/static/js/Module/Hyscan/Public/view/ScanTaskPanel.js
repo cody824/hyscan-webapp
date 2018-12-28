@@ -31,7 +31,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskPanel', {
         var me = this;
         Soul.Ajax.request({
             url: '/app/algo-config/',
-            successMsg: '载入完成',
+            successMsg: HYSCAN_LABLE.loadComplete,
             method: 'get',
             success: function (ret) {
                 if (ret.length > 0) {
@@ -69,10 +69,10 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskPanel', {
                                 column.comboData = comboData
                             }
                             customColumns.push(column);
-                        })
+                        });
                         customColumns = Ext.Array.sort(customColumns, function (a, b) {
                             return a.seq > b.seq;
-                        })
+                        });
                         var grid = Ext.create('Module.Hyscan.Public.view.ScanTaskGrid', {
                             title: wdac.model,
                             appId: me.appId,
@@ -83,8 +83,8 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskPanel', {
                     me.tabs.setActiveTab(0);
                 } else {
                     me.tabs.add({
-                        title: "没有配置",
-                        html: "没有型号配置存在"
+                        title: HYSCAN_LABLE.noConfig,
+                        html: HYSCAN_LABLE.noConfigMsg
                     });
                     me.tabs.setActiveTab(0);
                 }

@@ -11,8 +11,8 @@ Ext.define('Module.Hyscan.User.Operation', {
                 var infoGrid = Ext.create('Soul.view.PropertyGrid', {
                     width: 300,
                     propertyNames: {
-                        "accessKey": "访问KEY",
-                        "securityKey": "安全秘钥"
+                        "accessKey": HYSCAN_LABLE.accessKey,
+                        "securityKey": HYSCAN_LABLE.securityKey
                     },
                     customRenderers: {
                         "size": Soul.util.RendererUtil.getCapacityStrFormBytes
@@ -30,7 +30,7 @@ Ext.define('Module.Hyscan.User.Operation', {
                     modal: true,
                     buttonAlign: 'center',
                     buttons: [{
-                        text: "生成新的安全秘钥",
+                        text: HYSCAN_LABLE.buildNewSecurityKey,
                         handler: function () {
                             Soul.Ajax.request({
                                 url: "/security/api/key/?userId=" + user.id,
@@ -104,10 +104,10 @@ Ext.define('Module.Hyscan.User.Operation', {
             height: 400,
             columns: [
                 {header: 'ID', dataIndex: 'id', width: 50},
-                {header: "描述", dataIndex: 'comment', width: 100},
+                {header: HYSCAN_LABLE.comment, dataIndex: 'comment', width: 100},
                 {header: 'KEY', dataIndex: 'name', width: 200},
                 {
-                    text: "设置",
+                    text: LABEL.setup,
                     xtype: 'actioncolumn',
                     width: 80,
                     sortable: false,
@@ -116,7 +116,7 @@ Ext.define('Module.Hyscan.User.Operation', {
                     items: [
                         {
                             iconCls: 'lock',
-                            tooltip: '设置',
+                            tooltip: LABEL.setup,
                             name: 'view',
                             scope: this,
                             handler: function (grid, rowIdx, colIdx, item, e, record, row) {
@@ -140,7 +140,7 @@ Ext.define('Module.Hyscan.User.Operation', {
                         }]
                 },
                 {
-                    text: "取消",
+                    text: LABEL.cancel,
                     xtype: 'actioncolumn',
                     width: 80,
                     sortable: false,
@@ -149,7 +149,7 @@ Ext.define('Module.Hyscan.User.Operation', {
                     items: [
                         {
                             icon: '/img/icon/unsupport.png',
-                            tooltip: '取消',
+                            tooltip: LABEL.cancel,
                             name: 'view',
                             scope: this,
                             handler: function (grid, rowIdx, colIdx, item, e, record, row) {
@@ -186,7 +186,7 @@ Ext.define('Module.Hyscan.User.Operation', {
         var newFormWin = Ext.create('Ext.window.Window', {
             region: 'center',
             buttonAlign: 'center',
-            title: "APP管理员",
+            title: HYSCAN_LABLE.appAdmin,
             autoHeight: true,
             width: 600,
             height: 400,
@@ -234,5 +234,76 @@ Ext.define('Module.Hyscan.User.Operation', {
         });
 
     },
+
+    addUserWin: function (cb) {
+
+        var addForm = new Ext.FormPanel({
+            labelWidth: 60,
+            frame: true,
+            width: 400,
+            maxHeight: 500,
+            defaults: {
+                xtype: 'textfield',
+                labelAlign: 'right',
+                allowBlank: false,
+                width: 350
+            },
+            items: [{
+                name: 'nick',
+                fieldLabel: HYSCAN_LABLE.loginName
+            }, {
+                name: 'fullName',
+                fieldLabel: HYSCAN_LABLE.fullName
+            },
+                {
+                    name: 'password',
+                    id: 'password',
+                    inputType: 'password',
+                    minLength: 6,
+                    maxLength: 30,
+                    fieldLabel: LABEL.password
+                }, {
+                    name: 'rePassword',
+                    inputType: 'password',
+                    passwordField: 'password',
+                    vtype: 'confirmPwd',
+                    fieldLabel: LABEL.confirmPwd
+                }]
+        });
+
+        var win = new Ext.Window({
+            title: HYSCAN_LABLE.createUser,
+            items: [addForm],
+            // height : 'auto',
+            stateful: false,
+            autoDestroy: true,
+            bodyStyle: 'padding:5px',
+            modal: true,
+            buttonAlign: 'center',
+            buttons: [{
+                text: HYSCAN_LABLE.createUser,
+                handler: function () {
+                    var params = addForm.getForm().getValues();
+                    params.params = {
+                        fullName: params.fullName,
+                    };
+
+                    Soul.Ajax.request({
+                        url: "/admin/user-detail/",
+                        method: 'post',
+                        jsonData: params,
+                        success: function () {
+                            win.close();
+                            cb();
+                        }
+                    });
+                }
+            }]
+
+        });
+
+        win.show();
+    }
+
 
 });

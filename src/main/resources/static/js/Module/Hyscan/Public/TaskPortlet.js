@@ -21,7 +21,7 @@ Ext.define('Module.Hyscan.Public.TaskPortlet', {
             },
             items: [
                 {
-                    text: "导出JSON数据文件",
+                    text: HYSCAN_LABLE.exportJsonDataFile,
                     disabled: false,
                     name: 'exportData',
                     icon: "/img/icon/json.png",
@@ -31,7 +31,7 @@ Ext.define('Module.Hyscan.Public.TaskPortlet', {
                     scope: this
                 },
                 {
-                    text: "导出Txt数据文件",
+                    text: HYSCAN_LABLE.exportTxtDataFile,
                     disabled: false,
                     name: 'exportData',
                     icon: "/img/icon/txt.png",
@@ -41,7 +41,7 @@ Ext.define('Module.Hyscan.Public.TaskPortlet', {
                     scope: this
                 },
                 {
-                    text: "导出Excel数据文件",
+                    text: HYSCAN_LABLE.exportExcelDataFile,
                     disabled: false,
                     name: 'exportData',
                     icon: "/img/icon/excel.png",
@@ -61,7 +61,7 @@ Ext.define('Module.Hyscan.Public.TaskPortlet', {
         if (Ext.String.endsWith(view, ".view.Panel")) {
             var grid = item.tabs.getActiveTab() || item.tabs.getComponent(0);
             if (grid == null) {
-                Ext.Msg.alert("错误", "没有选择数据集");
+                Ext.Msg.alert(LABEL.error, HYSCAN_LABLE.noSelectDataSet);
                 return;
             }
             var model = grid.title;
@@ -70,8 +70,8 @@ Ext.define('Module.Hyscan.Public.TaskPortlet', {
 
             Soul.Ajax.request({
                 url: '/app/scanTask/export/',
-                successMsg: '压缩包生成完成',
-                loadMask: "生成压缩包",
+                successMsg: HYSCAN_LABLE.buildZipComplete,
+                loadMask: HYSCAN_LABLE.buildZip,
                 params: {
                     exportType: type,
                     filter: filter,
@@ -88,8 +88,8 @@ Ext.define('Module.Hyscan.Public.TaskPortlet', {
             var task = item.task;
             Soul.Ajax.request({
                 url: '/app/scanTask/export/' + task.id,
-                successMsg: '压缩包生成完成',
-                loadMask: "生成压缩包",
+                successMsg: HYSCAN_LABLE.buildZipComplete,
+                loadMask: HYSCAN_LABLE.buildZip,
                 timeout: 1000 * 60 * 10,
                 params: {
                     exportType: type,
@@ -105,7 +105,7 @@ Ext.define('Module.Hyscan.Public.TaskPortlet', {
     initToolbar: function () {
         var toolbar = this.callParent(arguments),
             optMenu = {
-                text: "操作",
+                text: LABEL.operation,
                 iconCls: 'pool_setting',
                 menu: this.buildDataOptMenu()
             };

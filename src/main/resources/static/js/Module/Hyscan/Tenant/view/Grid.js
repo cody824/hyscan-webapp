@@ -26,23 +26,23 @@ Ext.define('Module.Hyscan.Tenant.view.Grid', {
                 width: 60
             },
             {
-                text: "名称", width: 100, sortable: true, dataIndex: 'name', searchType: 'string'
+                text: TENANT_PROPERTY.name, width: 100, sortable: true, dataIndex: 'name', searchType: 'string'
             },
             {
-                text: "说明", dataIndex: 'description', width: 200, searchType: 'string',
+                text: TENANT_PROPERTY.description, dataIndex: 'description', width: 200, searchType: 'string',
                 renderer: Soul.util.RendererUtil.qtip
             },
             {
-                text: "管理员", width: 100, searchType: 'string',
+                text: TENANT_PROPERTY.adminName, width: 100, searchType: 'string',
                 sortable: false, menuDisabled: true, dataIndex: 'adminName'
             },
             {
-                text: "设备序列号", width: 200, searchType: 'string', flex: 1,
+                text: TENANT_PROPERTY.serials, width: 200, searchType: 'string', flex: 1,
                 sortable: false, menuDisabled: true, dataIndex: 'serials',
                 renderer: Soul.util.RendererUtil.qtip
             },
             {
-                text: "支持APP", width: 200, searchType: 'string',
+                text: TENANT_PROPERTY.appIds, width: 200, searchType: 'string',
                 sortable: false, menuDisabled: true, dataIndex: 'appIds',
                 renderer: function (value, meta, record) {
                     if (value) {
@@ -60,7 +60,7 @@ Ext.define('Module.Hyscan.Tenant.view.Grid', {
                 }
             },
             {
-                text: "编辑",
+                text: LABEL.edit,
                 xtype: 'actioncolumn',
                 width: 60,
                 sortable: false,
@@ -69,7 +69,7 @@ Ext.define('Module.Hyscan.Tenant.view.Grid', {
                 items: [
                     {
                         icon: "/img/icon/fileoperation.png",
-                        tooltip: '编辑租户属性',
+                        tooltip: LABEL.edit,
                         scope: this,
                         handler: this.onEditClick,
                         isDisabled: function (v, r, c, item, r) {
@@ -77,7 +77,7 @@ Ext.define('Module.Hyscan.Tenant.view.Grid', {
                     }]
             },
             {
-                text: "删除",
+                text: LABEL.del,
                 xtype: 'actioncolumn',
                 width: 60,
                 sortable: false,
@@ -86,7 +86,7 @@ Ext.define('Module.Hyscan.Tenant.view.Grid', {
                 items: [
                     {
                         icon: "/img/icon/del.png",
-                        tooltip: '删除',
+                        tooltip: LABEL.del,
                         scope: this,
                         handler: this.onDeleteClick,
                         isDisabled: function (v, r, c, item, r) {
@@ -111,7 +111,7 @@ Ext.define('Module.Hyscan.Tenant.view.Grid', {
             selModel: sm,
             store: Ext.data.StoreManager.lookup("Module.Hyscan.Tenant.store.Store"),
             viewConfig: {
-                emptyText: "没有租户"
+                emptyText: HYSCAN_LABLE.noTenant
             },
             columns: columns
         });
@@ -137,8 +137,8 @@ Ext.define('Module.Hyscan.Tenant.view.Grid', {
         Soul.Ajax.request({
             url: "/admin/tenant/" + record.data.id,
             method: "delete",
-            confirm: "确认要删除租户吗？",
-            successMsg: "删除成功",
+            confirm: HYSCAN_LABLE.confirmToDelTenant,
+            successMsg: HYSCAN_LABLE.delSuccess,
             success: function () {
                 me.updateView(me);
             }

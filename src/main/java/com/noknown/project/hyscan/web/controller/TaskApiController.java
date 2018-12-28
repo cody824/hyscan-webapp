@@ -23,6 +23,7 @@ import com.noknown.project.hyscan.service.AppService;
 import com.noknown.project.hyscan.service.ScanTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -84,7 +85,7 @@ public class TaskApiController extends BaseController {
 	@RequestMapping(value = "/task/{appId}", method = RequestMethod.POST)
 	public ResponseEntity<?> saveTask(HttpServletRequest request, @PathVariable String appId, @RequestParam String sign, @RequestParam("access_key") String accessKey, @RequestParam("sign_method") String signMethod, @RequestParam long timestamp, @RequestBody ApiUploadData apiData)
 			throws Exception {
-		Locale locale = request.getLocale();
+		Locale locale = LocaleContextHolder.getLocale();
 
 		Properties properties = globalConfigService.getProperties(Constants.APP_ALGO_CONFIG, appId, false);
 		if (properties == null) {
@@ -122,7 +123,7 @@ public class TaskApiController extends BaseController {
 	@RequestMapping(value = "/task/", method = RequestMethod.POST)
 	public ResponseEntity<?> saveTaskNew(HttpServletRequest request, @RequestParam String appId, @RequestParam String sign, @RequestParam("access_key") String accessKey, @RequestParam("sign_method") String signMethod, @RequestParam long timestamp, @RequestBody ApiUploadData apiData)
 			throws Exception {
-		Locale locale = request.getLocale();
+		Locale locale = LocaleContextHolder.getLocale();
 
 		Properties properties = globalConfigService.getProperties(Constants.APP_ALGO_CONFIG, appId, false);
 		if (properties == null) {
@@ -225,7 +226,7 @@ public class TaskApiController extends BaseController {
 	                                  @RequestParam(required = false, defaultValue = "0") int start,
 	                                  @RequestParam(required = false, defaultValue = "10") int limit)
 			throws Exception {
-		Locale locale = request.getLocale();
+		Locale locale = LocaleContextHolder.getLocale();
 
 		long now = System.currentTimeMillis();
 		if (now - timestamp > EXPIRE_TIME) {
@@ -247,7 +248,7 @@ public class TaskApiController extends BaseController {
 
 		if (StringUtil.isNotBlank(appId)) {
 			if (!supportApps.contains(appId)) {
-				throw new WebException("没有权限获取该APP的数据");
+				throw new WebException(messageSource.getMessage("not_permit_for_app_data", null, locale));
 			}
 			sqlFilter.addSQLExpression("appId", "=", appId);
 		} else {

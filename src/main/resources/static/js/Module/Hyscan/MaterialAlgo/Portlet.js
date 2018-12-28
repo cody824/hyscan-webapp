@@ -2,10 +2,10 @@ Ext.define('Module.Hyscan.MaterialAlgo.Portlet', {
 	extend : 'Soul.view.ModulePortlet',
 
  	VIEW : {
-        'Module.Hyscan.MaterialAlgo.view.Panel': '表格模式'
+        'Module.Hyscan.MaterialAlgo.view.Panel': LABEL.grid
 	},
-    
-	title: "材质检测算法",
+
+    title: MODULE_NAME['Module.Hyscan.MaterialAlgo'],
 
     moduleName: 'Module.Hyscan.MaterialAlgo',
     

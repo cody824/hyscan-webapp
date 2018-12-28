@@ -7,7 +7,7 @@ Ext.define('Module.Hyscan.Statistics.Portlet', {
     ],
 
     VIEW: {
-        'Module.Hyscan.Statistics.view.Map': "地图显示"
+        'Module.Hyscan.Statistics.view.Map': HYSCAN_LABLE.mapView
     },
 
     title: MODULE_NAME["Module.Hyscan.Statistics"],

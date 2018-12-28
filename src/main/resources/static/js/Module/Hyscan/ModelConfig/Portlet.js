@@ -7,10 +7,10 @@ Ext.define('Module.Hyscan.ModelConfig.Portlet', {
  	],
  		
  	VIEW : {
-		'Module.Hyscan.ModelConfig.view.Grid' : "表格显示"
+        'Module.Hyscan.ModelConfig.view.Grid': LABEL.grid
 	},
-    
-	title: "型号配置",
+
+    title: MODULE_NAME['Module.Hyscan.ModelConfig'],
 	
 	moduleName : 'Module.Hyscan.ModelConfig',
     
@@ -49,17 +49,17 @@ Ext.define('Module.Hyscan.ModelConfig.Portlet', {
 				overflow: 'visible'
 			},
 			items: [{
-					text: "新建型号",
+                text: HYSCAN_LABLE.createModel,
 					disabled: false,
 					name: 'createModel',
 					iconCls: 'x-add-icon'
 				},{
-					text: "编辑型号",
+                text: HYSCAN_LABLE.editModel,
 					disabled: true,
 					name: 'editModel',
 					iconCls: 'extensive-edit'
 				},{
-					text: "删除型号",
+                text: HYSCAN_LABLE.delModel,
 					disabled: true,
 					name: 'delModel',
 					iconCls: 'x-del-icon'
@@ -71,7 +71,7 @@ Ext.define('Module.Hyscan.ModelConfig.Portlet', {
     initToolbar : function(){
 		var toolbar = this.callParent(arguments);
 	    var modelOpt = {
-	        text: "操作",
+            text: LABEL.operation,
 	        icon : '/img/icon/show.png',
 	        menu: this.buildModelOptMenu()
 	    };

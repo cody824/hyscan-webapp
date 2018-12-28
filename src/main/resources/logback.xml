@@ -7,7 +7,7 @@
 	<property name="console" value="${console:-true}" />
 	
 	<property name="log.root.level" value="${log.root.level:-INFO}" />
-	<property name="log.path" value="${log.path:-/var/log/}" />
+	<property name="log.path" value="${log.path:-/var/hyscan/log/}"/>
 
 
     <property name="CONSOLE_LOG_PATTERN"

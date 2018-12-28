@@ -19,17 +19,16 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Grid', {
 	},
 
 	initComponent : function() {
-		var columns = new Array();
-		var renders = Module.Hyscan.WqAlgo.Renderer;
+        var columns = [];
 
 		columns.push(
             // new Ext.grid.RowNumberer(),
 			{
-				text: "序号",width: 80, sortable: false,
+                text: HYSCAN_LABLE.seq, width: 80, sortable: false,
 				menuDisabled:true, dataIndex: 'seq', align : 'center'
 			},
 			{
-                text: "算法key", flex: 1, width: 80, dataIndex: 'key',
+                text: HYSCAN_LABLE.algoKey, flex: 1, width: 80, dataIndex: 'key',
 				menuDisabled:true, align : 'center',editor: {
                     xtype: 'textfield',
                     maxLength : 20,
@@ -37,7 +36,7 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Grid', {
                 }
 			},
 			{
-                text: "显示名", flex: 1, width: 100, dataIndex: 'chineseName',
+                text: HYSCAN_LABLE.chineseName, flex: 1, width: 100, dataIndex: 'chineseName',
 				menuDisabled:true, align : 'center',
                 editor: {
                     xtype: 'textfield',
@@ -45,18 +44,8 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Grid', {
                     allowBlank: false
                 }
 			},
-            // {
-            // 	text: "光谱索引",  flex:1, dataIndex:'waveIndex',
-            // 	menuDisabled:true, align : 'center',
-            //    editor: {
-            //        xtype: 'textfield',
-            //        regex : /([0-9]+,)*[0-9]+/,
-            //        regexText : '请输入多个数字中间用","号间隔',
-            //        allowBlank: false,
-            //    }
-            // },
 			{
-				text: "小数保留", width: 80, dataIndex:'decimal',
+                text: HYSCAN_LABLE.decimal, width: 80, dataIndex: 'decimal',
 				menuDisabled:true, align : 'center', editor: {
                     xtype: 'numberfield',
                     maxValue: 4,
@@ -65,13 +54,13 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Grid', {
                 }
 			},
             {
-                text: "单位", width: 80, dataIndex:'unit',
+                text: HYSCAN_LABLE.unit, width: 80, dataIndex: 'unit',
                 menuDisabled:true, align : 'center', editor: {
                     xtype: 'textfield',
                     allowBlank: false
                 }
             }, {
-                text: "操作",
+                text: LABEL.operation,
 	            xtype: 'actioncolumn',
 	            width: 80,
 	            sortable : false,
@@ -80,7 +69,7 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Grid', {
 	            items: [
                     {
                         icon: '/img/icon/fileoperation.png',
-                        tooltip: '字典配置',
+                        tooltip: HYSCAN_LABLE.dictConfig,
                         name: 'view',
                         scope: this,
                         hidden: true,
@@ -90,7 +79,7 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Grid', {
                     },
                     {
 	                icon: '/img/icon/del.png',
-	                tooltip: '删除',
+                        tooltip: LABEL.del,
 	                name: 'view',
 	                scope: this,
 	                handler: this.onDelClick,
@@ -110,10 +99,10 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Grid', {
 		Ext.apply(this, {
 			// selModel: sm,
 			viewConfig : {
-				emptyText : "没有算法配置",
+                emptyText: HYSCAN_LABLE.noAc,
                 plugins: {
                     ptype: 'gridviewdragdrop',
-                    dragText: '移动顺序'
+                    dragText: HYSCAN_LABLE.moveSeq
                 }
 			},
             plugins: [
@@ -126,17 +115,17 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Grid', {
                 dock: 'top',
                 items: [{
                     icon : '/img/icon/save.png',
-                    text: '保存',
+                    text: LABEL.save,
                     handler : me.doSave,
                     scope : me
                 },{
                     icon : '/img/icon/reset.png',
-                    text: '重置',
+                    text: LABEL.reset,
                     handler : me.doReset,
                     scope : me
                 },{
                     icon : '/img/icon/add.png',
-                    text: '增加',
+                    text: LABEL.add,
                     handler : me.doAdd,
                     scope : me
                 }]
@@ -158,10 +147,10 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Grid', {
             value.chineseName = value.chineseName.replace(new RegExp("&nbsp;","gm"), " ");
             value.unit = value.unit.replace(new RegExp("&nbsp;","gm"), " ");
 			storeData.push(value);
-        })
+        });
         storeData = Ext.Array.sort(storeData, function (a, b) {
 			return a.seq > b.seq;
-        })
+        });
         me.orgData = storeData;
 		me.store.loadData(storeData);
 	},
@@ -172,18 +161,6 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Grid', {
         var orgData = [];
 	    me.store.each(function (r) {
             var data = r.data;
-            // if(!Array.isArray(data.waveIndex)){
-            //     var waveIndex = data.waveIndex.split(',');
-            //     data.waveIndex = [];
-            //     Ext.each(waveIndex, function (index) {
-            //         var i = parseInt(index);
-            //         if (isNaN(i) || i < 0){
-            //             Soul.util.MessageUtil.showErrorInfo("错误", data.key + "输入了无效的索引值");
-            //             return;
-            //         }
-            //         data.waveIndex.push(i);
-            //     });
-            // }
             data.chineseName = data.chineseName.replace(new RegExp(" ","gm"), "&nbsp;");
             if (data.unit.length == 0)
                 data.unit = " ";
@@ -193,7 +170,7 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Grid', {
         });
         Soul.Ajax.request({
             url: '/app/algo-config/',
-            successMsg : '载入完成',
+            successMsg: HYSCAN_LABLE.loadComplete,
             method : 'post',
             jsonData : {
                 appId: me.appId,

@@ -19,61 +19,45 @@ Ext.define('Module.Hyscan.ModelConfig.view.Grid', {
 
     initComponent: function () {
 		var me = this;
-        var columns = new Array();
+        var columns = [];
         columns.push(
         		new Ext.grid.RowNumberer(),
             {
-                text: "型号",
+                text: MODEL_CONFIG_PROPERTY.model,
                 dataIndex: 'model',
                 align: 'center',
                 width: 100
             },{
-                text: "说明",
+                text: MODEL_CONFIG_PROPERTY.desc,
 	            dataIndex: 'desc',
 	            align: 'center',
 	            fix : 1,
 	            width: 200
             }, {
-                text: "DN最大值",
+                text: MODEL_CONFIG_PROPERTY.dnMaxValue,
                 dataIndex: 'dnMaxValue',
                 align: 'center',
                 width: 100
             },
             {
-                text: "辐亮度参数",
+                text: MODEL_CONFIG_PROPERTY.radianceParams,
 	            dataIndex: 'radianceParams',
 	            align: 'center',
 	            width: 100
 	        },
 			{
-                text: "坐标范围",
+                text: MODEL_CONFIG_PROPERTY.spectralRange,
 	            dataIndex: 'spectralRange',
 	            align: 'center',
 	            width: 100
 	        },{
-	            text: "波长范围",
+                text: MODEL_CONFIG_PROPERTY.wavelengths,
 	            dataIndex: 'wavelengths',
 	            align: 'center',
 	            flex : 1,
 	        },
-            // {
-	        //     text: "标准光谱数据",
-	        //     dataIndex: 'olderLevelNormData',
-	        //     align: 'center',
-	        //     width: 150
-	        // }, {
-             //    text: "材质光谱数据",
-	        //     dataIndex: 'materialNormData',
-	        //     align: 'center',
-	        //     width: 150
-	        // }, {
-             //    text: "材质检测阈值",
-	        //     dataIndex: 'materialThreshold',
-	        //     align: 'center',
-	        //     width: 100
-	        // },
 			{
-                text: "删除",
+                text: LABEL.del,
 	            xtype: 'actioncolumn',
 	            width: 100,
 	            sortable : false,
@@ -81,7 +65,7 @@ Ext.define('Module.Hyscan.ModelConfig.view.Grid', {
 	            align: 'center',
 	            items: [{
 	                icon: '/img/icon/del.png',
-	                tooltip: '删除',
+                    tooltip: LABEL.del,
 	                name: 'view',
 	                scope: this,
 	                handler: this.onGoodsClick,
@@ -128,7 +112,7 @@ Ext.define('Module.Hyscan.ModelConfig.view.Grid', {
         	selModel: sm,
             columns: columns,
             viewConfig: {
-                emptyText: "没有配置型号",
+                emptyText: HYSCAN_LABLE.noModelConfig,
                 enableTextSelection:true  
             },
             store: store,
@@ -154,7 +138,7 @@ Ext.define('Module.Hyscan.ModelConfig.view.Grid', {
     	var me = this;
 		Soul.Ajax.request({
 			url : '/app/modelConfig/',
-			successMsg : '载入完成',
+            successMsg: HYSCAN_LABLE.loadComplete,
 			method : 'get',
 			success : function(ret){
 				me.store.loadData(ret);

@@ -8,10 +8,10 @@ Ext.define('Module.Hyscan.AlgoConfig.Portlet', {
  	],
  		
  	VIEW : {
-		'Module.Hyscan.AlgoConfig.view.Grid': '表格'
+        'Module.Hyscan.AlgoConfig.view.Grid': LABEL.grid
 	},
-    
-	title: "算法管理",
+
+    title: MODULE_NAME["Module.Hyscan.AlgoConfig"],
 			
 	moduleName : 'Module.Hyscan.AlgoConfig',
     
@@ -38,17 +38,17 @@ Ext.define('Module.Hyscan.AlgoConfig.Portlet', {
 				overflow: 'visible'
 			},
 			items: [{
-					text: "上传算法",
+                text: HYSCAN_LABLE.uploadAlgo,
 					disabled: false,
 					name: 'uploadAlgo',
 					iconCls: 'x-add-icon'
 				},{
-					text: "设置为当前算法",
+                text: HYSCAN_LABLE.useAlgo,
 					disabled: true,
 					name: 'useAlgo',
 					iconCls: 'extensive-edit'
 				},{
-					text: "删除算法",
+                text: HYSCAN_LABLE.delAlgo,
 					disabled: true,
 					name: 'delAlgo',
 					iconCls: 'x-del-icon'
@@ -60,7 +60,7 @@ Ext.define('Module.Hyscan.AlgoConfig.Portlet', {
     initToolbar : function(){
 		var toolbar = this.callParent(arguments);
 	    var paramCombox = {
-	        text: "操作",
+            text: LABEL.operation,
 	        icon : '/img/icon/show.png',
 	        menu: this.buildOptMenu()
 	    };

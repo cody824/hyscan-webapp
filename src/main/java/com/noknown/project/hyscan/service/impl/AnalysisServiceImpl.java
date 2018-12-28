@@ -21,11 +21,14 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -44,17 +47,19 @@ public class AnalysisServiceImpl implements AnalysisService {
 	private final Loader algoLoader;
 	private final ScanTaskDao scanTaskDao;
 	private final ScanTaskDataRepo scanTaskDataDao;
+	private final MessageSource messageSource;
 
 	private Map<String, Properties> dictMap = new HashMap<>();
 
 	@Autowired
-	public AnalysisServiceImpl(ModelConfigRepo mcDao, AlgoConfigRepo acDao, GlobalConfigDao gcDao, Loader algoLoader, ScanTaskDao scanTaskDao, ScanTaskDataRepo scanTaskDataDao) {
+	public AnalysisServiceImpl(ModelConfigRepo mcDao, AlgoConfigRepo acDao, GlobalConfigDao gcDao, Loader algoLoader, ScanTaskDao scanTaskDao, ScanTaskDataRepo scanTaskDataDao, MessageSource messageSource) {
 		this.mcDao = mcDao;
 		this.acDao = acDao;
 		this.gcDao = gcDao;
 		this.algoLoader = algoLoader;
 		this.scanTaskDao = scanTaskDao;
 		this.scanTaskDataDao = scanTaskDataDao;
+		this.messageSource = messageSource;
 	}
 
 	@PostConstruct
@@ -67,13 +72,15 @@ public class AnalysisServiceImpl implements AnalysisService {
 
 	@Override
 	public AbstractResult analysis(String taskId, String algoVersion) throws ServiceException, DaoException {
+		Locale locale = LocaleContextHolder.getLocale();
+
 		ScanTask task = scanTaskDao.findById(taskId).orElse(null);
 		if (task == null) {
-			throw new ServiceException("任务不存在");
+			throw new ServiceException(messageSource.getMessage("task_not_found", null, locale));
 		}
 		ScanTaskData taskData = scanTaskDataDao.get(taskId);
 		if (taskData == null) {
-			throw new ServiceException("任务数据不存在");
+			throw new ServiceException(messageSource.getMessage("data_not_exist", null, locale));
 		}
 		double[] ref = AlgoUtil.getReflectivity(taskData.getDn(), taskData.getDarkCurrent(), taskData.getWhiteboardData());
 
@@ -85,18 +92,19 @@ public class AnalysisServiceImpl implements AnalysisService {
 
 	@Override
 	public AbstractResult analysis(double[] reflectivity, String appId, String model, String target, String algoVersion) throws ServiceException, DaoException {
+		Locale locale = LocaleContextHolder.getLocale();
 		ModelConfig mc = mcDao.get(model);
 		if (mc == null) {
-			throw new ServiceException("不支持该型号的设备");
+			throw new ServiceException(messageSource.getMessage("model_not_support", null, "不支持该型号的设备", locale));
 		}
 		AlgoConfig algoConfig = acDao.get(appId + "-" + model);
 		if (algoConfig == null) {
-			throw new ServiceException("不支持该应用类型或者设置型号");
+			throw new ServiceException(messageSource.getMessage("app_not_support_or_model_not_setup", null, "不支持该应用类型或者设置型号", locale));
 		}
 
 		double[] wavelengths = mc.getWavelengths();
 		if (reflectivity.length != wavelengths.length) {
-			throw new ServiceException("数据长度不正确, 该型号对应数据长度为【" + wavelengths.length + "】,提供长度为【" + reflectivity.length + "】");
+			throw new ServiceException(messageSource.getMessage("data_length_error", new Object[]{wavelengths.length, reflectivity.length}, "数据长度不正确, 该型号对应数据长度为【{0}】,提供长度为【{1}】", locale));
 		}
 		AbstractAnalysisAlgo algo;
 		if (StringUtil.isNotBlank(algoVersion)) {
@@ -105,7 +113,7 @@ public class AnalysisServiceImpl implements AnalysisService {
 			algo = algoLoader.getCurrentAlgo();
 		}
 		if (algo == null) {
-			throw new ServiceException("算法未指定，或者没有正确加载，请联系管理员");
+			throw new ServiceException(messageSource.getMessage("algo_not_setup_or_load_error", null, "算法未指定，或者没有正确加载，请联系管理员", locale));
 		}
 
 		double[][] sampleData = new double[wavelengths.length][2];
@@ -115,7 +123,7 @@ public class AnalysisServiceImpl implements AnalysisService {
 
 		Map<String, AlgoItem> algos = algoConfig.getAlgos();
 		if (algos == null || algos.isEmpty()) {
-			throw new ServiceException("没有" + appId + "检测算法配置");
+			throw new ServiceException(messageSource.getMessage("no_algo_config_for_app", new Object[]{appId}, "没有{0}检测算法配置", locale));
 		}
 
 		double[] data = new double[algos.size()];
@@ -138,7 +146,7 @@ public class AnalysisServiceImpl implements AnalysisService {
 			}
 		} catch (Throwable e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
-			throw new ServiceException("算法执行出错:" + e.getCause().getMessage(), e);
+			throw new ServiceException(messageSource.getMessage("algo_exec_error", new Object[]{e.getCause().getMessage()}, "执行算法出错：{0}", locale), e);
 		}
 
 		ConfigRepo repo = gcDao.getConfigRepo(Constants.RESULT_DICT_CONFIG);

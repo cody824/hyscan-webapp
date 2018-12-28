@@ -9,11 +9,11 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
  	],
  		
  	VIEW : {
-        'Module.Hyscan.MaterialScanTask.view.Panel' : '表格模式',
-		'Module.Hyscan.Public.view.ScanTaskDataGrid' : '数据信息'
+        'Module.Hyscan.MaterialScanTask.view.Panel': LABEL.grid,
+        'Module.Hyscan.Public.view.ScanTaskDataGrid': HYSCAN_LABLE.dataInfo
 	},
-    
-	title: "材质检测扫描任务",
+
+    title: MODULE_NAME["Module.Hyscan.MaterialScanTask"],
 
 	moduleName : 'Module.Hyscan.MaterialScanTask',
     
@@ -41,7 +41,7 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
             },
             items: [
                 {
-                    text: "导出数据",
+                    text: HYSCAN_LABLE.exportData,
                     disabled:false,
                     name : 'exportData',
                     iconCls : 'export',
@@ -59,7 +59,7 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
 		if (view == "Module.Hyscan.MaterialScanTask.view.Panel") {
 			var grid = item.tabs.getActiveTab() || item.tabs.getComponent(0);
 			if (grid == null) {
-                Ext.Msg.alert("错误", "没有选择数据集");
+                Ext.Msg.alert(LABEL.error, HYSCAN_LABLE.noSelectDataSet);
 				return;
 			}
 			var model = grid.title;
@@ -68,8 +68,8 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
 
             Soul.Ajax.request({
                 url : '/app/scanTask/export/',
-                successMsg : '压缩包生成完成',
-				loadMask : "生成压缩包",
+                successMsg: HYSCAN_LABLE.buildZipComplete,
+                loadMask: HYSCAN_LABLE.buildZip,
                 params : {
 					filter : filter,
                     appId : appId,
@@ -85,8 +85,8 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
 			var task = item.task;
             Soul.Ajax.request({
                 url : '/app/scanTask/export/' + task.id,
-                successMsg : '压缩包生成完成',
-                loadMask : "生成压缩包",
+                successMsg: HYSCAN_LABLE.buildZipComplete,
+                loadMask: HYSCAN_LABLE.buildZip,
                 timeout : 1000 * 60 * 10,
                 method : 'post',
                 success : function(ret){
@@ -99,7 +99,7 @@ Ext.define('Module.Hyscan.MaterialScanTask.Portlet', {
     initToolbar : function(){
 		var toolbar = this.callParent(arguments),
             optMenu = {
-                text: "操作",
+                text: LABEL.operation,
                 iconCls: 'pool_setting',
                 menu: this.buildDataOptMenu()
             };
