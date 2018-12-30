@@ -353,13 +353,23 @@ Ext.define('Module.Hyscan.Statistics.view.Map', {
         })
     },
 
+    modifyScanTarget: function (ids, scanTarget) {
+        var me = this;
+        Ext.each(me.taskData, function (task) {
+            if (Ext.Array.contains(ids, task.id)) {
+                task.scanTarget = scanTarget;
+            }
+        })
+    },
+
+
     showAnnotation: function () {
         var me = this;
         if (me.heatmapOverlay) {
             me.heatmapOverlay.hide();
         }
         updateTaskView(me.map, me.map.getZoom(), me.taskData, function (tasks) {
-            Module.Hyscan.Statistics.Opt.showTasksWin(tasks);
+            Module.Hyscan.Statistics.Opt.showTasksWin(tasks, me);
         });
     },
 

@@ -79,4 +79,12 @@ public interface ScanTaskService extends BaseService<ScanTask, String> {
 	 */
 	ScanTask findLatestTask(String appId);
 
+	/**
+	 * 更新任务标记
+	 *
+	 * @param ids
+	 * @param scanTarget
+	 */
+	void updateScanTarget(List<String> ids, String scanTarget);
+
 }

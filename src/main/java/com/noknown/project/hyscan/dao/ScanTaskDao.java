@@ -3,6 +3,9 @@ package com.noknown.project.hyscan.dao;
 import com.noknown.project.hyscan.model.ScanTask;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -54,5 +57,16 @@ public interface ScanTaskDao extends JpaRepository<ScanTask, String>,JpaSpecific
 	 * @return
 	 */
 	ScanTask findFirstByAppIdOrderByScanTimeDesc(String appId);
+
+
+	/**
+	 * 更新任务标记
+	 *
+	 * @param ids
+	 * @param scanTarget
+	 */
+	@Modifying
+	@Query("update ScanTask st set st.scanTarget = :scanTarget where st.id in :ids")
+	void updateScanTargetById(@Param("ids") List<String> ids, @Param("scanTarget") String scanTarget);
 
 }

@@ -163,7 +163,10 @@ HYSCAN_LABLE = {
     noContent: '未填写',
     setupAppAdmin: '设置APP管理员',
     buildApiKey: '生成APIKey',
-    taskNumMsg: '共{0}个任务'
+    taskNumMsg: '共{0}个任务',
+    modelLoading: '载入型号配置',
+    algoLoading: '载入算法配置',
+    markTask: '标记任务'
 };
 
 MODEL_CONFIG_PROPERTY = {

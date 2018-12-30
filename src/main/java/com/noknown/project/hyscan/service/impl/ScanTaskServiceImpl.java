@@ -199,6 +199,11 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 		return taskDao.findFirstByAppIdOrderByScanTimeDesc(appId);
 	}
 
+	@Override
+	public void updateScanTarget(List<String> ids, String scanTarget) {
+		taskDao.updateScanTargetById(ids, scanTarget);
+	}
+
 	private File exportJson(ScanTask scanTask, File dir) throws ServiceException, DaoException {
 		Locale locale = LocaleContextHolder.getLocale();
 		File taskDir = new File(dir, scanTask.getId());

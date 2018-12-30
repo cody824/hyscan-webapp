@@ -10,6 +10,10 @@ Ext.define('Module.Hyscan.Statistics.view.ScanTaskGrid', {
         'Module.Hyscan.Public.model.ScanTaskModel'
     ],
 
+    uses: [
+        'Module.Hyscan.Statistics.Opt'
+    ],
+
 
     initComponent: function () {
         var columns = [];
@@ -73,7 +77,7 @@ Ext.define('Module.Hyscan.Statistics.view.ScanTaskGrid', {
                 width: 70,
                 renderer: Soul.util.RendererUtil.qtip
 	        }, {
-                text: TASK_PROPERTY.targetTypes,
+                text: TASK_PROPERTY.targetType,
                 dataIndex: 'targetType',
                 searchType: 'string',
                 align: 'center',
@@ -179,7 +183,10 @@ Ext.define('Module.Hyscan.Statistics.view.ScanTaskGrid', {
             }
         });
 
+        var sm = new Ext.selection.CheckboxModel();
+
         Ext.apply(this, {
+            selModel: sm,
             columns: columns,
             viewConfig: {
                 emptyText: HYSCAN_LABLE.noScanTask,
@@ -197,11 +204,49 @@ Ext.define('Module.Hyscan.Statistics.view.ScanTaskGrid', {
                         emptyMsg: LABEL.emptyMsg
                     })
                 ]
+            }, {
+                xtype: 'toolbar',
+                dock: 'top',
+                items: [
+                    {
+                        text: '标记任务',
+                        icon: '/img/icon/mark.png',
+                        handler: function () {
+                            var selModel = me.getSelectionModel();
+                            var selection = selModel.getSelection();
+                            var ids = [];
+                            var isAll = false;
+                            if (selection.length == 0) {
+                                isAll = true;
+                                Ext.each(me.data, function (task) {
+                                    ids.push(task.id);
+                                })
+                            } else {
+                                Ext.each(selection, function (record) {
+                                    ids.push(record.data.id)
+                                })
+                            }
+                            Module.Hyscan.Statistics.Opt.showMarkWin(ids, isAll, function (scanTarget) {
+                                me.modifyScanTarget(ids, scanTarget);
+                            })
+                        }
+                    }
+                ]
             }],
             store: store
         });
 
         this.callParent(arguments);
+    },
+
+    modifyScanTarget: function (ids, scanTarget) {
+        var me = this;
+        me.store.each(function (record) {
+            if (Ext.Array.contains(ids, record.data.id)) {
+                record.set("scanTarget", scanTarget);
+            }
+        });
+        me.map.modifyScanTarget(ids, scanTarget);
     },
     
 	onDataClick : function(view ,rowIndex, colIndex, item, e, record, row){

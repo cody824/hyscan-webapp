@@ -6,12 +6,13 @@ Ext.define('Module.Hyscan.Statistics.Opt', {
         'Module.Hyscan.Public.Tools'
     ],
 
-    showTasksWin: function (tasks) {
+    showTasksWin: function (tasks, map) {
 
         var infoGrid = Ext.create('Module.Hyscan.Statistics.view.ScanTaskGrid', {
             width: 800,
             height: 475,
-            data: tasks
+            data: tasks,
+            map: map
         });
 
         var win = new Ext.Window({
@@ -78,8 +79,55 @@ Ext.define('Module.Hyscan.Statistics.Opt', {
 
             }
         });
+    },
 
+    showMarkWin: function (ids, isAll, cb) {
 
-    }
+        var form = Ext.create("Ext.form.Panel", {
+            labelWidth: 60,
+            frame: true,
+            width: 400,
+            maxHeight: 500,
+            defaults: {
+                xtype: 'textfield',
+                labelAlign: 'right',
+                allowBlank: false,
+                width: 350
+            },
+            items: [{
+                name: 'scanTarget',
+                fieldLabel: TASK_PROPERTY.scanTarget
+            }]
+        });
+
+        var win = new Ext.Window({
+            title: HYSCAN_LABLE.markTask,
+            items: form,
+            stateful: false,
+            autoDestroy: true,
+            bodyStyle: 'padding:5px',
+            modal: true,
+            buttonAlign: 'center',
+            buttons: [{
+                text: LABEL.save,
+                handler: function () {
+                    if (!form.getForm().isValid()) return;
+                    var params = form.getForm().getValues();
+                    Soul.Ajax.request({
+                        url: '/admin/scanTask/scanTarget/?scanTarget=' + params.scanTarget,
+                        method: 'post',
+                        jsonData: ids,
+                        loadMask: LABEL.executing,
+                        confirm: isAll ? "确认要标记该地点所有任务吗？" : "确认要标记所选任务吗？",
+                        success: function () {
+                            cb(params.scanTarget);
+                            win.close();
+                        }
+                    })
+                }
+            }]
+        });
+        win.show();
+    },
 
 });

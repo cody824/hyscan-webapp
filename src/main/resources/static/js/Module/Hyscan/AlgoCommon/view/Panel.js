@@ -33,11 +33,19 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Panel', {
 
     loadWgAlgoConfig: function () {
         var me = this;
+
+        Soul.Ajax.showLoadBar(HYSCAN_LABLE.algoLoading);
+
         Soul.Ajax.request({
             url: '/app/algo-config/',
             successMsg: HYSCAN_LABLE["loadComplete"],
+            quiet: true,
             method: 'get',
+            failure: function () {
+                Soul.Ajax.hideLoadBar();
+            },
             success: function (ret) {
+                Soul.Ajax.hideLoadBar();
                 if (ret.length > 0) {
                     me.tabs.removeAll(true);
                     Ext.each(ret, function (algoConfig) {
@@ -51,11 +59,17 @@ Ext.define('Module.Hyscan.AlgoCommon.view.Panel', {
                         }
                     });
                 }
+                Soul.Ajax.showLoadBar(HYSCAN_LABLE.modelLoading);
                 Soul.Ajax.request({
                     url: '/app/modelConfig/',
                     successMsg: HYSCAN_LABLE["loadComplete"],
+                    quiet: true,
                     method: 'get',
+                    failure: function () {
+                        Soul.Ajax.hideLoadBar();
+                    },
                     success: function (models) {
+                        Soul.Ajax.hideLoadBar();
                         if (models.length > 0) {
                             if (ret.length == 0)
                                 me.tabs.removeAll(true);

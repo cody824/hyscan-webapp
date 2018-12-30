@@ -21,7 +21,10 @@ import com.noknown.project.hyscan.dao.AlgoConfigRepo;
 import com.noknown.project.hyscan.model.AlgoConfig;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
-import com.noknown.project.hyscan.pojo.*;
+import com.noknown.project.hyscan.pojo.AppScanTask;
+import com.noknown.project.hyscan.pojo.CommonResult;
+import com.noknown.project.hyscan.pojo.DataSet;
+import com.noknown.project.hyscan.pojo.DownloadInfo;
 import com.noknown.project.hyscan.service.ScanTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,39 +72,9 @@ public class ScanTaskController extends BaseController {
 		this.messageSource = messageSource;
 	}
 
-	@Deprecated
+
 	@RequestMapping(value = "/scanTask/", method = RequestMethod.POST)
 	public ResponseEntity<?> saveTask(@RequestBody AppScanTask<CommonResult> appTask)
-			throws Exception {
-		Authentication user = loginAuth();
-		appTask.setUserId((Integer) user.getPrincipal());
-		ScanTaskData data = appTask.toTaskData();
-		taskService.saveScanTaskData(data);
-		ScanTask task = appTask.toTaskInfo();
-		taskService.update(task);
-		return ResponseEntity.ok(task);
-	}
-
-	/**
-	 * 保存材质检测任务
-	 */
-	@RequestMapping(value = "/scanTask/material", method = RequestMethod.POST)
-	public ResponseEntity<?> saveMaterialTask(@RequestBody AppScanTask<MaterialResult> appTask)
-			throws Exception {
-		Authentication user = loginAuth();
-		appTask.setUserId((Integer) user.getPrincipal());
-		ScanTaskData data = appTask.toTaskData();
-		taskService.saveScanTaskData(data);
-		ScanTask task = appTask.toTaskInfo();
-		taskService.update(task);
-		return ResponseEntity.ok(task);
-	}
-
-	/**
-	 * 保存水质检测任务
-	 */
-	@RequestMapping(value = "/scanTask/wq", method = RequestMethod.POST)
-	public ResponseEntity<?> saveWQTask(@RequestBody AppScanTask<WqResult> appTask)
 			throws Exception {
 		Authentication user = loginAuth();
 		appTask.setUserId((Integer) user.getPrincipal());
