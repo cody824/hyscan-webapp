@@ -86,7 +86,6 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 		        	allowDecimals : false,
 		        	allowBlank : false,
 		        	minValue : 0,
-		        	maxValue : 2048,
 		        	flex: 1,
 		        	listeners : {
 			        	change : function ( field, newValue, oldValue, eOpts ) {
@@ -107,7 +106,6 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 		            allowDecimals : false,
 		            allowBlank : false,
 			        minValue : 0,
-		        	maxValue : 2048,
 		            flex: 1,
 		        	listeners : {
 			        	change : function ( field, newValue, oldValue, eOpts ) {
