@@ -43,17 +43,27 @@ Ext.define('Module.Hyscan.User.Portlet', {
                     text: HYSCAN_LABLE.createUser,
                     name: 'add',
                     hidden: !supportAddUser,
+                    needSelect: false,
                     icon: '/img/icon/add.png'
+                },
+                {
+                    text: HYSCAN_LABLE.resetPasswd,
+                    name: 'resetPassword',
+                    hidden: !supportAddUser,
+                    needSelect: true,
+                    icon: '/img/icon/reset.png'
                 },
                 {
                     text: HYSCAN_LABLE.setupAppAdmin,
                     disabled: true,
                     name: 'setAppAdmin',
+                    needSelect: true,
                     iconCls: 'lock'
                 }, {
                     text: HYSCAN_LABLE.buildApiKey,
                     disabled: true,
                     name: 'buildApiKey',
+                    needSelect: true,
                     iconCls: 'lock'
                 }
 

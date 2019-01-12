@@ -82,15 +82,22 @@ Ext.define('Module.Hyscan.User.view.Grid', {
             listeners: {
                 selectionchange: function (sm2) {
                     var records = sm2.getSelection();
-                    var buildApiKeyR = me.contextMenu.down('menuitem[name=buildApiKey]');
-                    var buildApiKey = me.portlet.down('menuitem[name=buildApiKey]');
-
+                    var itemsR = me.contextMenu.query('menuitem[needSelect=true]');
+                    var items = me.portlet.query('menuitem[needSelect=true]');
                     if (records.length == 1) {
-                        buildApiKeyR.enable();
-                        buildApiKey.enable();
+                        Ext.each(items, function (item) {
+                            item.enable();
+                        });
+                        Ext.each(itemsR, function (item) {
+                            item.enable();
+                        });
                     } else {
-                        buildApiKeyR.disable();
-                        buildApiKey.disable();
+                        Ext.each(items, function (item) {
+                            item.disable();
+                        });
+                        Ext.each(itemsR, function (item) {
+                            item.disable();
+                        });
                     }
 
                 }
@@ -165,22 +172,28 @@ Ext.define('Module.Hyscan.User.view.Grid', {
             me.updateView(me);
         };
 
-        var buildApiKeyR = me.contextMenu.down('menuitem[name=buildApiKey]');
-        var buildApiKey = me.portlet.down('menuitem[name=buildApiKey]');
-
         me.addMenuHandler("add", function () {
             opt.addUserWin(callbackFn);
         });
 
-        buildApiKeyR.on('click', function () {
-            var records = sm.getSelection();
-            opt.showApiKey(records[0].data);
-        });
-        buildApiKey.on('click', function () {
+        me.addMenuHandler("buildApiKey", function () {
             var records = sm.getSelection();
             opt.showApiKey(records[0].data);
         });
 
+        me.addMenuHandler("setAppAdmin", function () {
+            var records = sm.getSelection();
+            opt.doLookUserRoleFunction(record[0], callbackFn);
+        });
+
+        me.addMenuHandler("resetPassword", function () {
+            var records = sm.getSelection();
+            Soul.Ajax.request({
+                url: '/security/user/' + records[0].data.id + '/password/reset',
+                method: 'PUT',
+                confirm: HYSCAN_LABLE.confirmResetPassword
+            })
+        });
 
     }
 });

@@ -42,6 +42,27 @@ public class ModelConfig  implements Serializable, BaseObj {
 	 * 光谱坐标范围
 	 */
 	private Integer[] spectralRange;
+
+
+	/**
+	 * 可见近红外型号
+	 */
+	private String vnir;
+
+	/**
+	 * 可见近红外光谱坐标范围
+	 */
+	private Integer[] vnirRange;
+
+	/**
+	 * 短波红外型号
+	 */
+	private String swir;
+
+	/**
+	 * 短波红外光谱坐标范围
+	 */
+	private Integer[] swirRange;
 	
 	/**
 	 * 波长范围
@@ -103,6 +124,42 @@ public class ModelConfig  implements Serializable, BaseObj {
 
 	public ModelConfig setDnMaxValue(int dnMaxValue) {
 		this.dnMaxValue = dnMaxValue;
+		return this;
+	}
+
+	public Integer[] getVnirRange() {
+		return vnirRange;
+	}
+
+	public ModelConfig setVnirRange(Integer[] vnirRange) {
+		this.vnirRange = vnirRange;
+		return this;
+	}
+
+	public Integer[] getSwirRange() {
+		return swirRange;
+	}
+
+	public ModelConfig setSwirRange(Integer[] swirRange) {
+		this.swirRange = swirRange;
+		return this;
+	}
+
+	public String getVnir() {
+		return vnir;
+	}
+
+	public ModelConfig setVnir(String vnir) {
+		this.vnir = vnir;
+		return this;
+	}
+
+	public String getSwir() {
+		return swir;
+	}
+
+	public ModelConfig setSwir(String swir) {
+		this.swir = swir;
 		return this;
 	}
 

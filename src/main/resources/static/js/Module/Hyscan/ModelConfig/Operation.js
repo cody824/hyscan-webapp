@@ -8,7 +8,7 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 		'Soul.util.ObjectConfig',
 		'Soul.ux.EmailDomainBox',
 		'Module.Hyscan.ModelConfig.Tools',
-		
+        "Module.Hyscan.ModelConfig.Config"
 	],
 
 	views : [
@@ -35,6 +35,25 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 	},
 
 	editModelWin : function(record, callback) {
+
+        var vnirStore = Ext.create('Ext.data.Store', {
+            fields: ['value', 'name'],
+            data: [
+                {"value": "", "name": "不支持"},
+                {"value": "VNIR1", "name": "VNIR1"}
+            ]
+        });
+
+        var swirStore = Ext.create('Ext.data.Store', {
+            fields: ['value', 'name'],
+            data: [
+                {"value": "", "name": "不支持"},
+                {"value": "SWIR1", "name": "SWIR1"}
+            ]
+        });
+
+        var spConfig = Module.Hyscan.ModelConfig.Config.spDeivceConfig;
+
 		var formpanel = new Ext.FormPanel({
 			labelWidth: 60,
 			frame: true,
@@ -75,51 +94,127 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
                     allowBlank : false,
                     flex: 1
                 }]
-            },{
-		        xtype: 'fieldcontainer',
-                fieldLabel: MODEL_CONFIG_PROPERTY.spectralRange,
-		        labelWidth: 100,
-		        layout: 'hbox',
-		        items: [{
-		        	name : 'spectralRange',
-		        	xtype: 'numberfield',
-		        	allowDecimals : false,
-		        	allowBlank : false,
-		        	minValue : 0,
-		        	flex: 1,
-		        	listeners : {
-			        	change : function ( field, newValue, oldValue, eOpts ) {
-			        		var bv = field.getValue();
-			        		var end = field.next('numberfield');
-			        		end.setMinValue(bv);
-			        		var ev = end.getValue();
-			        		if (ev > bv) {
-			        			calRange(bv, ev);
-			        		}
-			        	}
-		        	}
-		        }, {
-		            xtype: 'splitter'
-		        }, {
-		        	name : 'spectralRange',
-		            xtype: 'numberfield',
-		            allowDecimals : false,
-		            allowBlank : false,
-			        minValue : 0,
-		            flex: 1,
-		        	listeners : {
-			        	change : function ( field, newValue, oldValue, eOpts ) {
-				        		var ev = field.getValue();
-				        		var begin = field.prev('numberfield');
-				        		begin.setMaxValue(ev);
-				        		var  bv = begin.getValue();
-				        		if (ev > bv) {
-				        			calRange(bv, ev);
-				        		}
-			        	}
-		        	}
-		        }]
-			},{
+            }, {
+                xtype: 'fieldcontainer',
+                fieldLabel: MODEL_CONFIG_PROPERTY.vnirRange,
+                labelWidth: 100,
+                layout: 'hbox',
+                items: [{
+                    name: 'vnir',
+                    xtype: 'combo',
+                    allowBlank: false,
+                    store: vnirStore,
+                    displayField: 'name',
+                    valueField: 'value',
+                    value: "",
+                    listeners: {
+                        change: function (field, newValue, oldValue, eOpts) {
+                            var begin = field.next('numberfield');
+                            var end = begin.next('numberfield');
+                            var vnirModel = spConfig.vnir[newValue];
+                            if (vnirModel) {
+                                begin.enable();
+                                end.enable();
+                                begin.setValue(vnirModel.range[0]);
+                                end.setValue(vnirModel.range[1])
+                            } else {
+                                begin.setValue(0);
+                                end.setValue(0);
+                                begin.disable();
+                                end.disable();
+                            }
+                        }
+                    }
+                }, {
+                    xtype: 'splitter'
+                }, {
+                    name: 'vnirRange',
+                    xtype: 'numberfield',
+                    allowDecimals: false,
+                    allowBlank: true,
+                    minValue: 0,
+                    flex: 1,
+                    listeners: {
+                        change: function (field, newValue, oldValue, eOpts) {
+                            calWaveLengths();
+                        }
+                    }
+                }, {
+                    xtype: 'splitter'
+                }, {
+                    name: 'vnirRange',
+                    xtype: 'numberfield',
+                    allowDecimals: false,
+                    allowBlank: true,
+                    minValue: 0,
+                    flex: 1,
+                    listeners: {
+                        change: function (field, newValue, oldValue, eOpts) {
+                            calWaveLengths();
+                        }
+                    }
+                }]
+            }, {
+                xtype: 'fieldcontainer',
+                fieldLabel: MODEL_CONFIG_PROPERTY.swirRange,
+                labelWidth: 100,
+                layout: 'hbox',
+                items: [{
+                    name: 'swir',
+                    xtype: 'combo',
+                    allowBlank: false,
+                    store: swirStore,
+                    displayField: 'name',
+                    valueField: 'value',
+                    value: "",
+                    listeners: {
+                        change: function (field, newValue, oldValue, eOpts) {
+                            var begin = field.next('numberfield');
+                            var end = begin.next('numberfield');
+                            var swirModel = spConfig.swir[newValue];
+                            if (swirModel) {
+                                begin.enable();
+                                end.enable();
+                                begin.setValue(swirModel.range[0]);
+                                end.setValue(swirModel.range[1])
+                            } else {
+                                begin.setValue(0);
+                                end.setValue(0);
+                                begin.disable();
+                                end.disable();
+                            }
+                        }
+                    }
+                }, {
+                    xtype: 'splitter'
+                }, {
+                    name: 'swirRange',
+                    xtype: 'numberfield',
+                    allowDecimals: false,
+                    allowBlank: true,
+                    minValue: 0,
+                    flex: 1,
+                    listeners: {
+                        change: function (field, newValue, oldValue, eOpts) {
+                            calWaveLengths();
+                        }
+                    }
+                }, {
+                    xtype: 'splitter'
+                }, {
+                    name: 'swirRange',
+                    xtype: 'numberfield',
+                    allowDecimals: false,
+                    allowBlank: true,
+                    minValue: 0,
+                    flex: 1,
+                    listeners: {
+                        change: function (field, newValue, oldValue, eOpts) {
+                            calWaveLengths()
+                        }
+                    }
+                }]
+            }, {
 				name: 'wavelengths',
 				xtype : 'textarea',
 				allowBlank : false,
@@ -136,11 +231,42 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 			formpanel.down('textarea[name=wavelengths]').setValue(wavelengths);
 		}
 
+        function calWaveLengths() {
+            var params = formpanel.getForm().getValues();
+            var wavelengths = [];
+            if (params.vnir) {
+                var vnirModel = spConfig.vnir[params.vnir];
+                var bv = parseInt(params.vnirRange[0]);
+                var ev = parseInt(params.vnirRange[1]);
+                if (ev > bv) {
+                    for (var i = bv; i <= ev; i++) {
+                        wavelengths.push(vnirModel.toW(i));
+                    }
+                }
+            }
+            if (params.swir) {
+                var swirModel = spConfig.swir[params.swir];
+                var bv = parseInt(params.swirRange[0]);
+                var ev = parseInt(params.swirRange[1]);
+                if (ev > bv) {
+                    for (var i = bv; i <= ev; i++) {
+                        wavelengths.push(swirModel.toW(i));
+                    }
+                }
+            }
+            formpanel.down('textarea[name=wavelengths]').setValue(wavelengths);
+        }
+
         var title = HYSCAN_LABLE.createModel;
 		if (record) {
 			formpanel.getForm().setValues(record.data);
 			formpanel.down('[name=radianceParams]').next('[name=radianceParams]').setValue(record.data.radianceParams[1]);
-			formpanel.down('[name=spectralRange]').next('[name=spectralRange]').setValue(record.data.spectralRange[1]);
+            if (record.data.vnirRange && record.data.vnirRange.length == 2) {
+                formpanel.down('[name=vnirRange]').next('[name=vnirRange]').setValue(record.data.vnirRange[1]);
+            }
+            if (record.data.swirRange && record.data.swirRange.length == 2) {
+                formpanel.down('[name=swirRange]').next('[name=swirRange]').setValue(record.data.swirRange[1]);
+            }
 			formpanel.down('[name=model]').setReadOnly(true);
             title = HYSCAN_LABLE.editModel;
 		}
@@ -158,6 +284,7 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 			buttons: [{
 				text: LABEL.save,
 				handler: function(){
+                    calWaveLengths();
 					if (!formpanel.getForm().isValid()) return;
 
 					var params = formpanel.getForm().getValues();
@@ -168,7 +295,6 @@ Ext.define('Module.Hyscan.ModelConfig.Operation', {
 						wavelengths.push(wArray[i]);
 					}
 					params.wavelengths = wavelengths;
-					var dataNum = wavelengths.length;
 
 					Soul.Ajax.request({
 						url : '/app/modelConfig/',

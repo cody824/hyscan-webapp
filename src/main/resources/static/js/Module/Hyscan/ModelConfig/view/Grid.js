@@ -46,15 +46,36 @@ Ext.define('Module.Hyscan.ModelConfig.view.Grid', {
 	            width: 100
 	        },
 			{
-                text: MODEL_CONFIG_PROPERTY.spectralRange,
-	            dataIndex: 'spectralRange',
+                text: MODEL_CONFIG_PROPERTY.vnirRange,
+                dataIndex: 'vnirRange',
 	            align: 'center',
-	            width: 100
-	        },{
+                width: 150,
+                renderer: function (val, el, r) {
+                    if (r.data.vnir) {
+                        return val;
+                    } else {
+                        return HYSCAN_LABLE.notSupport
+                    }
+                }
+            },
+            {
+                text: MODEL_CONFIG_PROPERTY.swirRange,
+                dataIndex: 'swirRange',
+                align: 'center',
+                width: 150,
+                renderer: function (val, el, r) {
+                    if (r.data.swir) {
+                        return val;
+                    } else {
+                        return HYSCAN_LABLE.notSupport
+                    }
+                }
+            }, {
                 text: MODEL_CONFIG_PROPERTY.wavelengths,
 	            dataIndex: 'wavelengths',
 	            align: 'center',
 	            flex : 1,
+                renderer: Soul.util.RendererUtil.qtip
 	        },
 			{
                 text: LABEL.del,

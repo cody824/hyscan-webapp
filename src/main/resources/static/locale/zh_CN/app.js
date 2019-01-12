@@ -48,6 +48,8 @@ APPID_VIEW = {
 };
 
 HYSCAN_LABLE = {
+    resetPasswd: "重置密码",
+    notSupport: '不支持',
     "dictEdit": '字典编辑',
     "dictConfig": '字典配置',
     noDictConfig: '没有字典配置',
@@ -81,6 +83,7 @@ HYSCAN_LABLE = {
     calComplete: '计算完成',
     confirmDeleteAlgo: '确认要删除该算法吗？',
     confirmCurrentAlgo: '确认要把该算法设置为当前算法吗？',
+    confirmResetPassword: '确认要把密码重置为123456吗',
     jar: 'jar包',
     selectJar: '选择JAR包',
     className: '类名',
@@ -175,6 +178,8 @@ MODEL_CONFIG_PROPERTY = {
     "dnMaxValue": "DN最大值",
     "radianceParams": "辐亮度参数",
     "spectralRange": "光谱坐标范围",
+    "vnirRange": "可见近红外坐标范围",
+    "swirRange": "短波近红外坐标范围",
     "wavelengths": "波长范围"
 };
 

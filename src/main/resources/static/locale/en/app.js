@@ -46,6 +46,8 @@ APPID_VIEW = {
 };
 
 HYSCAN_LABLE = {
+    resetPasswd: "Reset Password",
+    notSupport: 'Not support',
     "dictEdit": 'Dict edit',
     "dictConfig": 'Dict configuration',
     noDictConfig: 'No dict configuration found',
@@ -78,6 +80,7 @@ HYSCAN_LABLE = {
     calComplete: 'Calculation completed',
     confirmDeleteAlgo: 'Confirm to delete this algorithm？',
     confirmCurrentAlgo: 'Confirm to use this algorithm?',
+    confirmResetPassword: 'Confirm to reset password?',
     jar: 'jar',
     selectJar: 'Select',
     className: 'Classname',
@@ -171,6 +174,8 @@ MODEL_CONFIG_PROPERTY = {
     "dnMaxValue": "DN maximum",
     "radianceParams": "Radiance parameters",
     "spectralRange": "Spectral range",
+    "vnirRange": "VNIR range",
+    "swirRange": "SWIR range",
     "wavelengths": "Wavelength range"
 };
 
