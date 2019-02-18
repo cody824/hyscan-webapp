@@ -37,6 +37,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author guodong
@@ -52,6 +54,14 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 	private final MessageSource messageSource;
 
+	private final static String JSON = "json";
+
+	private final static String TXT = "txt";
+
+	private final static String EXCEL = "excel";
+
+	private final ExecutorService clearEService;
+
 	@Value("${hyscan.tmpDir:/var/hyscan/tmp/}")
 	private String tmpDir;
 
@@ -64,6 +74,17 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 		this.taskDao = taskDao;
 		this.taskDataDao = taskDataDao;
 		this.messageSource = messageSource;
+		this.clearEService = new ThreadPoolExecutor(1,
+				1,
+				0L, TimeUnit.MILLISECONDS,
+				new LinkedBlockingQueue<>(8), new ThreadFactory() {
+			AtomicInteger atomic = new AtomicInteger();
+
+			@Override
+			public Thread newThread(Runnable r) {
+				return new Thread(r, "ClearThread-" + this.atomic.getAndIncrement());
+			}
+		});
 	}
 
 
@@ -156,11 +177,11 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 		}
 		dir.mkdirs();
 		File taskDir;
-		if ("json".equals(type)) {
+		if (JSON.equals(type)) {
 			taskDir = exportJson(task, dir);
-		} else if ("txt".equals(type)) {
+		} else if (TXT.equals(type)) {
 			taskDir = exportTxt(task, dir);
-		} else if ("excel".equals(type)) {
+		} else if (EXCEL.equals(type)) {
 			taskDir = exportExcel(task, dir);
 		} else {
 			taskDir = exportJson(task, dir);
@@ -353,9 +374,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 			return;
 		}
 		Runnable runnable = new CacheClean();
-		Thread thread = new Thread(runnable);
-		freeRun = true;
-		thread.start();
+		clearEService.execute(runnable);
 	}
 
 	private  boolean freeRun = false;
@@ -364,6 +383,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 		@Override
 		public void run() {
+			freeRun = true;
 			File file = new File(tmpDir);
 			if (file.exists() && file.isDirectory()) {
 				File[] fs = file.listFiles((dir, name) -> name.endsWith(".zip"));
@@ -379,6 +399,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 				}
 
 			}
+			freeRun = false;
 		}
 	}
 
