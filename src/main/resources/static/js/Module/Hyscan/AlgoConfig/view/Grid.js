@@ -127,7 +127,8 @@ Ext.define('Module.Hyscan.AlgoConfig.view.Grid', {
 		Ext.apply(this, {
 			selModel: sm,
 			viewConfig : {
-                emptyText: HYSCAN_LABLE.noAc
+                emptyText: HYSCAN_LABLE.noAc,
+                enableTextSelection: true
 			},
 			store : paramStore,
 			columns : columns,

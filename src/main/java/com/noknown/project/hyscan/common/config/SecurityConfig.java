@@ -143,7 +143,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				//管理员页面
 				.antMatchers("/admin").hasAnyRole("ADMIN", "TENANT_ADMIN")
 				// 除上面外的所有请求全部需要鉴权认证
-				.anyRequest().authenticated();
+				.anyRequest().authenticated().and().headers().frameOptions().disable();
 
 		// 添加JWT filter
 		httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
