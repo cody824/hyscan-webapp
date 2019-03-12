@@ -1,5 +1,6 @@
 package com.noknown.project.hyscan.common.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.ErrorPageRegistrar;
 import org.springframework.boot.web.server.ErrorPageRegistry;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.MultipartConfigElement;
+import java.io.File;
 
 /**
  * @author guodong
@@ -18,9 +20,18 @@ public class WebConfig {
 
 	private final static long TASK_ID_WORKER = 0L;
 
+	@Value("${hyscan.upload.tmp:/var/hyscan/tmp/upload}")
+	private String uploadTmp;
+
 	@Bean
 	public MultipartConfigElement multipartConfigElement() {
 		MultipartConfigFactory factory = new MultipartConfigFactory();
+		File file = new File(uploadTmp);
+		file.setWritable(true, false);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		factory.setLocation(uploadTmp);
 		factory.setMaxFileSize("10MB");
 		factory.setMaxRequestSize("10MB");
 		return factory.createMultipartConfig();
