@@ -49,6 +49,16 @@ Ext.define('Module.Hyscan.Public.TaskPortlet', {
                         me.doExport("excel");
                     },
                     scope: this
+                },
+                {
+                    text: LABEL.del,
+                    disabled: true,
+                    needSelect: true,
+                    name: 'delTask',
+                    icon: "/img/icon/del.png",
+                    handler: function () {
+                    },
+                    scope: this
                 }
             ]
         });

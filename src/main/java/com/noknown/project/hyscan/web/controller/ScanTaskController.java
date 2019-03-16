@@ -88,44 +88,13 @@ public class ScanTaskController extends BaseController {
 		return ResponseEntity.ok(task);
 	}
 
-	@RequestMapping(value = "/scanTask/img", method = RequestMethod.POST)
-	public ResponseEntity<?> saveTaskImg(@RequestParam("file") MultipartFile uploadFile, @RequestParam String taskId) throws WebException, ServiceException, DaoException {
-		Locale locale = LocaleContextHolder.getLocale();
-
-		ScanTask task = taskService.get(taskId);
-		if (task == null) {
-			throw new WebException(messageSource.getMessage("task_not_found", null, locale));
+	@RequestMapping(value = "/scanTask/", method = RequestMethod.DELETE)
+	public ResponseEntity<?> delTask(@RequestBody String[] ids)
+			throws Exception {
+		for (String id : ids) {
+			taskService.removeTask(id);
 		}
-
-		InputStream is;
-		try {
-			is = uploadFile.getInputStream();
-		} catch (IOException e) {
-			throw new WebException(messageSource.getMessage("file_upload_failed", new Object[]{e.getLocalizedMessage()}, locale));
-		}
-		Date taskTime = task.getScanTime();
-		DateUtil.getCurrentYear(taskTime);
-
-		FileStoreService fss = repo.getOS(null);
-		if (fss == null) {
-			throw new WebException(messageSource.getMessage("file_server_not_config", null, locale));
-		}
-
-		String key = "taskImg/" + DateUtil.getCurrentYear(taskTime) + "/" +
-				DateUtil.getCurrentMonth(taskTime) + "/" + DateUtil.getCurrentDay(taskTime) + "/" + taskId + ".png";
-		String url;
-		try {
-			url = fss.put(is, key);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new WebException(messageSource.getMessage("img_server_error", new Object[]{e.getMessage()}, locale));
-		}
-		Map<String, String> ret = new HashMap<>(2);
-		ret.put("taskId", taskId);
-		ret.put("imagePath", url);
-		task.setImagePath(url);
-		taskService.update(task);
-		return ResponseEntity.ok(ret);
+		return ResponseEntity.ok(null);
 	}
 
 	@RequestMapping(value = "/scanTask/", method = RequestMethod.GET)
@@ -178,6 +147,48 @@ public class ScanTaskController extends BaseController {
 		tasks = taskService.find(sqlFilter, start, limit);
 		return ResponseEntity.ok(tasks);
 	}
+
+	@RequestMapping(value = "/scanTask/img", method = RequestMethod.POST)
+	public ResponseEntity<?> saveTaskImg(@RequestParam("file") MultipartFile uploadFile, @RequestParam String taskId) throws WebException, ServiceException, DaoException {
+		Locale locale = LocaleContextHolder.getLocale();
+
+		ScanTask task = taskService.get(taskId);
+		if (task == null) {
+			throw new WebException(messageSource.getMessage("task_not_found", null, locale));
+		}
+
+		InputStream is;
+		try {
+			is = uploadFile.getInputStream();
+		} catch (IOException e) {
+			throw new WebException(messageSource.getMessage("file_upload_failed", new Object[]{e.getLocalizedMessage()}, locale));
+		}
+		Date taskTime = task.getScanTime();
+		DateUtil.getCurrentYear(taskTime);
+
+		FileStoreService fss = repo.getOS(null);
+		if (fss == null) {
+			throw new WebException(messageSource.getMessage("file_server_not_config", null, locale));
+		}
+
+		String key = "taskImg/" + DateUtil.getCurrentYear(taskTime) + "/" +
+				DateUtil.getCurrentMonth(taskTime) + "/" + DateUtil.getCurrentDay(taskTime) + "/" + taskId + ".png";
+		String url;
+		try {
+			url = fss.put(is, key);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new WebException(messageSource.getMessage("img_server_error", new Object[]{e.getMessage()}, locale));
+		}
+		Map<String, String> ret = new HashMap<>(2);
+		ret.put("taskId", taskId);
+		ret.put("imagePath", url);
+		task.setImagePath(url);
+		taskService.update(task);
+		return ResponseEntity.ok(ret);
+	}
+
+
 
 	@RequestMapping(value = "/scanTask/info/latest", method = RequestMethod.GET)
 	public ResponseEntity<?> getLatestScanTask(@RequestParam(required = false) String appId) {

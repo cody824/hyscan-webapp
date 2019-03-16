@@ -165,7 +165,8 @@ HYSCAN_LABLE = {
     taskNumMsg: 'Total {0} tasks',
     modelLoading: 'Loading model',
     algoLoading: 'Loading Algorithm',
-    markTask: '标记任务'
+    markTask: 'Mark task',
+    confirmToDelTenant: 'Confirm to delete selected tasks?',
 };
 
 MODEL_CONFIG_PROPERTY = {

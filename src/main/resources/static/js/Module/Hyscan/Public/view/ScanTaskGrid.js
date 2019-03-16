@@ -258,7 +258,27 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
         var proxy = store.getProxy();
         proxy.api.read = proxy.api.read + "?appId=" + me.appId + "&model=" + me.title;
 
+        var sm = new Ext.selection.CheckboxModel({
+            // mode: 'single',
+            listeners: {
+                selectionchange: function (model, selected, eOpts) {
+                    var records = selected;
+                    var items = me.up("hyscantaskportlet").query('menuitem[needSelect=true]');
+                    if (records.length > 0) {
+                        Ext.each(items, function (item) {
+                            item.enable();
+                        });
+                    } else {
+                        Ext.each(items, function (item) {
+                            item.disable();
+                        });
+                    }
+                }
+            }
+        });
+
         Ext.apply(this, {
+            selModel: sm,
             columns: columns,
             viewConfig: {
                 emptyText: HYSCAN_LABLE.noTaskFound,
@@ -283,7 +303,26 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
         Soul.Ajax.request({
             url: "/app/scanTask/info/" + record.data.id,
             method: "delete",
-            confirm: HYSCAN_LABLE.confirmToDelTenant,
+            confirm: HYSCAN_LABLE.confirmToDelTask,
+            successMsg: HYSCAN_LABLE.delSuccess,
+            success: function () {
+                me.updateView(me);
+            }
+        })
+    },
+
+    doDelete: function (records, scope) {
+        var me = scope || this;
+        var ids = [];
+        Ext.each(records, function (record) {
+            ids.push(record.data.id);
+        });
+        Soul.Ajax.request({
+            url: "/app/scanTask/",
+            method: 'delete',
+            jsonData: ids,
+            loadMask: LABEL.del + "...",
+            confirm: HYSCAN_LABLE.confirmToDelTask,
             successMsg: HYSCAN_LABLE.delSuccess,
             success: function () {
                 me.updateView(me);
@@ -295,5 +334,11 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
         var me = this;
         me.callParent(arguments);
         me.updateView(me);
+        var sm = me.selModel;
+        me.portlet = me.up("hyscantaskportlet");
+        me.addMenuHandler("delTask", function () {
+            var records = sm.getSelection();
+            me.doDelete(records, me)
+        });
     }
 });

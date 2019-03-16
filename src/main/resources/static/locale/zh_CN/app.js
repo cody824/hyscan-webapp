@@ -169,7 +169,8 @@ HYSCAN_LABLE = {
     taskNumMsg: '共{0}个任务',
     modelLoading: '载入型号配置',
     algoLoading: '载入算法配置',
-    markTask: '标记任务'
+    markTask: '标记任务',
+    confirmToDelTask: '确认要删除所选任务吗?'
 };
 
 MODEL_CONFIG_PROPERTY = {
