@@ -79,6 +79,9 @@ public class ScanTaskController extends BaseController {
 		Authentication user = loginAuth();
 		appTask.setUserId((Integer) user.getPrincipal());
 		ScanTaskData data = appTask.toTaskData();
+		if (!data.check()) {
+			throw new WebException("数据不符合格式要求，请检测型号配置，或者重新进行定标设置后再采集");
+		}
 		taskService.saveScanTaskData(data);
 		ScanTask task = appTask.toTaskInfo();
 		taskService.update(task);
@@ -152,9 +155,11 @@ public class ScanTaskController extends BaseController {
 					sqlFilter.addSQLOrder(order);
 				}
 			}
-		} else {
+		}
+		if (sqlFilter.getOrderList() == null || sqlFilter.getOrderList().isEmpty()) {
 			sqlFilter.addSQLOrder(new SQLOrder("scanTime", "desc"));
 		}
+
 		if (StringUtil.isNotBlank(appId)) {
 			sqlFilter.addSQLExpression("appId", "=", appId);
 		} else {

@@ -19,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -26,6 +27,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 /**
  * @author guodong
@@ -88,6 +91,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		successHandler.setAlwaysUseDefaultTargetUrl(true);
 		successHandler.setDefaultTargetUrl("/");
 		return successHandler;
+	}
+
+	@Bean
+	public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
+		StrictHttpFirewall firewall = new StrictHttpFirewall();
+		firewall.setAllowUrlEncodedSlash(true);
+		return firewall;
 	}
 
 
@@ -153,6 +163,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// 禁用缓存
 		//httpSecurity.headers().cacheControl();
 
+	}
+
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		super.configure(web);
+		web.httpFirewall(allowUrlEncodedSlashHttpFirewall());
 	}
 
 	@Bean

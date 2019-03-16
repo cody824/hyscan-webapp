@@ -46,7 +46,6 @@ public class AppScanTask<T extends AbstractResult> implements Serializable {
 		task.setUserId(getUserId());
 		task.setAppId(getAppId());
 		
-		task.setImagePath(getImagePath());
 		task.setScanTarget(getName());
 		task.setScanTime(new Date(getTimestamp()));
 		
@@ -79,6 +78,10 @@ public class AppScanTask<T extends AbstractResult> implements Serializable {
 		
 		if (getDevice() != null) {
 			scanTaskData.setRange(getDevice().getSpectralRange());
+			scanTaskData.setVnir(getDevice().getVnir());
+			scanTaskData.setVnirRange(getDevice().getVnirRange());
+			scanTaskData.setSwir(getDevice().getSwir());
+			scanTaskData.setSwirRange(getDevice().getSwirRange());
 			Float[] radianceConfig = new Float[2];
 			
 			radianceConfig[0] = getDevice().getRadianceA();

@@ -11,6 +11,7 @@ import com.noknown.framework.common.util.excel.ExcelHandle;
 import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.project.hyscan.dao.ScanTaskDao;
 import com.noknown.project.hyscan.dao.ScanTaskDataRepo;
+import com.noknown.project.hyscan.device.DeviceConfig;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
 import com.noknown.project.hyscan.pojo.DownloadInfo;
@@ -62,6 +63,8 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 	private final ExecutorService clearEService;
 
+	private final DeviceConfig deviceConfig;
+
 	@Value("${hyscan.tmpDir:/var/hyscan/tmp/}")
 	private String tmpDir;
 
@@ -70,10 +73,11 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 	@Value("${hyscan.export.excelTpl:/var/hyscan/excelTpl/taskData.xlsx}")
 	private String excelTpl;
 
-	public ScanTaskServiceImpl(ScanTaskDao taskDao, ScanTaskDataRepo taskDataDao, MessageSource messageSource) {
+	public ScanTaskServiceImpl(ScanTaskDao taskDao, ScanTaskDataRepo taskDataDao, MessageSource messageSource, DeviceConfig deviceConfig) {
 		this.taskDao = taskDao;
 		this.taskDataDao = taskDataDao;
 		this.messageSource = messageSource;
+		this.deviceConfig = deviceConfig;
 		this.clearEService = new ThreadPoolExecutor(1,
 				1,
 				0L, TimeUnit.MILLISECONDS,
@@ -86,7 +90,6 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 			}
 		});
 	}
-
 
 	@Override
 	public void removeTask(String taskId) throws DaoException {
@@ -275,12 +278,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 		ScanTaskData taskData = taskDataDao.get(scanTask.getId());
 		if (taskData != null) {
 			if (taskData.check()) {
-				Integer[] range = taskData.getRange();
-				Double[] wavelength = new Double[taskData.getDn().length];
-				int index = 0;
-				for (int i = range[0]; i <= range[1]; i++) {
-					wavelength[index++] = 1.9799 * i - 934.5831;
-				}
+				Double[] wavelength = deviceConfig.getWavelength(taskData);
 				double[] reflectivity = AlgoUtil.getReflectivity(taskData.getDn(), taskData.getDarkCurrent(), taskData.getWhiteboardData());
 				StringBuilder stringBuilder = new StringBuilder("波长,DN,反射率,暗电流,白板数据\n");
 				for (int i = 0; i < taskData.getDn().length; i++) {
@@ -319,12 +317,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 		ScanTaskData taskData = taskDataDao.get(scanTask.getId());
 		if (taskData != null) {
 			if (taskData.check()) {
-				Integer[] range = taskData.getRange();
-				Double[] wavelength = new Double[taskData.getDn().length];
-				int index = 0;
-				for (int i = range[0]; i <= range[1]; i++) {
-					wavelength[index++] = 1.9799 * i - 934.5831;
-				}
+				Double[] wavelength = deviceConfig.getWavelength(taskData);
 				double[] reflectivity = AlgoUtil.getReflectivity(taskData.getDn(), taskData.getDarkCurrent(), taskData.getWhiteboardData());
 				List<ExportRow> exportRows = new ArrayList<>(wavelength.length);
 				for (int i = 0; i < taskData.getDn().length; i++) {

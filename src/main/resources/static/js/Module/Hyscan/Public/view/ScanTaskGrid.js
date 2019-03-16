@@ -146,7 +146,24 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
 	            searchType: 'string',
 	            align: 'center',
 	            width: 80
-	        }
+            },
+            {
+                text: LABEL.del,
+                xtype: 'actioncolumn',
+                width: 60,
+                sortable: false,
+                editor: false,
+                align: 'center',
+                items: [
+                    {
+                        icon: "/img/icon/del.png",
+                        tooltip: LABEL.del,
+                        scope: this,
+                        handler: this.onDeleteClick,
+                        isDisabled: function (v, r, c, item, r) {
+                        }
+                    }]
+            }
         );
 
         if (this.customColumns) {
@@ -260,6 +277,19 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
         	task: record.data,
 		}, portlet);
 	},
+
+    onDeleteClick: function (grid, rowIdx, colIdx, item, e, record, row) {
+        var me = this;
+        Soul.Ajax.request({
+            url: "/app/scanTask/info/" + record.data.id,
+            method: "delete",
+            confirm: HYSCAN_LABLE.confirmToDelTenant,
+            successMsg: HYSCAN_LABLE.delSuccess,
+            success: function () {
+                me.updateView(me);
+            }
+        })
+    },
 
     afterRender: function () {
         var me = this;
