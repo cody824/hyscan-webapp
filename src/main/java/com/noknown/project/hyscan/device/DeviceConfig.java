@@ -43,7 +43,7 @@ public class DeviceConfig {
 		};
 		swir1.setName("SWIR1");
 		swir1.setRange(new int[]{2071, 2156});
-		swir.put(vnir1.getName(), vnir1);
+		swir.put(swir1.getName(), swir1);
 	}
 
 
@@ -51,33 +51,37 @@ public class DeviceConfig {
 		Double[] labels = new Double[taskData.getDn().length];
 
 		int n = 0;
-		if (StringUtil.isNotBlank(taskData.getVnir()) && taskData.getVnirRange() != null) {
+		if (StringUtil.isNotBlank(taskData.getVnir())) {
 			SpDevice spDevice = vnir.get(taskData.getVnir());
 			if (spDevice != null) {
-				for (int i = spDevice.getRange()[0]; i < spDevice.getRange()[1]; i++) {
+				int begin = taskData.getVnirRange() == null ? spDevice.getRange()[0] : taskData.getVnirRange()[0];
+				int end = taskData.getVnirRange() == null ? spDevice.getRange()[1] : taskData.getVnirRange()[1];
+				for (int i = begin; i < end; i++) {
 					double label = spDevice.toW(i);
-					if (n < (taskData.getDn().length - 1)) {
+					if (n < (taskData.getDn().length)) {
 						labels[n++] = label;
 					}
 				}
 			}
 		}
-		if (StringUtil.isNotBlank(taskData.getSwir()) && taskData.getSwirRange() != null) {
-			SpDevice spDevice = swir.get(taskData.getVnir());
+		if (StringUtil.isNotBlank(taskData.getSwir())) {
+			SpDevice spDevice = swir.get(taskData.getSwir());
 			if (spDevice != null) {
-				for (int i = spDevice.getRange()[0]; i < spDevice.getRange()[1]; i++) {
+				int begin = taskData.getSwirRange() == null ? spDevice.getRange()[0] : taskData.getSwirRange()[0];
+				int end = taskData.getSwirRange() == null ? spDevice.getRange()[1] : taskData.getSwirRange()[1];
+				for (int i = begin; i < end; i++) {
 					double label = spDevice.toW(i);
-					if (n < (taskData.getDn().length - 1)) {
+					if (n < (taskData.getDn().length)) {
 						labels[n++] = label;
 					}
 				}
 			}
 		}
-		if (labels.length == 0) {
+		if (n == 0) {
 			if (taskData.getRange() != null) {
 				for (int i = taskData.getRange()[0]; i < taskData.getRange()[1]; i++) {
 					double label = 1.9799 * i - 934.5831;
-					if (n < (taskData.getDn().length - 1)) {
+					if (n < (taskData.getDn().length)) {
 						labels[n++] = label;
 					}
 				}

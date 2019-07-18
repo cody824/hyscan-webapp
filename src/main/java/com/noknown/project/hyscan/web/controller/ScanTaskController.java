@@ -103,7 +103,7 @@ public class ScanTaskController extends BaseController {
 			@RequestParam(required = false) String appId,
 			@RequestParam(required = false) String model,
 			@RequestParam(required = false, defaultValue = "{}") String filter,
-			@RequestParam(required = false, defaultValue = "{}") String sort,
+			@RequestParam(required = false, defaultValue = "[]") String sort,
 			@RequestParam(required = false, defaultValue = "0") int start,
 			@RequestParam(required = false, defaultValue = "-1") int limit)
 			throws Exception {

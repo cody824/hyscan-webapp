@@ -9,12 +9,16 @@ import com.noknown.framework.common.util.JsonUtil;
 import com.noknown.framework.common.util.StringUtil;
 import com.noknown.framework.common.util.excel.ExcelHandle;
 import com.noknown.framework.common.web.model.SQLFilter;
+import com.noknown.project.hyscan.dao.AlgoConfigRepo;
 import com.noknown.project.hyscan.dao.ScanTaskDao;
 import com.noknown.project.hyscan.dao.ScanTaskDataRepo;
 import com.noknown.project.hyscan.device.DeviceConfig;
+import com.noknown.project.hyscan.model.AlgoConfig;
+import com.noknown.project.hyscan.model.AlgoItem;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
 import com.noknown.project.hyscan.pojo.DownloadInfo;
+import com.noknown.project.hyscan.pojo.ExportResult;
 import com.noknown.project.hyscan.pojo.ExportRow;
 import com.noknown.project.hyscan.service.ScanTaskService;
 import com.noknown.project.hyscan.util.AlgoUtil;
@@ -34,6 +38,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -55,6 +62,8 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 	private final MessageSource messageSource;
 
+	private final AlgoConfigRepo algoConfigRepo;
+
 	private final static String JSON = "json";
 
 	private final static String TXT = "txt";
@@ -73,10 +82,11 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 	@Value("${hyscan.export.excelTpl:/var/hyscan/excelTpl/taskData.xlsx}")
 	private String excelTpl;
 
-	public ScanTaskServiceImpl(ScanTaskDao taskDao, ScanTaskDataRepo taskDataDao, MessageSource messageSource, DeviceConfig deviceConfig) {
+	public ScanTaskServiceImpl(ScanTaskDao taskDao, ScanTaskDataRepo taskDataDao, MessageSource messageSource, AlgoConfigRepo algoConfigRepo, DeviceConfig deviceConfig) {
 		this.taskDao = taskDao;
 		this.taskDataDao = taskDataDao;
 		this.messageSource = messageSource;
+		this.algoConfigRepo = algoConfigRepo;
 		this.deviceConfig = deviceConfig;
 		this.clearEService = new ThreadPoolExecutor(1,
 				1,
@@ -281,7 +291,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 				Double[] wavelength = deviceConfig.getWavelength(taskData);
 				double[] reflectivity = AlgoUtil.getReflectivity(taskData.getDn(), taskData.getDarkCurrent(), taskData.getWhiteboardData());
 				StringBuilder stringBuilder = new StringBuilder("波长,DN,反射率,暗电流,白板数据\n");
-				for (int i = 0; i < taskData.getDn().length; i++) {
+				for (int i = 0; i < wavelength.length; i++) {
 					stringBuilder.append(wavelength[i] + ",");
 					stringBuilder.append(taskData.getDn()[i] + ",");
 					stringBuilder.append(reflectivity[i] + ",");
@@ -315,18 +325,23 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 		ExcelHandle handle = new ExcelHandle();
 		JSONParser parser = new JSONParser();
 		ScanTaskData taskData = taskDataDao.get(scanTask.getId());
+
 		if (taskData != null) {
 			if (taskData.check()) {
 				Double[] wavelength = deviceConfig.getWavelength(taskData);
 				double[] reflectivity = AlgoUtil.getReflectivity(taskData.getDn(), taskData.getDarkCurrent(), taskData.getWhiteboardData());
 				List<ExportRow> exportRows = new ArrayList<>(wavelength.length);
-				for (int i = 0; i < taskData.getDn().length; i++) {
-					ExportRow row = new ExportRow().setDarkCurrent(taskData.getDarkCurrent()[i])
-							.setDn(taskData.getDn()[i])
-							.setWavelength(wavelength[i])
-							.setWhiteboardData(taskData.getWhiteboardData()[i])
-							.setReflectivity(reflectivity[i]);
-					exportRows.add(row);
+				for (int i = 0; i < wavelength.length; i++) {
+					try {
+						ExportRow row = new ExportRow().setDarkCurrent(taskData.getDarkCurrent()[i])
+								.setDn(taskData.getDn()[i])
+								.setWavelength(wavelength[i])
+								.setWhiteboardData(taskData.getWhiteboardData()[i])
+								.setReflectivity(reflectivity[i]);
+						exportRows.add(row);
+					} catch (Throwable e) {
+						logger.warn("导出错误：", e);
+					}
 				}
 
 				String dataStr = JsonUtil.toJson(exportRows);
@@ -336,6 +351,36 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 				}
 				String infoStr = JsonUtil.toJson(scanTask);
 
+				AlgoConfig algoConfig = algoConfigRepo.get(scanTask.getAppId() + "-" + scanTask.getDeviceModel());
+
+				List<ExportResult> resultList = new ArrayList<>(10);
+
+				String resultStr = null;
+				if (algoConfig != null) {
+					Map<String, AlgoItem> algos = algoConfig.getAlgos();
+					if (algos != null && !algos.isEmpty()) {
+						for (AlgoItem ac : algos.values()) {
+							try {
+								Method method = ScanTask.class.getMethod("getResult" + ac.getSeq());
+								Double value = (Double) method.invoke(scanTask);
+								if (value != null) {
+									BigDecimal b = new BigDecimal(value);
+									value = b.setScale(ac.getDecimal(), BigDecimal.ROUND_HALF_UP).doubleValue();
+									ExportResult exportResult = new ExportResult();
+									exportResult.key = ac.getChineseName().replaceAll("&nbsp;", "");
+									exportResult.value = value + ac.getUnit().replaceAll("&nbsp;", "");
+									resultList.add(exportResult);
+								}
+							} catch (NoSuchMethodException e) {
+							} catch (IllegalAccessException e) {
+							} catch (InvocationTargetException e) {
+							}
+						}
+					}
+				}
+				if (resultList.size() > 0) {
+					resultStr = JsonUtil.toJson(resultList);
+				}
 				File dataFile = new File(taskDir, "data.xlsx");
 				try (OutputStream os = new FileOutputStream(dataFile)) {
 					Object objs = parser.parse(new StringReader(dataStr));
@@ -346,6 +391,11 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 					JSONObject dataMap = new JSONObject();
 					dataMap.put("data", dataJson);
 					dataMap.put("info", infoJson);
+					if (resultStr != null) {
+						Object results = parser.parse(new StringReader(resultStr));
+						JSONArray resultsJson = (JSONArray) results;
+						dataMap.put("result", resultsJson);
+					}
 					handle.writeData(excelTpl, dataMap);
 					Workbook wb = handle.getTempWorkbook(excelTpl);
 					handle.readClose(excelTpl);
