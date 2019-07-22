@@ -153,7 +153,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
         if (device.vnir && device.vnirRange) {
             var vnirConfig = me.spDeivceConfig.vnir[device.vnir];
             if (vnirConfig) {
-                for (var i = device.vnirRange[0]; i < device.vnirRange[1]; i++) {
+                for (var i = device.vnirRange[0]; i <= device.vnirRange[1]; i++) {
                     var label = vnirConfig.toW(i);
                     labels.push(label)
                 }
@@ -162,7 +162,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
         if (device.swir && device.swirRange) {
             var swirConfig = me.spDeivceConfig.swir[device.swir];
             if (swirConfig) {
-                for (var i = device.swirRange[0]; i < device.swirRange[1]; i++) {
+                for (var i = device.swirRange[0]; i <= device.swirRange[1]; i++) {
                     var label = swirConfig.toW(i);
                     labels.push(label)
                 }
@@ -170,7 +170,7 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskDataGrid', {
         }
         if (labels.length == 0) {
             if (device.range) {
-                for (var i = device.range[0]; i < device.range[1]; i++) {
+                for (var i = device.range[0]; i <= device.range[1]; i++) {
                     labels.push(1.9799 * i - 934.5831);
                 }
             }

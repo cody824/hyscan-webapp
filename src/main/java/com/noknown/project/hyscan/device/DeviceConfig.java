@@ -56,9 +56,9 @@ public class DeviceConfig {
 			if (spDevice != null) {
 				int begin = taskData.getVnirRange() == null ? spDevice.getRange()[0] : taskData.getVnirRange()[0];
 				int end = taskData.getVnirRange() == null ? spDevice.getRange()[1] : taskData.getVnirRange()[1];
-				for (int i = begin; i < end; i++) {
+				for (int i = begin; i <= end; i++) {
 					double label = spDevice.toW(i);
-					if (n < (taskData.getDn().length)) {
+					if (n < taskData.getDn().length) {
 						labels[n++] = label;
 					}
 				}
@@ -69,9 +69,9 @@ public class DeviceConfig {
 			if (spDevice != null) {
 				int begin = taskData.getSwirRange() == null ? spDevice.getRange()[0] : taskData.getSwirRange()[0];
 				int end = taskData.getSwirRange() == null ? spDevice.getRange()[1] : taskData.getSwirRange()[1];
-				for (int i = begin; i < end; i++) {
+				for (int i = begin; i <= end; i++) {
 					double label = spDevice.toW(i);
-					if (n < (taskData.getDn().length)) {
+					if (n < taskData.getDn().length) {
 						labels[n++] = label;
 					}
 				}
@@ -79,7 +79,7 @@ public class DeviceConfig {
 		}
 		if (n == 0) {
 			if (taskData.getRange() != null) {
-				for (int i = taskData.getRange()[0]; i < taskData.getRange()[1]; i++) {
+				for (int i = taskData.getRange()[0]; i <= taskData.getRange()[1]; i++) {
 					double label = 1.9799 * i - 934.5831;
 					if (n < (taskData.getDn().length)) {
 						labels[n++] = label;
