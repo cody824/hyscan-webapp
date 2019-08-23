@@ -124,17 +124,17 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 		Locale locale = LocaleContextHolder.getLocale();
 		Optional<ScanTask> scanTaskOptional = taskDao.findById(taskId);
 		if (!scanTaskOptional.isPresent()) {
-			throw new ServiceException(messageSource.getMessage("task_not_found", null, "任务不存在", locale));
+			throw new ServiceException(messageSource.getMessage("task_not_found", null, "任务不存在", locale), -100);
 		}
 		ScanTask scanTask = scanTaskOptional.get();
 		ModelConfig mc = mcDao.get(scanTask.getDeviceModel());
 		if (mc == null) {
-			throw new ServiceException(messageSource.getMessage("model_not_support", null, "不支持该型号的设备", locale));
+			throw new ServiceException(messageSource.getMessage("model_not_support", null, "不支持该型号的设备", locale), -104);
 		}
 		double[] wavelengths = mc.getWavelengths();
 		ScanTaskData scanTaskData = taskDataDao.get(taskId);
 		if (scanTaskData == null) {
-			throw new ServiceException(messageSource.getMessage("data_not_exist", null, "数据不存在", locale));
+			throw new ServiceException(messageSource.getMessage("data_not_exist", null, "数据不存在", locale), -105);
 		}
 		return new ApiTaskData(scanTaskData, wavelengths);
 	}

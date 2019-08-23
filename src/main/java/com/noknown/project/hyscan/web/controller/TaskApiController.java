@@ -185,7 +185,7 @@ public class TaskApiController extends BaseController {
 		ScanTask task = scanTaskService.get(taskId);
 
 		if (task == null) {
-			throw new ServiceException(messageSource.getMessage("task_not_found", null, "任务不存在", locale));
+			throw new ServiceException(messageSource.getMessage("task_not_found", null, "任务不存在", locale), -100);
 		}
 		Set<String> supportApps = supportApp(user);
 		Set<String> serials = new HashSet<>(20);
@@ -250,7 +250,7 @@ public class TaskApiController extends BaseController {
 		User user = apiKeyService.check(token);
 		ScanTask scanTask = scanTaskService.get(taskId);
 		if (scanTask == null) {
-			throw new ServiceException(messageSource.getMessage("task_not_found", null, "任务不存在", locale));
+			throw new ServiceException(messageSource.getMessage("task_not_found", null, "任务不存在", locale), -100);
 		}
 		Set<String> supportApps = supportApp(user);
 		Set<String> serials = new HashSet<>(20);
@@ -274,14 +274,14 @@ public class TaskApiController extends BaseController {
 			}
 		}
 		if (supportApps.isEmpty()) {
-			throw new WebException(messageSource.getMessage("no_app_has_access_privileges", null, locale));
+			throw new WebException(messageSource.getMessage("no_app_has_access_privileges", null, locale), -101);
 		}
 		if (!supportApps.contains(scanTask.getAppId())) {
-			throw new WebException(messageSource.getMessage("not_permit_for_app_data", null, locale));
+			throw new WebException(messageSource.getMessage("not_permit_for_app_data", null, locale), -102);
 		}
 		if (isTenant) {
 			if (!serials.contains(scanTask.getDeviceSerial())) {
-				throw new WebException(messageSource.getMessage("not_permit_for_device_data", null, locale));
+				throw new WebException(messageSource.getMessage("not_permit_for_device_data", null, locale), -103);
 			}
 		}
 		ApiTaskData data = scanTaskService.getApiData(taskId);
@@ -347,11 +347,11 @@ public class TaskApiController extends BaseController {
 			}
 		}
 		if (supportApps.isEmpty()) {
-			throw new WebException(messageSource.getMessage("no_app_has_access_privileges", null, locale));
+			throw new WebException(messageSource.getMessage("no_app_has_access_privileges", null, locale), -101);
 		}
 		if (StringUtil.isNotBlank(appId)) {
 			if (!supportApps.contains(appId)) {
-				throw new WebException(messageSource.getMessage("not_permit_for_app_data", null, locale));
+				throw new WebException(messageSource.getMessage("not_permit_for_app_data", null, locale), -102);
 			}
 			sqlFilter.addSQLExpression("appId", "=", appId);
 		} else {
@@ -361,7 +361,7 @@ public class TaskApiController extends BaseController {
 		if (isTenant) {
 			if (StringUtil.isNotBlank(serial)) {
 				if (!serials.contains(serial)) {
-					throw new WebException(messageSource.getMessage("not_permit_for_device_data", null, locale));
+					throw new WebException(messageSource.getMessage("not_permit_for_device_data", null, locale), -103);
 				}
 				sqlFilter.addSQLExpression("deviceSerial", "=", serial);
 			} else {
