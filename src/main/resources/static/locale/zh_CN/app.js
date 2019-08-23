@@ -19,6 +19,7 @@ MODULE_NAME = {
     "Module.Hyscan.MaterialConfig": '材料索引',
     "Module.Hyscan.ModelConfig": '型号配置',
     "Module.Hyscan.Tenant": '租户管理',
+    "Module.Hyscan.Me": '个人中心',
     "Module.Hyscan.Statistics": '统计分析'
 };
 
@@ -37,6 +38,7 @@ MODULE_HELP = {
     "Module.Hyscan.MaterialConfig": '配置材料索引解释！',
     "Module.Hyscan.ModelConfig": '配置型号，辐亮度参数，参考数据等！',
     "Module.Hyscan.Tenant": '配置管理租户',
+    "Module.Hyscan.Me": '配置访问apikey，个人信息等',
     "Module.Hyscan.Statistics": '统计信息，图表方式显示数据'
 };
 

@@ -25,5 +25,23 @@
                 </subModules>
             </subModules>
         </moduleList>
+        <moduleList>
+            <name>security</name>
+            <config>
+                <cls>security</cls>
+                <index>2</index>
+            </config>
+            <subModules>
+                <subModules>
+                    <name>Me</name>
+                    <disable>false</disable>
+                    <permissions>1</permissions>
+                    <config>
+                        <packageN>Hyscan</packageN>
+                        <index>0</index>
+                    </config>
+                </subModules>
+            </subModules>
+        </moduleList>
     </moduleList>
 </ProductInfo>
