@@ -16,11 +16,13 @@ import com.noknown.framework.security.service.ApiKeyService;
 import com.noknown.project.hyscan.common.APP_TYPE;
 import com.noknown.project.hyscan.common.Constants;
 import com.noknown.project.hyscan.model.ScanTask;
-import com.noknown.project.hyscan.model.ScanTaskData;
+import com.noknown.project.hyscan.model.Tenant;
+import com.noknown.project.hyscan.pojo.ApiTaskData;
 import com.noknown.project.hyscan.pojo.ApiUploadData;
 import com.noknown.project.hyscan.service.AnalysisService;
 import com.noknown.project.hyscan.service.AppService;
 import com.noknown.project.hyscan.service.ScanTaskService;
+import com.noknown.project.hyscan.service.TenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -56,18 +58,21 @@ public class TaskApiController extends BaseController {
 
 	private final ScanTaskService scanTaskService;
 
+	private final TenantService tenantService;
+
 	private final BlockingQueue<List<ScanTask>> blockingDeque = new LinkedBlockingQueue<>();
 
 	private ExecutorService analysisExecutor;
 
 	@Autowired
-	public TaskApiController(ApiKeyService apiKeyService, GlobalConfigService globalConfigService, MessageSource messageSource, AppService appService, AnalysisService analysisService, ScanTaskService scanTaskService) {
+	public TaskApiController(ApiKeyService apiKeyService, GlobalConfigService globalConfigService, MessageSource messageSource, AppService appService, AnalysisService analysisService, ScanTaskService scanTaskService, TenantService tenantService) {
 		this.apiKeyService = apiKeyService;
 		this.globalConfigService = globalConfigService;
 		this.messageSource = messageSource;
 		this.appService = appService;
 		this.analysisService = analysisService;
 		this.scanTaskService = scanTaskService;
+		this.tenantService = tenantService;
 	}
 
 	@PostConstruct
@@ -175,10 +180,45 @@ public class TaskApiController extends BaseController {
 		paramsMap.forEach((key, values) -> params.put(key, StringUtil.join(values, ",")));
 		params.remove("sign");
 		token.setAccessKey(accessKey).setSign(sign).setParams(params).setTimestamp(timestamp).setSignMethod(signMethod);
-		apiKeyService.check(token);
+		User user = apiKeyService.check(token);
 
 		ScanTask task = scanTaskService.get(taskId);
 
+		if (task == null) {
+			throw new ServiceException(messageSource.getMessage("task_not_found", null, "任务不存在", locale));
+		}
+		Set<String> supportApps = supportApp(user);
+		Set<String> serials = new HashSet<>(20);
+		boolean isTenant = false;
+		if (supportApps.size() == 0) {
+			List<Tenant> tenantList = tenantService.findByAdminId(user.getId());
+			for (Tenant tenant : tenantList) {
+				isTenant = true;
+				String[] apps = tenant.getAppIds().split(",");
+				for (String app : apps) {
+					supportApps.add(app);
+				}
+				if (StringUtil.isNotBlank(tenant.getSerials())) {
+					String[] serialArr = tenant.getSerials().split(",");
+					for (String s : serialArr) {
+						if (!serials.contains(s)) {
+							serials.add(s);
+						}
+					}
+				}
+			}
+		}
+		if (supportApps.isEmpty()) {
+			throw new WebException(messageSource.getMessage("no_app_has_access_privileges", null, locale));
+		}
+		if (!supportApps.contains(task.getAppId())) {
+			throw new WebException(messageSource.getMessage("not_permit_for_app_data", null, locale));
+		}
+		if (isTenant) {
+			if (!serials.contains(task.getDeviceSerial())) {
+				throw new WebException(messageSource.getMessage("not_permit_for_device_data", null, locale));
+			}
+		}
 		return ResponseEntity.ok(task);
 	}
 
@@ -186,12 +226,18 @@ public class TaskApiController extends BaseController {
 	 * 获取任务数据
 	 */
 	@RequestMapping(value = "/task/{taskId}/data", method = RequestMethod.GET)
-	public ResponseEntity<?> getTaskData(HttpServletRequest request, @PathVariable String taskId, @RequestParam String sign, @RequestParam("access_key") String accessKey, @RequestParam("sign_method") String signMethod, @RequestParam long timestamp)
+	public ResponseEntity<?> getTaskData(
+			HttpServletRequest request,
+			@PathVariable String taskId,
+			@RequestParam String sign,
+			@RequestParam("access_key") String accessKey,
+			@RequestParam("sign_method") String signMethod,
+			@RequestParam long timestamp)
 			throws Exception {
 		Locale locale = request.getLocale();
 
 		long now = System.currentTimeMillis();
-		if (now - timestamp > EXPIRE_TIME) {
+		if (Math.abs(now - timestamp) > EXPIRE_TIME) {
 			throw new WebException(messageSource.getMessage("request_expire", null, locale), -2);
 		}
 
@@ -201,10 +247,44 @@ public class TaskApiController extends BaseController {
 		paramsMap.forEach((key, values) -> params.put(key, StringUtil.join(values, ",")));
 		params.remove("sign");
 		token.setAccessKey(accessKey).setSign(sign).setParams(params).setTimestamp(timestamp).setSignMethod(signMethod);
-		apiKeyService.check(token);
-
-		ScanTaskData data = scanTaskService.getData(taskId);
-
+		User user = apiKeyService.check(token);
+		ScanTask scanTask = scanTaskService.get(taskId);
+		if (scanTask == null) {
+			throw new ServiceException(messageSource.getMessage("task_not_found", null, "任务不存在", locale));
+		}
+		Set<String> supportApps = supportApp(user);
+		Set<String> serials = new HashSet<>(20);
+		boolean isTenant = false;
+		if (supportApps.size() == 0) {
+			List<Tenant> tenantList = tenantService.findByAdminId(user.getId());
+			for (Tenant tenant : tenantList) {
+				isTenant = true;
+				String[] apps = tenant.getAppIds().split(",");
+				for (String app : apps) {
+					supportApps.add(app);
+				}
+				if (StringUtil.isNotBlank(tenant.getSerials())) {
+					String[] serialArr = tenant.getSerials().split(",");
+					for (String s : serialArr) {
+						if (!serials.contains(s)) {
+							serials.add(s);
+						}
+					}
+				}
+			}
+		}
+		if (supportApps.isEmpty()) {
+			throw new WebException(messageSource.getMessage("no_app_has_access_privileges", null, locale));
+		}
+		if (!supportApps.contains(scanTask.getAppId())) {
+			throw new WebException(messageSource.getMessage("not_permit_for_app_data", null, locale));
+		}
+		if (isTenant) {
+			if (!serials.contains(scanTask.getDeviceSerial())) {
+				throw new WebException(messageSource.getMessage("not_permit_for_device_data", null, locale));
+			}
+		}
+		ApiTaskData data = scanTaskService.getApiData(taskId);
 		return ResponseEntity.ok(data);
 	}
 
@@ -229,7 +309,7 @@ public class TaskApiController extends BaseController {
 		Locale locale = LocaleContextHolder.getLocale();
 
 		long now = System.currentTimeMillis();
-		if (now - timestamp > EXPIRE_TIME) {
+		if (Math.abs(now - timestamp) > EXPIRE_TIME) {
 			throw new WebException(messageSource.getMessage("request_expire", null, locale), -2);
 		}
 
@@ -243,9 +323,32 @@ public class TaskApiController extends BaseController {
 
 		SQLFilter sqlFilter = new SQLFilter();
 		sqlFilter.addSQLOrder(new SQLOrder("scanTime", "desc"));
-		List<String> supportApps = supportApp(user);
 
 
+		Set<String> supportApps = supportApp(user);
+		Set<String> serials = new HashSet<>(20);
+		boolean isTenant = false;
+		if (supportApps.size() == 0) {
+			List<Tenant> tenantList = tenantService.findByAdminId(user.getId());
+			for (Tenant tenant : tenantList) {
+				isTenant = true;
+				String[] apps = tenant.getAppIds().split(",");
+				for (String app : apps) {
+					supportApps.add(app);
+				}
+				if (StringUtil.isNotBlank(tenant.getSerials())) {
+					String[] serialArr = tenant.getSerials().split(",");
+					for (String s : serialArr) {
+						if (!serials.contains(s)) {
+							serials.add(s);
+						}
+					}
+				}
+			}
+		}
+		if (supportApps.isEmpty()) {
+			throw new WebException(messageSource.getMessage("no_app_has_access_privileges", null, locale));
+		}
 		if (StringUtil.isNotBlank(appId)) {
 			if (!supportApps.contains(appId)) {
 				throw new WebException(messageSource.getMessage("not_permit_for_app_data", null, locale));
@@ -255,16 +358,27 @@ public class TaskApiController extends BaseController {
 			sqlFilter.addSQLExpression("appId", "in", supportApps.toArray(new String[]{}));
 		}
 
+		if (isTenant) {
+			if (StringUtil.isNotBlank(serial)) {
+				if (!serials.contains(serial)) {
+					throw new WebException(messageSource.getMessage("not_permit_for_device_data", null, locale));
+				}
+				sqlFilter.addSQLExpression("deviceSerial", "=", serial);
+			} else {
+				sqlFilter.addSQLExpression("deviceSerial", "in", serials.toArray(new String[]{}));
+			}
+		} else {
+			if (StringUtil.isNotBlank(serial)) {
+				sqlFilter.addSQLExpression("deviceSerial", "=", serial);
+			}
+		}
+
 		if (StringUtil.isNotBlank(model)) {
 			sqlFilter.addSQLExpression("deviceModel", "=", model);
 		}
 
 		if (StringUtil.isNotBlank(scanTarget)) {
 			sqlFilter.addSQLExpression("scanTarget", "=", scanTarget);
-		}
-
-		if (StringUtil.isNotBlank(serial)) {
-			sqlFilter.addSQLExpression("deviceSerial", "=", serial);
 		}
 
 		if (begin != null || end != null) {
@@ -276,8 +390,15 @@ public class TaskApiController extends BaseController {
 		return ResponseEntity.ok(pageData);
 	}
 
-	private List<String> supportApp(User user) {
-		List<String> appIds = new ArrayList<>();
+	@RequestMapping(value = "/timestamp", method = RequestMethod.GET)
+	public @ResponseBody
+	Object timestamp() {
+		return System.currentTimeMillis();
+	}
+
+
+	private Set<String> supportApp(User user) {
+		Set<String> appIds = new HashSet<>();
 		if (this.hasRole("ROLE_ADMIN")) {
 			if (user.hasRole(Constants.ROLE_HYSCAN_ADMIN)) {
 				appIds.add(APP_TYPE.caizhi.name());
@@ -289,19 +410,6 @@ public class TaskApiController extends BaseController {
 				appIds.add(APP_TYPE.nongse.name());
 			}
 			if (user.hasRole(Constants.ROLE_MEISE_ADMIN)) {
-				appIds.add(APP_TYPE.meise.name());
-			}
-		} else if (hasRole(Constants.ROLE_TENANT_ADMIN)) {
-			if (user.hasRole(Constants.ROLE_HYSCAN_TENANT)) {
-				appIds.add(APP_TYPE.caizhi.name());
-			}
-			if (user.hasRole(Constants.ROLE_WQ_TENANT)) {
-				appIds.add(APP_TYPE.shuise.name());
-			}
-			if (user.hasRole(Constants.ROLE_NONGSE_TENANT)) {
-				appIds.add(APP_TYPE.nongse.name());
-			}
-			if (user.hasRole(Constants.ROLE_MEISE_TENANT)) {
 				appIds.add(APP_TYPE.meise.name());
 			}
 		}

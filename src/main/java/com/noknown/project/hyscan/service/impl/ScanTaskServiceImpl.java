@@ -10,13 +10,12 @@ import com.noknown.framework.common.util.StringUtil;
 import com.noknown.framework.common.util.excel.ExcelHandle;
 import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.project.hyscan.dao.AlgoConfigRepo;
+import com.noknown.project.hyscan.dao.ModelConfigRepo;
 import com.noknown.project.hyscan.dao.ScanTaskDao;
 import com.noknown.project.hyscan.dao.ScanTaskDataRepo;
 import com.noknown.project.hyscan.device.DeviceConfig;
-import com.noknown.project.hyscan.model.AlgoConfig;
-import com.noknown.project.hyscan.model.AlgoItem;
-import com.noknown.project.hyscan.model.ScanTask;
-import com.noknown.project.hyscan.model.ScanTaskData;
+import com.noknown.project.hyscan.model.*;
+import com.noknown.project.hyscan.pojo.ApiTaskData;
 import com.noknown.project.hyscan.pojo.DownloadInfo;
 import com.noknown.project.hyscan.pojo.ExportResult;
 import com.noknown.project.hyscan.pojo.ExportRow;
@@ -64,6 +63,8 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 	private final AlgoConfigRepo algoConfigRepo;
 
+	private final ModelConfigRepo mcDao;
+
 	private final static String JSON = "json";
 
 	private final static String TXT = "txt";
@@ -82,11 +83,12 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 	@Value("${hyscan.export.excelTpl:/var/hyscan/excelTpl/taskData.xlsx}")
 	private String excelTpl;
 
-	public ScanTaskServiceImpl(ScanTaskDao taskDao, ScanTaskDataRepo taskDataDao, MessageSource messageSource, AlgoConfigRepo algoConfigRepo, DeviceConfig deviceConfig) {
+	public ScanTaskServiceImpl(ScanTaskDao taskDao, ScanTaskDataRepo taskDataDao, MessageSource messageSource, AlgoConfigRepo algoConfigRepo, ModelConfigRepo mcDao, DeviceConfig deviceConfig) {
 		this.taskDao = taskDao;
 		this.taskDataDao = taskDataDao;
 		this.messageSource = messageSource;
 		this.algoConfigRepo = algoConfigRepo;
+		this.mcDao = mcDao;
 		this.deviceConfig = deviceConfig;
 		this.clearEService = new ThreadPoolExecutor(1,
 				1,
@@ -115,6 +117,26 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 	@Override
 	public ScanTaskData getData(String taskId) throws DaoException {
 		return taskDataDao.get(taskId);
+	}
+
+	@Override
+	public ApiTaskData getApiData(String taskId) throws ServiceException, DaoException {
+		Locale locale = LocaleContextHolder.getLocale();
+		Optional<ScanTask> scanTaskOptional = taskDao.findById(taskId);
+		if (!scanTaskOptional.isPresent()) {
+			throw new ServiceException(messageSource.getMessage("task_not_found", null, "任务不存在", locale));
+		}
+		ScanTask scanTask = scanTaskOptional.get();
+		ModelConfig mc = mcDao.get(scanTask.getDeviceModel());
+		if (mc == null) {
+			throw new ServiceException(messageSource.getMessage("model_not_support", null, "不支持该型号的设备", locale));
+		}
+		double[] wavelengths = mc.getWavelengths();
+		ScanTaskData scanTaskData = taskDataDao.get(taskId);
+		if (scanTaskData == null) {
+			throw new ServiceException(messageSource.getMessage("data_not_exist", null, "数据不存在", locale));
+		}
+		return new ApiTaskData(scanTaskData, wavelengths);
 	}
 
 	@Override

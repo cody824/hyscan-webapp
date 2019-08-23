@@ -110,7 +110,7 @@ Ext.define('Module.Hyscan.Tenant.Opt', {
                 xtype: 'textareafield',
                 blankText: HYSCAN_LABLE.serialsBlankText,
                 grow: true,
-                regex: /^\d+(,\d+)*$/,
+                regex: /^[0123456789ABCDEFabcdef]+(,[0123456789ABCDEFabcdef]+)*$/,
                 regexText: HYSCAN_LABLE.serialsReg,
                 fieldLabel: TENANT_PROPERTY.serials
             }, {

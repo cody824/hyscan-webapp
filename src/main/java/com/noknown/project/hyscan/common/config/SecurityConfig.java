@@ -148,7 +148,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				// 对于获取token的rest api要允许匿名访问
 				.antMatchers("/security/auth/**", "/security/authcode/**", "/gotoLoginView", "/base/auth").permitAll()
 				// APP开放接口
-				.antMatchers("/app/spAnalysis", "/api/task/**").permitAll()
+				.antMatchers("/app/spAnalysis", "/api/task/**", "/api/timestamp").permitAll()
 				.antMatchers(HttpMethod.GET, "/app/modelConfig/").permitAll()
 				//管理员页面
 				.antMatchers("/admin").hasAnyRole("ADMIN", "TENANT_ADMIN")
