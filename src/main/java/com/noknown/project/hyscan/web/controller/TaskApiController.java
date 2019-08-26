@@ -322,7 +322,7 @@ public class TaskApiController extends BaseController {
 		User user = apiKeyService.check(token);
 
 		SQLFilter sqlFilter = new SQLFilter();
-		sqlFilter.addSQLOrder(new SQLOrder("scanTime", "desc"));
+		sqlFilter.addSQLOrder(new SQLOrder("scanTime", "asc"));
 
 
 		Set<String> supportApps = supportApp(user);
@@ -386,7 +386,7 @@ public class TaskApiController extends BaseController {
 			Date endDate = end == null ? new Date() : new Date(end);
 			sqlFilter.addSQLExpression("scanTime", "between", new Date[]{beginDate, endDate});
 		}
-		PageData<ScanTask> pageData = scanTaskService.find(sqlFilter, start, limit);
+		PageData<ScanTask> pageData = scanTaskService.findByPage(sqlFilter, start, limit);
 		return ResponseEntity.ok(pageData);
 	}
 
