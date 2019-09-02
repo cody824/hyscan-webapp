@@ -26,6 +26,8 @@ public class Constants {
 
 	public static final String ROLE_MEISE_TENANT = "ROLE_MEISE_TENANT";
 
+	public static final String ROLE_SCHOOL_TENANT = "ROLE_SCHOOL_TENANT";
+
 	public static final String ROLE_NONGSE_TENANT = "ROLE_NONGSE_TENANT";
 
 	public static final String ROLE_HYSCAN_TENANT = "ROLE_HYSCAN_TENANT";
@@ -37,5 +39,7 @@ public class Constants {
 	public static final String ROLE_NONGSE_ADMIN = "ROLE_NONGSE_ADMIN";
 
 	public static final String ROLE_HYSCAN_ADMIN = "ROLE_HYSCAN_ADMIN";
+
+	public static final String ROLE_SCHOOL_ADMIN = "ROLE_SCHOOL_ADMIN";
 
 }

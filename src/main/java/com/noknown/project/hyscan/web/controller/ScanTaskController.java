@@ -334,6 +334,9 @@ public class ScanTaskController extends BaseController {
 			if (this.hasRole(Constants.ROLE_MEISE_ADMIN)) {
 				appIds.add(APP_TYPE.meise.name());
 			}
+			if (this.hasRole(Constants.ROLE_SCHOOL_ADMIN)) {
+				appIds.add(APP_TYPE.school.name());
+			}
 		} else if (hasRole(Constants.ROLE_TENANT_ADMIN)) {
 			if (this.hasRole(Constants.ROLE_HYSCAN_TENANT)) {
 				appIds.add(APP_TYPE.caizhi.name());
@@ -346,6 +349,9 @@ public class ScanTaskController extends BaseController {
 			}
 			if (this.hasRole(Constants.ROLE_MEISE_TENANT)) {
 				appIds.add(APP_TYPE.meise.name());
+			}
+			if (this.hasRole(Constants.ROLE_SCHOOL_TENANT)) {
+				appIds.add(APP_TYPE.school.name());
 			}
 		}
 		return appIds.toArray(new String[]{});

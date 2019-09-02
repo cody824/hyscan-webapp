@@ -41,6 +41,12 @@ public class RunConfig {
 	public boolean supportCaizhi;
 
 	/**
+	 * 是否支持校园版
+	 */
+	@Value("${hyscan.support.school:true}")
+	public boolean supportSchool;
+
+	/**
 	 * 是否地图显示
 	 */
 	@Value("${hyscan.support.map:true}")

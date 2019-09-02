@@ -10,12 +10,14 @@ MODULE_NAME = {
     "Module.Hyscan.MeiseAlgo": 'Meise algorithm',
     "Module.Hyscan.NongseAlgo": 'Nongse algorithm',
     "Module.Hyscan.MaterialAlgo": 'Caizhi algorithm',
+    "Module.Hyscan.SchoolAlgo": 'School algorithm',
     "Module.Hyscan.User": 'User info',
     "Module.Hyscan.ScanTask": 'Task',
     "Module.Hyscan.MaterialScanTask": 'Caizhi task',
     "Module.Hyscan.WQScanTask": 'Shuise task',
     "Module.Hyscan.MeiseScanTask": 'Meise task',
     "Module.Hyscan.NongseScanTask": 'Nongse task',
+    "Module.Hyscan.SchoolScanTask": 'School task',
     "Module.Hyscan.ModelConfig": 'Model',
     "Module.Hyscan.Tenant": 'Tenant',
     "Module.Hyscan.Statistics": 'Statistics'
@@ -42,7 +44,8 @@ APPID_VIEW = {
     "caizhi": "Hyscan",
     "shuise": "Shuise",
     "meise": "Meise",
-    "nongse": "Nongse"
+    "nongse": "Nongse",
+    "school": 'School'
 };
 
 HYSCAN_LABLE = {

@@ -56,6 +56,9 @@ public class AdminController extends BaseController {
 			if (runConfig.supportShuise) {
 				checkAndBuildRole(Constants.ROLE_WQ_ADMIN, "水色管理员");
 			}
+			if (runConfig.supportSchool) {
+				checkAndBuildRole(Constants.ROLE_SCHOOL_ADMIN, "校园版管理员");
+			}
 		} catch (DaoException e) {
 			e.printStackTrace();
 		} catch (ServiceException e) {
@@ -121,6 +124,9 @@ public class AdminController extends BaseController {
 			if (this.hasRole(Constants.ROLE_MEISE_ADMIN)) {
 				appIds.add(APP_TYPE.meise);
 			}
+			if (this.hasRole(Constants.ROLE_SCHOOL_ADMIN)) {
+				appIds.add(APP_TYPE.school);
+			}
 		} else if (hasRole(Constants.ROLE_TENANT_ADMIN)) {
 			if (this.hasRole(Constants.ROLE_HYSCAN_TENANT)) {
 				appIds.add(APP_TYPE.caizhi);
@@ -133,6 +139,9 @@ public class AdminController extends BaseController {
 			}
 			if (this.hasRole(Constants.ROLE_MEISE_TENANT)) {
 				appIds.add(APP_TYPE.meise);
+			}
+			if (this.hasRole(Constants.ROLE_SCHOOL_TENANT)) {
+				appIds.add(APP_TYPE.school);
 			}
 		}
 		return appIds;

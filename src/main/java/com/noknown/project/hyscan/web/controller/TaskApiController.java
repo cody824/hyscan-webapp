@@ -412,6 +412,9 @@ public class TaskApiController extends BaseController {
 			if (user.hasRole(Constants.ROLE_MEISE_ADMIN)) {
 				appIds.add(APP_TYPE.meise.name());
 			}
+			if (user.hasRole(Constants.ROLE_SCHOOL_ADMIN)) {
+				appIds.add(APP_TYPE.school.name());
+			}
 		}
 		return appIds;
 	}

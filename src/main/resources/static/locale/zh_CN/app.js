@@ -10,12 +10,14 @@ MODULE_NAME = {
     "Module.Hyscan.MeiseAlgo": '煤色算法配置',
     "Module.Hyscan.NongseAlgo": '农色算法配置',
     "Module.Hyscan.MaterialAlgo": '材质检测算法',
+    "Module.Hyscan.SchoolAlgo": '校园检测算法',
     "Module.Hyscan.User": '用户信息',
     "Module.Hyscan.ScanTask": '扫描任务',
     "Module.Hyscan.MaterialScanTask": '材质检测扫描任务',
     "Module.Hyscan.WQScanTask": '水色扫描任务',
     "Module.Hyscan.MeiseScanTask": '煤色扫描任务',
     "Module.Hyscan.NongseScanTask": '农色扫描任务',
+    "Module.Hyscan.SchoolScanTask": '校园扫描任务',
     "Module.Hyscan.MaterialConfig": '材料索引',
     "Module.Hyscan.ModelConfig": '型号配置',
     "Module.Hyscan.Tenant": '租户管理',
@@ -43,10 +45,11 @@ MODULE_HELP = {
 };
 
 APPID_VIEW = {
-    "caizhi": "Hyscan",
+    "caizhi": "HyScan",
     "shuise": "水色",
     "meise": "煤色",
-    "nongse": "农色"
+    "nongse": "农色",
+    "school": 'HyScan校园版'
 };
 
 HYSCAN_LABLE = {

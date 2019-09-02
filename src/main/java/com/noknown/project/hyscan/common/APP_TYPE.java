@@ -5,7 +5,7 @@ package com.noknown.project.hyscan.common;
  */
 public enum APP_TYPE {
 
-	caizhi("HYSCAN"), meise("煤色"), nongse("农色"), shuise("水色");
+	caizhi("HYSCAN"), meise("煤色"), nongse("农色"), shuise("水色"), school("HyScan校园版");
 
 	private String view;
 

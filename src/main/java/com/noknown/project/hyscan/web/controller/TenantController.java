@@ -58,6 +58,7 @@ public class TenantController extends BaseController {
 			checkAndBuildRole(Constants.ROLE_MEISE_TENANT, "煤色租户管理员");
 			checkAndBuildRole(Constants.ROLE_NONGSE_TENANT, "农色租户管理员");
 			checkAndBuildRole(Constants.ROLE_WQ_TENANT, "水色租户管理员");
+			checkAndBuildRole(Constants.ROLE_SCHOOL_TENANT, "校园版租户管理员");
 		} catch (DaoException e) {
 			e.printStackTrace();
 		} catch (ServiceException e) {
@@ -110,6 +111,7 @@ public class TenantController extends BaseController {
 			roleService.detachRoleFromUser(tenant.getAdminId(), Constants.ROLE_NONGSE_TENANT);
 			roleService.detachRoleFromUser(tenant.getAdminId(), Constants.ROLE_MEISE_TENANT);
 			roleService.detachRoleFromUser(tenant.getAdminId(), Constants.ROLE_WQ_TENANT);
+			roleService.detachRoleFromUser(tenant.getAdminId(), Constants.ROLE_SCHOOL_TENANT);
 			String[] appIds = tenant.getAppIds().split(",");
 			for (String appId : appIds) {
 				if (APP_TYPE.caizhi.name().equals(appId)) {
@@ -120,6 +122,8 @@ public class TenantController extends BaseController {
 					roleService.attachRoleForUser(tenant.getAdminId(), Constants.ROLE_MEISE_TENANT);
 				} else if (APP_TYPE.shuise.name().equals(appId)) {
 					roleService.attachRoleForUser(tenant.getAdminId(), Constants.ROLE_WQ_TENANT);
+				} else if (APP_TYPE.school.name().equals(appId)) {
+					roleService.attachRoleForUser(tenant.getAdminId(), Constants.ROLE_SCHOOL_TENANT);
 				}
 			}
 		}
