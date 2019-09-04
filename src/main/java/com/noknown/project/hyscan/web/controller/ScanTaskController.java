@@ -21,6 +21,7 @@ import com.noknown.project.hyscan.dao.AlgoConfigRepo;
 import com.noknown.project.hyscan.model.AlgoConfig;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
+import com.noknown.project.hyscan.model.TaskResult;
 import com.noknown.project.hyscan.pojo.AppScanTask;
 import com.noknown.project.hyscan.pojo.CommonResult;
 import com.noknown.project.hyscan.pojo.DataSet;
@@ -84,7 +85,15 @@ public class ScanTaskController extends BaseController {
 		}
 		taskService.saveScanTaskData(data);
 		ScanTask task = appTask.toTaskInfo();
+		if (StringUtil.isBlank(task.getResultType())) {
+			task.setResultType(TaskResult.TYPE_CAL);
+			task.setResultSource("default");
+
+		}
 		taskService.update(task);
+		TaskResult taskResult = task.getCurrentResult();
+		taskService.addResult(task.getId(), taskResult, true);
+
 		return ResponseEntity.ok(task);
 	}
 
@@ -228,6 +237,33 @@ public class ScanTaskController extends BaseController {
 		} else {
 			return ResponseEntity.ok(data);
 		}
+	}
+
+	@RequestMapping(value = "/scanTask/result/{taskId}", method = RequestMethod.GET)
+	public ResponseEntity<?> getScanTaskResult(@PathVariable String taskId) {
+		List<TaskResult> taskResults = taskService.findAllResult(taskId);
+		return ResponseEntity.ok(taskResults);
+	}
+
+	@RequestMapping(value = "/scanTask/result/{taskId}", method = RequestMethod.POST)
+	public ResponseEntity<?> addScanTaskResult(@PathVariable String taskId,
+	                                           @RequestParam(required = false, defaultValue = "false") boolean use,
+	                                           @RequestBody TaskResult taskResult)
+			throws Exception {
+		ScanTask task = taskService.get(taskId);
+		if (task == null) {
+			return ResponseEntity.notFound().build();
+		}
+		taskService.addResult(taskId, taskResult, use);
+		return ResponseEntity.ok(taskResult);
+	}
+
+	@RequestMapping(value = "/scanTask/result/{taskId}/default", method = RequestMethod.POST)
+	public ResponseEntity<?> setDefault(@PathVariable String taskId,
+	                                    @RequestParam Integer id)
+			throws Exception {
+		taskService.setDefaultTaskResult(taskId, id);
+		return ResponseEntity.ok(null);
 	}
 
 	@RequestMapping(value = "/scanTask/appData/{taskId}", method = RequestMethod.GET)

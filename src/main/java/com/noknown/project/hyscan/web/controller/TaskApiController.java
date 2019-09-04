@@ -428,7 +428,7 @@ public class TaskApiController extends BaseController {
 					List<ScanTask> scanTasks = blockingDeque.take();
 					for (ScanTask task : scanTasks) {
 						try {
-							analysisService.analysis(task.getId(), null);
+							analysisService.analysis(task.getId(), null, true);
 						} catch (ServiceException | DaoException e) {
 							logger.error(e.getLocalizedMessage());
 						}

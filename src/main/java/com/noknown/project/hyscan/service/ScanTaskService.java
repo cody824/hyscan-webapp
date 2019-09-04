@@ -6,6 +6,7 @@ import com.noknown.framework.common.exception.ServiceException;
 import com.noknown.framework.common.web.model.SQLFilter;
 import com.noknown.project.hyscan.model.ScanTask;
 import com.noknown.project.hyscan.model.ScanTaskData;
+import com.noknown.project.hyscan.model.TaskResult;
 import com.noknown.project.hyscan.pojo.ApiTaskData;
 import com.noknown.project.hyscan.pojo.DownloadInfo;
 
@@ -97,5 +98,39 @@ public interface ScanTaskService extends BaseService<ScanTask, String> {
 	 * @param scanTarget
 	 */
 	void updateScanTarget(List<String> ids, String scanTarget);
+
+
+	/**
+	 * 获取所有的结果集
+	 *
+	 * @param id
+	 * @return
+	 */
+	List<TaskResult> findAllResult(String id);
+
+	/**
+	 * 增加结果到结果集中
+	 *
+	 * @param taskId
+	 * @param taskResult
+	 * @param use
+	 * @return
+	 */
+	ScanTask addResult(String taskId, TaskResult taskResult, boolean use) throws ServiceException;
+
+	/**
+	 * 删除任务结果
+	 *
+	 * @param id
+	 */
+	void deleteTaskResult(Integer id);
+
+	/**
+	 * 设置默认任务
+	 *
+	 * @param taskId
+	 * @param id
+	 */
+	void setDefaultTaskResult(String taskId, Integer id);
 
 }

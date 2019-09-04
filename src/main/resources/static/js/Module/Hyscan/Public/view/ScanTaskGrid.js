@@ -148,6 +148,23 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
 	            width: 80
             },
             {
+                text: HYSCAN_LABLE.resultSet,
+                xtype: 'actioncolumn',
+                width: 60,
+                sortable: false,
+                editor: false,
+                align: 'center',
+                items: [
+                    {
+                        icon: "/img/icon/view.png",
+                        tooltip: HYSCAN_LABLE.resultSet,
+                        scope: this,
+                        handler: this.onResultSetClick,
+                        isDisabled: function (v, r, c, item, r) {
+                        }
+                    }]
+            },
+            {
                 text: LABEL.del,
                 xtype: 'actioncolumn',
                 width: 60,
@@ -163,6 +180,16 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
                         isDisabled: function (v, r, c, item, r) {
                         }
                     }]
+            }, {
+                text: TASK_PROPERTY.resultType,
+                dataIndex: 'resultType',
+                searchType: 'combo',
+                comboData: Soul.util.RendererUtil.buildComBo(TASK_RESULT_TYPE),
+                renderer: function (val) {
+                    return TASK_RESULT_TYPE[val] || TASK_RESULT_TYPE.cal;
+                },
+                align: 'center',
+                width: 80
             }
         );
 
@@ -297,6 +324,12 @@ Ext.define('Module.Hyscan.Public.view.ScanTaskGrid', {
         	task: record.data,
 		}, portlet);
 	},
+
+
+    onResultSetClick: function (view, rowIndex, colIndex, item, e, record, row) {
+        var me = this;
+        Module.Hyscan.Public.Opt.showResultRet(record.data, me.customColumns);
+    },
 
     onDeleteClick: function (grid, rowIdx, colIdx, item, e, record, row) {
         var me = this;

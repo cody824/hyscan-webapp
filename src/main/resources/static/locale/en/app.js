@@ -93,6 +93,7 @@ HYSCAN_LABLE = {
     canEmpty: 'It can be empty',
     reflectivity: 'Reflectivity',
     result: 'Result',
+    resultSet: 'Result Set',
     upload: 'Upload',
     cal: 'Calculation',
     uploadWin: 'Upload algorithm',
@@ -170,6 +171,14 @@ HYSCAN_LABLE = {
     algoLoading: 'Loading Algorithm',
     markTask: 'Mark task',
     confirmToDelTenant: 'Confirm to delete selected tasks?',
+    spSetup: 'SP setup',
+    noSpConfig: 'No sp config',
+    noResult: 'No result found',
+    inputResult: 'Input result',
+    calResult: 'Calculate',
+    defaultResult: 'Default Result',
+    setDefaultResult: 'Set Default',
+    confirmToDelResult: 'Confirm to delete selected result?',
 };
 
 MODEL_CONFIG_PROPERTY = {
@@ -206,7 +215,25 @@ TASK_PROPERTY = {
     imagePath: 'Image',
     userId: 'User id',
     scanTime: 'Scan time',
+    resultType: 'Result type',
+    resultSource: 'Result source'
 };
+
+TASK_RESULT_PROPERTY = {
+    "id": "ID",
+    taskId: 'Task ID',
+    source: 'Source',
+    type: 'Type',
+    model: 'Model',
+    appId: 'APP ID',
+    addTime: 'Time',
+    use: 'Task Default'
+};
+
+TASK_RESULT_TYPE = {
+    input: 'Input',
+    cal: 'Calculate'
+}
 
 AC_PROPERTY = {
     'version': 'Version',

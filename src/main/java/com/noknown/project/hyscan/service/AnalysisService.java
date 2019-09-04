@@ -29,10 +29,11 @@ public interface AnalysisService {
 	 *
 	 * @param taskId      任务ID
 	 * @param algoVersion 算法
+	 * @param use         是否保存到任务结果中
 	 * @return 检测结果
 	 * @throws ServiceException 服务异常
 	 * @throws DaoException     dao异常
 	 */
-	AbstractResult analysis(String taskId, String algoVersion) throws ServiceException, DaoException;
+	AbstractResult analysis(String taskId, String algoVersion, boolean use) throws ServiceException, DaoException;
 
 }

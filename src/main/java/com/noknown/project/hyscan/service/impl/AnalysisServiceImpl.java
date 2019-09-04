@@ -8,10 +8,7 @@ import com.noknown.framework.common.util.StringUtil;
 import com.noknown.project.hyscan.algorithm.AbstractAnalysisAlgo;
 import com.noknown.project.hyscan.algorithm.Loader;
 import com.noknown.project.hyscan.common.Constants;
-import com.noknown.project.hyscan.dao.AlgoConfigRepo;
-import com.noknown.project.hyscan.dao.ModelConfigRepo;
-import com.noknown.project.hyscan.dao.ScanTaskDao;
-import com.noknown.project.hyscan.dao.ScanTaskDataRepo;
+import com.noknown.project.hyscan.dao.*;
 import com.noknown.project.hyscan.model.*;
 import com.noknown.project.hyscan.pojo.AbstractResult;
 import com.noknown.project.hyscan.pojo.CommonResult;
@@ -27,10 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author guodong
@@ -47,18 +41,20 @@ public class AnalysisServiceImpl implements AnalysisService {
 	private final Loader algoLoader;
 	private final ScanTaskDao scanTaskDao;
 	private final ScanTaskDataRepo scanTaskDataDao;
+	private final TaskResultDao taskResultDao;
 	private final MessageSource messageSource;
 
 	private Map<String, Properties> dictMap = new HashMap<>();
 
 	@Autowired
-	public AnalysisServiceImpl(ModelConfigRepo mcDao, AlgoConfigRepo acDao, GlobalConfigDao gcDao, Loader algoLoader, ScanTaskDao scanTaskDao, ScanTaskDataRepo scanTaskDataDao, MessageSource messageSource) {
+	public AnalysisServiceImpl(ModelConfigRepo mcDao, AlgoConfigRepo acDao, GlobalConfigDao gcDao, Loader algoLoader, ScanTaskDao scanTaskDao, ScanTaskDataRepo scanTaskDataDao, TaskResultDao taskResultDao, MessageSource messageSource) {
 		this.mcDao = mcDao;
 		this.acDao = acDao;
 		this.gcDao = gcDao;
 		this.algoLoader = algoLoader;
 		this.scanTaskDao = scanTaskDao;
 		this.scanTaskDataDao = scanTaskDataDao;
+		this.taskResultDao = taskResultDao;
 		this.messageSource = messageSource;
 	}
 
@@ -71,7 +67,7 @@ public class AnalysisServiceImpl implements AnalysisService {
 	}
 
 	@Override
-	public AbstractResult analysis(String taskId, String algoVersion) throws ServiceException, DaoException {
+	public AbstractResult analysis(String taskId, String algoVersion, boolean use) throws ServiceException, DaoException {
 		Locale locale = LocaleContextHolder.getLocale();
 
 		ScanTask task = scanTaskDao.findById(taskId).orElse(null);
@@ -85,8 +81,38 @@ public class AnalysisServiceImpl implements AnalysisService {
 		double[] ref = AlgoUtil.getReflectivity(taskData.getDn(), taskData.getDarkCurrent(), taskData.getWhiteboardData());
 
 		AbstractResult resultIF = analysis(ref, task.getAppId(), task.getDeviceModel(), task.getTargetType(), algoVersion);
+		CommonResult commonResult = (CommonResult) resultIF;
 		resultIF.fillTask(task);
-		scanTaskDao.save(task);
+		task.setResultType(TaskResult.TYPE_CAL);
+		task.setResultSource(commonResult.getSource());
+
+		TaskResult taskResult = task.getCurrentResult();
+		TaskResult old = taskResultDao.getByTaskIdAndSource(taskId, taskResult.getSource());
+		Integer id;
+		if (old != null) {
+			taskResult.copyResult(old);
+			old.setAddTime(new Date());
+			old.setUse(use);
+			taskResultDao.save(old);
+			id = old.getId();
+		} else {
+			taskResult.setAddTime(new Date());
+			taskResult.setUse(use);
+			taskResultDao.save(taskResult);
+			id = taskResult.getId();
+		}
+
+		if (use) {
+			List<TaskResult> taskResults = taskResultDao.findAllByTaskId(taskId);
+			for (TaskResult tr : taskResults) {
+				tr.setUse(false);
+				if (tr.getId().equals(id)) {
+					tr.setUse(true);
+				}
+			}
+			taskResultDao.saveAll(taskResults);
+			scanTaskDao.save(task);
+		}
 		return resultIF;
 	}
 
@@ -160,6 +186,8 @@ public class AnalysisServiceImpl implements AnalysisService {
 				.setUnit(unit)
 				.setDecimal(decimal)
 				.setAppId(appId)
+				.setType(CommonResult.TYPE_CAL)
+				.setSource(algo.getVersion())
 				.setDict(dictMap.get(appId));
 	}
 

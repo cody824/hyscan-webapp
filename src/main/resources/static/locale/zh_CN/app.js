@@ -20,6 +20,7 @@ MODULE_NAME = {
     "Module.Hyscan.SchoolScanTask": '校园扫描任务',
     "Module.Hyscan.MaterialConfig": '材料索引',
     "Module.Hyscan.ModelConfig": '型号配置',
+    "Module.Hyscan.SpDevice": '设备管理',
     "Module.Hyscan.Tenant": '租户管理',
     "Module.Hyscan.Me": '个人中心',
     "Module.Hyscan.Statistics": '统计分析'
@@ -39,6 +40,7 @@ MODULE_HELP = {
     "Module.Hyscan.NongseScanTask": '记录农色客户端监测的扫描结果',
     "Module.Hyscan.MaterialConfig": '配置材料索引解释！',
     "Module.Hyscan.ModelConfig": '配置型号，辐亮度参数，参考数据等！',
+    "Module.Hyscan.SpDevice": '查看系统中所有的设备信息',
     "Module.Hyscan.Tenant": '配置管理租户',
     "Module.Hyscan.Me": '配置访问apikey，个人信息等',
     "Module.Hyscan.Statistics": '统计信息，图表方式显示数据'
@@ -70,7 +72,6 @@ HYSCAN_LABLE = {
     chineseName: '显示名',
     decimal: '小数保留',
     unit: '单位',
-    noAc: '没有算法配置',
     moveSeq: '移动顺序',
     createIndex: '新建索引',
     editIndex: '编辑索引',
@@ -98,6 +99,7 @@ HYSCAN_LABLE = {
     canEmpty: '可以为空',
     reflectivity: '反射率',
     result: '结果',
+    resultSet: '结果集',
     upload: '上传',
     cal: '计算',
     uploadWin: '上传算法',
@@ -142,7 +144,6 @@ HYSCAN_LABLE = {
     noImg: '没有图片',
     bigImg: '图片大图',
     doubleClickShowBigImg: '双击查看大图',
-    pleaseSelectTask: '请选择任务',
     backToTaskList: '返回任务列表',
     today: '今天',
     yesterday: '昨天',
@@ -175,7 +176,15 @@ HYSCAN_LABLE = {
     modelLoading: '载入型号配置',
     algoLoading: '载入算法配置',
     markTask: '标记任务',
-    confirmToDelTask: '确认要删除所选任务吗?'
+    confirmToDelTask: '确认要删除所选任务吗?',
+    spSetup: '光谱定标设置',
+    noSpConfig: '没有提交定标设置',
+    noResult: '没有结果',
+    inputResult: '录入结果',
+    calResult: '计算结果',
+    defaultResult: '默认结果',
+    setDefaultResult: '设为默认',
+    confirmToDelResult: '确认要删除所选结果吗?',
 };
 
 MODEL_CONFIG_PROPERTY = {
@@ -212,7 +221,26 @@ TASK_PROPERTY = {
     imagePath: '图片',
     userId: '用户ID',
     scanTime: '扫描时间',
+    resultType: '结果类型',
+    resultSource: '结果来源'
 };
+
+TASK_RESULT_PROPERTY = {
+
+    "id": "ID",
+    taskId: '任务ID',
+    source: '来源',
+    type: '结果类型',
+    model: '设备型号',
+    appId: 'APP ID',
+    addTime: '计算时间',
+    use: '默认结果'
+};
+
+TASK_RESULT_TYPE = {
+    input: '手工录入',
+    cal: '算法计算'
+}
 
 AC_PROPERTY = {
     'version': '版本',

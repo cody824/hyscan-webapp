@@ -13,5 +13,6 @@ Ext.define('Module.Hyscan.Public.model.ScanTaskModel', {
         "deviceAddress",
         "deviceModel", "deviceSerial", "deviceFirmware",
         "level", "targetType",
+        "resultType", "resultSource",
         "material", "result0", "result1", "result2", "result3", "result4", "result5", "result6", "result7", "result8", "result9"]
 });

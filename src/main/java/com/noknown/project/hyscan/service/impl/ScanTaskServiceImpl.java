@@ -9,10 +9,7 @@ import com.noknown.framework.common.util.JsonUtil;
 import com.noknown.framework.common.util.StringUtil;
 import com.noknown.framework.common.util.excel.ExcelHandle;
 import com.noknown.framework.common.web.model.SQLFilter;
-import com.noknown.project.hyscan.dao.AlgoConfigRepo;
-import com.noknown.project.hyscan.dao.ModelConfigRepo;
-import com.noknown.project.hyscan.dao.ScanTaskDao;
-import com.noknown.project.hyscan.dao.ScanTaskDataRepo;
+import com.noknown.project.hyscan.dao.*;
 import com.noknown.project.hyscan.device.DeviceConfig;
 import com.noknown.project.hyscan.model.*;
 import com.noknown.project.hyscan.pojo.ApiTaskData;
@@ -59,6 +56,8 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 
 	private final ScanTaskDataRepo taskDataDao;
 
+	private final TaskResultDao taskResultDao;
+
 	private final MessageSource messageSource;
 
 	private final AlgoConfigRepo algoConfigRepo;
@@ -83,9 +82,10 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 	@Value("${hyscan.export.excelTpl:/var/hyscan/excelTpl/taskData.xlsx}")
 	private String excelTpl;
 
-	public ScanTaskServiceImpl(ScanTaskDao taskDao, ScanTaskDataRepo taskDataDao, MessageSource messageSource, AlgoConfigRepo algoConfigRepo, ModelConfigRepo mcDao, DeviceConfig deviceConfig) {
+	public ScanTaskServiceImpl(ScanTaskDao taskDao, ScanTaskDataRepo taskDataDao, TaskResultDao taskResultDao, MessageSource messageSource, AlgoConfigRepo algoConfigRepo, ModelConfigRepo mcDao, DeviceConfig deviceConfig) {
 		this.taskDao = taskDao;
 		this.taskDataDao = taskDataDao;
+		this.taskResultDao = taskResultDao;
 		this.messageSource = messageSource;
 		this.algoConfigRepo = algoConfigRepo;
 		this.mcDao = mcDao;
@@ -107,6 +107,7 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 	public void removeTask(String taskId) throws DaoException {
 		taskDao.deleteById(taskId);
 		taskDataDao.delete(taskId);
+		taskResultDao.deleteByTaskId(taskId);
 	}
 
 	@Override
@@ -258,6 +259,74 @@ public class ScanTaskServiceImpl extends BaseServiceImpl<ScanTask, String> imple
 	@Override
 	public void updateScanTarget(List<String> ids, String scanTarget) {
 		taskDao.updateScanTargetById(ids, scanTarget);
+	}
+
+	@Override
+	public List<TaskResult> findAllResult(String id) {
+		List<TaskResult> list = taskResultDao.findAllByTaskId(id);
+		if (list.isEmpty()) {
+			ScanTask scanTask = taskDao.findById(id).orElse(null);
+			if (scanTask != null) {
+				if (StringUtil.isBlank(scanTask.getResultType())) {
+					scanTask.setResultType(TaskResult.TYPE_CAL);
+					scanTask.setResultSource("default");
+					taskDao.save(scanTask);
+				}
+				TaskResult taskResult = scanTask.getCurrentResult();
+				taskResultDao.save(taskResult);
+				list.add(taskResult);
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public ScanTask addResult(String taskId, TaskResult taskResult, boolean use) throws ServiceException {
+		Locale locale = LocaleContextHolder.getLocale();
+		Optional<ScanTask> optionalScanTask = taskDao.findById(taskId);
+		if (!optionalScanTask.isPresent()) {
+			throw new ServiceException(messageSource.getMessage("task_not_found", null, "任务不存在", locale), -100);
+		}
+		ScanTask scanTask = optionalScanTask.get();
+		taskResult.setTaskId(taskId);
+		TaskResult old = taskResultDao.getByTaskIdAndSource(taskId, taskResult.getSource());
+		Integer id;
+		if (old != null) {
+			taskResult.copyResult(old);
+			old.setAddTime(new Date());
+			old.setUse(use);
+			taskResult.setId(old.getId());
+			taskResultDao.save(old);
+			id = old.getId();
+		} else {
+			taskResult.setAddTime(new Date());
+			taskResult.setUse(use);
+			taskResultDao.save(taskResult);
+			id = taskResult.getId();
+		}
+		if (use) {
+			taskResult.fillTask(scanTask);
+			taskDao.save(scanTask);
+			setDefaultTaskResult(taskId, id);
+		}
+		return scanTask;
+	}
+
+	@Override
+	public void deleteTaskResult(Integer id) {
+		taskResultDao.deleteById(id);
+	}
+
+	@Override
+	public void setDefaultTaskResult(String taskId, Integer id) {
+		List<TaskResult> taskResults = taskResultDao.findAllByTaskId(taskId);
+		for (TaskResult taskResult : taskResults) {
+			taskResult.setUse(false);
+			if (taskResult.getId().equals(id)) {
+				taskResult.setUse(true);
+			}
+		}
+		taskResultDao.saveAll(taskResults);
 	}
 
 	private File exportJson(ScanTask scanTask, File dir) throws ServiceException, DaoException {

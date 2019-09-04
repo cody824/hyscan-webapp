@@ -23,16 +23,22 @@ public class AnalysisController extends BaseController {
 	}
 
 	@RequestMapping(value = "/analysis/{appId}", method = RequestMethod.POST)
-	public ResponseEntity<?> analysis(@PathVariable String appId, @RequestParam String model, @RequestParam(required = false) String target, @RequestParam(required = false) String algo, @RequestBody double[] reflectivitys)
+	public ResponseEntity<?> analysis(@PathVariable String appId,
+	                                  @RequestParam String model,
+	                                  @RequestParam(required = false) String target,
+	                                  @RequestParam(required = false) String algo,
+	                                  @RequestBody double[] reflectivitys)
 			throws Exception {
 		AbstractResult result = analysisService.analysis(reflectivitys, appId, model, target, algo);
 		return ResponseEntity.ok(result);
 	}
 
 	@RequestMapping(value = "/analysis/task/{taskId}", method = RequestMethod.POST)
-	public ResponseEntity<?> analysis(@PathVariable String taskId, @RequestParam(required = false) String algo)
+	public ResponseEntity<?> analysis(@PathVariable String taskId,
+	                                  @RequestParam(required = false) String algo,
+	                                  @RequestParam(required = false, defaultValue = "false") boolean use)
 			throws Exception {
-		AbstractResult result = analysisService.analysis(taskId, algo);
+		AbstractResult result = analysisService.analysis(taskId, algo, use);
 		return ResponseEntity.ok(result);
 	}
 

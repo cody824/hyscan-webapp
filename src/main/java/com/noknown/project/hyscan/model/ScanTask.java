@@ -118,6 +118,10 @@ public class ScanTask implements Serializable {
 	@Column(length = 16)
 	private String material;
 
+	private String resultType;
+
+	private String resultSource;
+
 	/**
 	 * 预留结果字段
 	 */
@@ -210,6 +214,28 @@ public class ScanTask implements Serializable {
 		return appScanTask;
 
 	}
+
+	public TaskResult getCurrentResult() {
+		TaskResult taskResult = new TaskResult();
+		taskResult.setTaskId(id);
+		taskResult.setResult0(result0);
+		taskResult.setResult1(result1);
+		taskResult.setResult2(result2);
+		taskResult.setResult3(result3);
+		taskResult.setResult4(result4);
+		taskResult.setResult5(result5);
+		taskResult.setResult6(result6);
+		taskResult.setResult7(result7);
+		taskResult.setResult8(result8);
+		taskResult.setResult9(result9);
+		taskResult.setResult10(result10);
+		taskResult.setType(resultType);
+		taskResult.setSource(resultSource);
+		taskResult.setUse(true);
+		return taskResult;
+	}
+
+	;
 
 	public String getId() {
 		return id;
@@ -461,6 +487,24 @@ public class ScanTask implements Serializable {
 
 	public ScanTask setTargetType(String targetType) {
 		this.targetType = targetType;
+		return this;
+	}
+
+	public String getResultType() {
+		return resultType;
+	}
+
+	public ScanTask setResultType(String resultType) {
+		this.resultType = resultType;
+		return this;
+	}
+
+	public String getResultSource() {
+		return resultSource;
+	}
+
+	public ScanTask setResultSource(String resultSource) {
+		this.resultSource = resultSource;
 		return this;
 	}
 }

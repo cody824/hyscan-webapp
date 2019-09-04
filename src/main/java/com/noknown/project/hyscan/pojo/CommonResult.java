@@ -18,6 +18,9 @@ import java.util.Properties;
  */
 public class CommonResult extends AbstractResult {
 
+	public static final String TYPE_INPUT = "input";
+
+	public static final String TYPE_CAL = "cal";
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -32,6 +35,16 @@ public class CommonResult extends AbstractResult {
 	private String[] name;
 
 	private String[] chineseName;
+
+	/**
+	 * 结果来源类型
+	 */
+	private String type;
+
+	/**
+	 * 结果来源
+	 */
+	private String source;
 
 	/**
 	 * 结果数据字典
@@ -50,6 +63,7 @@ public class CommonResult extends AbstractResult {
 				e.printStackTrace();
 			}
 		}
+		scanTask.setResultType(type).setResultSource(source);
 	}
 
 	@Override
@@ -87,6 +101,8 @@ public class CommonResult extends AbstractResult {
 				.setName(name)
 				.setUnit(unit)
 				.setDecimal(decimal)
+				.setSource(task.getResultSource())
+				.setType(task.getResultType())
 				.setAppId(task.getAppId())
 				.setDict(dict);
 	}
@@ -151,6 +167,24 @@ public class CommonResult extends AbstractResult {
 
 	public CommonResult setDict(Properties dict) {
 		this.dict = dict;
+		return this;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public CommonResult setType(String type) {
+		this.type = type;
+		return this;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public CommonResult setSource(String source) {
+		this.source = source;
 		return this;
 	}
 }
