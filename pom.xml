@@ -19,7 +19,8 @@
 		<jta.version>1.1</jta.version>
         <spring.boot.version>2.0.5.RELEASE</spring.boot.version>
         <spring.boot.web.version>2.0.5.RELEASE</spring.boot.web.version>
-        <framework.version>0.0.2-snapshot</framework.version>
+		<framework.version>0.0.3-snapshot</framework.version>
+		<bd-admin.version>0.0.2-snapshot</bd-admin.version>
 	</properties>
 
 	<dependencyManagement>
@@ -99,7 +100,7 @@
 		<dependency>
 			<groupId>com.noknown</groupId>
 			<artifactId>bd-admin</artifactId>
-            <version>${framework.version}</version>
+			<version>${bd-admin.version}</version>
 		</dependency>
 
 		<!-- for 算法 -->
