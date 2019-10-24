@@ -19,8 +19,8 @@
 		<jta.version>1.1</jta.version>
         <spring.boot.version>2.0.5.RELEASE</spring.boot.version>
         <spring.boot.web.version>2.0.5.RELEASE</spring.boot.web.version>
-		<framework.version>0.0.3-snapshot</framework.version>
-		<bd-admin.version>0.0.2-snapshot</bd-admin.version>
+        <framework.version>0.0.2</framework.version>
+        <bd-admin.version>0.0.2</bd-admin.version>
 	</properties>
 
 	<dependencyManagement>
